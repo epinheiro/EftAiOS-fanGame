@@ -74,21 +74,27 @@ public class ClientController : MonoBehaviour
                     pendingPings[0] = new PendingPing {id = pingStats[0], time = fixedTime};
                     // Create a 4 byte data stream which we can store our ping sequence number in
                     
-                    DataStreamWriter pingData = new DataStreamWriter(8, Allocator.Temp);
-                    pingData.Write(1);
-                    pingData.Write(66);
+                    /////////////////////////////////////////////////////////////////////////
+                    ////////////////////////// SEND DATA TO SERVER /////////////////////
+                    DataStreamWriter pingData = ClientData.DirectlyPackCliendData(1, 2,2, 4,4);
+                    ////////////////////////// SEND DATA TO SERVER /////////////////////
+                    /////////////////////////////////////////////////////////////////////////
+
                     connection[0].Send(driver, pingData);
                     // Update the number of sent pings
                     pingStats[0] = pingStats[0] + 1;
                 }
                 else if (cmd == NetworkEvent.Type.Data)
                 {
-                    // When the pong message is received we calculate the ping time and disconnect
-                    DataStreamReader.Context readerCtx = default(DataStreamReader.Context);
-                    int letter = strm.ReadInt(ref readerCtx);
-                    int number = strm.ReadInt(ref readerCtx);
-                    Debug.Log("("+ letter + " " + number+")"); // DEBUG METHOD TO CHECK COMMUNICATION
+                    /////////////////////////////////////////////////////////////////////////
+                    ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
+                    ClientData dataFromServer = new ClientData(strm);
 
+                    Debug.Log(dataFromServer.ToString()); // DEBUG METHOD TO CHECK COMMUNICATION
+                    ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
+                    /////////////////////////////////////////////////////////////////////////
+
+                    // When the pong message is received we calculate the ping time and disconnect
                     pingStats[1] = (int) ((fixedTime - pendingPings[0].time) * 1000);
                     connection[0].Disconnect(driver);
                     connection[0] = default(NetworkConnection);

@@ -38,17 +38,16 @@ public class ServerController : MonoBehaviour
                 // For ping requests we reply with a pong message
                 // A DataStreamReader.Context is required to keep track of current read position since
                 // DataStreamReader is immutable
-                DataStreamReader.Context readerCtx = default(DataStreamReader.Context);
-                
-                int letter = strm.ReadInt(ref readerCtx);
-                int number = strm.ReadInt(ref readerCtx);
 
-                // Create a temporary DataStreamWriter to keep our serialized pong message
-                DataStreamWriter pongData = new DataStreamWriter(8, Allocator.Temp);
-                pongData.Write(letter); //pongData.Write(id);
-                pongData.Write(number); //pongData.Write(id);
-                // Send the pong message with the same id as the ping
-                driver.Send(NetworkPipeline.Null, connection, pongData);
+                /////////////////////////////////////////////////////////////////////////
+                ////////////////////////// RECEIVE DATA FROM CLIENT /////////////////////
+                ClientData dataFromClient = new ClientData(strm);
+
+                DataStreamWriter dataToClient = dataFromClient.PackClientData();
+                driver.Send(NetworkPipeline.Null, connection, dataToClient);
+                ////////////////////////// SENT DATA BACK TO CLIENT /////////////////////
+                /////////////////////////////////////////////////////////////////////////
+
             }
             else if (cmd == NetworkEvent.Type.Disconnect)
             {
