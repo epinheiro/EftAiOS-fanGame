@@ -15,19 +15,20 @@ public class ClientController : MonoBehaviour
     NetworkEndPoint endpoint;
 
     void Start(){
-        // Create a NetworkDriver for the client. We could bind to a specific address but in this case we rely on the
-        // implicit bind since we do not need to bing to anything special
         m_ClientDriver = new UdpNetworkDriver(new INetworkParameter[0]);
 
         m_clientToServerConnection = new NativeArray<NetworkConnection>(1, Allocator.Persistent);
 
         endpoint = NetworkEndPoint.LoopbackIpv4;
         endpoint.Port = 9000;
+
+        m_clientToServerConnection[0] = m_ClientDriver.Connect(endpoint);
     }
 
     void OnDestroy(){
         // All jobs must be completed before we can dispose the data they use
         m_updateHandle.Complete();
+        m_ClientDriver.Disconnect(m_clientToServerConnection[0]);
         m_ClientDriver.Dispose();
         m_clientToServerConnection.Dispose();
     }
@@ -42,8 +43,11 @@ public class ClientController : MonoBehaviour
         public void Execute()
         {
             // If the client ui indicates we should be sending pings but we do not have an active connection we create one
-            if (serverEP.IsValid && !connection[0].IsCreated)
+            if (serverEP.IsValid && !connection[0].IsCreated){
+                Debug.Log("Client reconnection");
                 connection[0] = driver.Connect(serverEP);
+            }
+                
             // If the client ui indicates we should not be sending pings but we do have a connection we close that connection
             if (!serverEP.IsValid && connection[0].IsCreated)
             {
@@ -58,14 +62,14 @@ public class ClientController : MonoBehaviour
             {
                 if (cmd == NetworkEvent.Type.Connect)
                 {
-                   
-                    /////////////////////////////////////////////////////////////////////////
-                    ////////////////////////// SEND DATA TO SERVER /////////////////////
-                    DataStreamWriter pingData = ClientData.DirectlyPackCliendData(1, 2,2, 4,4);
-                    ////////////////////////// SEND DATA TO SERVER /////////////////////
-                    /////////////////////////////////////////////////////////////////////////
+                    Debug.Log("Client connection completed");
+                    // /////////////////////////////////////////////////////////////////////////
+                    // ////////////////////////// SEND DATA TO SERVER /////////////////////
+                    // DataStreamWriter pingData = ClientData.DirectlyPackCliendData(1, 2,2, 4,4);
+                    // ////////////////////////// SEND DATA TO SERVER /////////////////////
+                    // /////////////////////////////////////////////////////////////////////////
 
-                    connection[0].Send(driver, pingData);
+                    // connection[0].Send(driver, pingData);
                 }
                 else if (cmd == NetworkEvent.Type.Data)
                 {
@@ -78,8 +82,6 @@ public class ClientController : MonoBehaviour
                     /////////////////////////////////////////////////////////////////////////
 
                     // When the pong message is received we calculate the ping time and disconnect
-                    connection[0].Disconnect(driver);
-                    connection[0] = default(NetworkConnection);
                 }
                 else if (cmd == NetworkEvent.Type.Disconnect)
                 {

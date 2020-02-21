@@ -35,10 +35,6 @@ public class ServerController : MonoBehaviour
         {
             if (cmd == NetworkEvent.Type.Data)
             {
-                // For ping requests we reply with a pong message
-                // A DataStreamReader.Context is required to keep track of current read position since
-                // DataStreamReader is immutable
-
                 /////////////////////////////////////////////////////////////////////////
                 ////////////////////////// RECEIVE DATA FROM CLIENT /////////////////////
                 ClientData dataFromClient = new ClientData(strm);
@@ -83,9 +79,14 @@ public class ServerController : MonoBehaviour
             {
                 NetworkConnection con = driver.Accept();
                 // "Nothing more to accept" is signaled by returning an invalid connection from accept
-                if (!con.IsCreated)
+                if (con.IsCreated){
+                    connections.Add(con);
+                    // DEBUG //////////////////////////////////////////////////
+                    Debug.Log("Server connections: " + connections.Length); 
+                    // DEBUG //////////////////////////////////////////////////
+                }else{
                     break;
-                connections.Add(con);
+                }
             }
         }
     }
