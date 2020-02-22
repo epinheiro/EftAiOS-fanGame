@@ -62,36 +62,31 @@ public class BoardManager : MonoBehaviour
     void CreateTileInMap(string rowId, string columnId, string tileType){
         int rowNumber = TranslateRowIdToNumber(rowId);
         int columnNumber = TranslateColumnIdToNumber(columnId);
-        int tileTypeNumber = TranslateTileTypeToEnum(tileType);
+        int tileTypeNumber = TranslateTileTypeToEnumNumber(tileType);
 
         float xPos;
         float yPos;
-        // Color clr; //debug
 
         if (columnNumber%2 == 0){
             xPos = evenColumnSpacing.x + (columnNumber/2) * spriteOffset.x;
             yPos = evenColumnSpacing.y + rowNumber * spriteOffset.y;
-            // clr = Color.red; //debug
         }else{
             xPos = oddColumnSpacing.x + ((columnNumber-1)/2) * spriteOffset.x;
             yPos = oddColumnSpacing.y + rowNumber * spriteOffset.y;
-            // clr = Color.blue; //debug
         }
 
         GameObject go = Instantiate(hexagonPrefab, new Vector3(xPos, yPos, 0), Quaternion.identity);
         go.transform.parent = mapReference.transform;
-        go.GetComponent<SpriteRenderer>().color = colors[tileTypeNumber];
-        // go.GetComponent<SpriteRenderer>().color = clr; //debug
-        
+        go.GetComponent<SpriteRenderer>().color = colors[tileTypeNumber];        
     }
 
-    int TranslateTileTypeToEnum(string typeTypeString){
+    int TranslateTileTypeToEnumNumber(string typeTypeString){
         if (Enum.IsDefined(typeof(PossibleTypes), typeTypeString)){
             PossibleTypes output;
             Enum.TryParse(typeTypeString, false, out output);
             return (int) output;
         } else {
-            throw new System.Exception(string.Format("Language {0} is not supported", typeTypeString));
+            throw new System.Exception(string.Format("Tile type {0} is not supported", typeTypeString));
         }
     }
 
