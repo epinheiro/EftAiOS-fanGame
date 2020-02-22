@@ -7,6 +7,8 @@ using Unity.Jobs;
 
 public class ServerController : MonoBehaviour
 {
+    public enum ServerState {WaitingPlayers, Processing, Updating}
+    public enum ServerCommand {PutPlay, GetState, GetResults}
 
     public UdpNetworkDriver m_ServerDriver;
     private NativeList<NetworkConnection> m_connections;
@@ -14,17 +16,7 @@ public class ServerController : MonoBehaviour
     private JobHandle m_updateHandle;
 
     void Start(){
-        ushort serverPort = 9000;
-        // Create the server driver, bind it to a port and start listening for incoming connections
-        m_ServerDriver = new UdpNetworkDriver(new INetworkParameter[0]);
-        NetworkEndPoint addr = NetworkEndPoint.AnyIpv4;
-        addr.Port = serverPort;
-        if (m_ServerDriver.Bind(addr) != 0)
-            Debug.Log($"Failed to bind to port {serverPort}");
-        else
-            m_ServerDriver.Listen();
-
-        m_connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
+        InitServer();
     }
 
     static NetworkConnection ProcessSingleConnection(UdpNetworkDriver.Concurrent driver, NetworkConnection connection){
@@ -137,5 +129,21 @@ public class ServerController : MonoBehaviour
         // an int since the job needs to pick up new connections from DriverUpdateJob
         // The PongJob is the last job in the chain and it must depends on the DriverUpdateJob
         m_updateHandle = pongJob.Schedule(m_connections, 1, m_updateHandle);
+    }
+
+    //////////////////////////////////
+    /////// Server functions /////////
+    void InitServer(){
+        ushort serverPort = 9000;
+        // Create the server driver, bind it to a port and start listening for incoming connections
+        m_ServerDriver = new UdpNetworkDriver(new INetworkParameter[0]);
+        NetworkEndPoint addr = NetworkEndPoint.AnyIpv4;
+        addr.Port = serverPort;
+        if (m_ServerDriver.Bind(addr) != 0)
+            Debug.Log($"Failed to bind to port {serverPort}");
+        else
+            m_ServerDriver.Listen();
+
+        m_connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
     }
 }

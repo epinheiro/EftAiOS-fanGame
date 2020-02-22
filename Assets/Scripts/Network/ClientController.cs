@@ -7,6 +7,8 @@ using System.Text;
 
 public class ClientController : MonoBehaviour
 {
+    public enum ClientState {Playing, WaitingPlayers, WaitingServer, Updating}
+
     private UdpNetworkDriver m_ClientDriver;
     private NativeArray<NetworkConnection> m_clientToServerConnection;
 
@@ -15,14 +17,7 @@ public class ClientController : MonoBehaviour
     NetworkEndPoint endpoint;
 
     void Start(){
-        m_ClientDriver = new UdpNetworkDriver(new INetworkParameter[0]);
-
-        m_clientToServerConnection = new NativeArray<NetworkConnection>(1, Allocator.Persistent);
-
-        endpoint = NetworkEndPoint.LoopbackIpv4;
-        endpoint.Port = 9000;
-
-        m_clientToServerConnection[0] = m_ClientDriver.Connect(endpoint);
+        ConnectToServer();
     }
 
     void OnDestroy(){
@@ -66,10 +61,10 @@ public class ClientController : MonoBehaviour
                     // /////////////////////////////////////////////////////////////////////////
                     // ////////////////////////// SEND DATA TO SERVER /////////////////////
                     // DataStreamWriter pingData = ClientData.DirectlyPackCliendData(1, 2,2, 4,4);
+                    // connection[0].Send(driver, pingData);
                     // ////////////////////////// SEND DATA TO SERVER /////////////////////
                     // /////////////////////////////////////////////////////////////////////////
 
-                    // connection[0].Send(driver, pingData);
                 }
                 else if (cmd == NetworkEvent.Type.Data)
                 {
@@ -115,5 +110,18 @@ public class ClientController : MonoBehaviour
         // Schedule a chain with the driver update followed by the ping job
         m_updateHandle = m_ClientDriver.ScheduleUpdate();
         m_updateHandle = pingJob.Schedule(m_updateHandle);
+    }
+
+    //////////////////////////////////
+    /////// Client functions /////////
+    void ConnectToServer(){
+        m_ClientDriver = new UdpNetworkDriver(new INetworkParameter[0]);
+
+        m_clientToServerConnection = new NativeArray<NetworkConnection>(1, Allocator.Persistent);
+
+        endpoint = NetworkEndPoint.LoopbackIpv4;
+        endpoint.Port = 9000;
+
+        m_clientToServerConnection[0] = m_ClientDriver.Connect(endpoint);
     }
 }
