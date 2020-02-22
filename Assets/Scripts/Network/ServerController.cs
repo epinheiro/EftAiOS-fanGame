@@ -28,16 +28,13 @@ public class ServerController : MonoBehaviour
         while ((cmd = driver.PopEventForConnection(connection, out strm)) != NetworkEvent.Type.Empty)
         {
             if (cmd == NetworkEvent.Type.Data)
-            {
+            {                
                 /////////////////////////////////////////////////////////////////////////
                 ////////////////////////// RECEIVE DATA FROM CLIENT /////////////////////
-                PlayerTurnData dataFromClient = new PlayerTurnData(strm);
-
-                DataStreamWriter dataToClient = dataFromClient.PackPlayerTurnObjectData();
-                driver.Send(NetworkPipeline.Null, connection, dataToClient);
+                ServerCommand command = ServerController.ReadCommandReceived(strm);
+                ServerController.ProcessCommandReceived(command, driver, connection, strm);
                 ////////////////////////// SENT DATA BACK TO CLIENT /////////////////////
                 /////////////////////////////////////////////////////////////////////////
-
             }
             else if (cmd == NetworkEvent.Type.Disconnect)
             {
@@ -147,5 +144,48 @@ public class ServerController : MonoBehaviour
             m_ServerDriver.Listen();
 
         m_connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
+    }
+
+    static ServerCommand ReadCommandReceived(DataStreamReader reader){
+        DataStreamReader.Context readerCtx = default(DataStreamReader.Context);
+        int command = reader.ReadInt(ref readerCtx);
+
+        try{
+            return (ServerCommand) command;
+        }catch{
+            throw new System.Exception(string.Format("Command number {0} not found", command));
+        }
+    }
+
+    static void ProcessCommandReceived(ServerCommand command, UdpNetworkDriver.Concurrent driver, NetworkConnection connection, DataStreamReader strm){
+        switch(command){
+            case ServerCommand.PutPlay:
+                PutPlayCommand(driver, connection, strm);
+            break;
+            case ServerCommand.GetState:
+                GetStateCommand();
+            break;
+            case ServerCommand.GetResults:
+                GetResults();
+            break;
+            default:
+                throw new System.Exception(string.Format("Command number {0} not found", command));
+        }
+    }
+
+    static void PutPlayCommand(UdpNetworkDriver.Concurrent driver, NetworkConnection connection, DataStreamReader strm){
+        PlayerTurnData dataFromClient = new PlayerTurnData(strm);
+
+        DataStreamWriter dataToClient = dataFromClient.PackPlayerTurnObjectData();
+
+        driver.Send(NetworkPipeline.Null, connection, dataToClient);
+    }
+
+    static void GetStateCommand(){
+
+    }
+
+    static void GetResults(){
+
     }
 }
