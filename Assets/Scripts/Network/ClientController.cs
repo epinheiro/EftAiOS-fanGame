@@ -9,6 +9,8 @@ public class ClientController : MonoBehaviour
 {
     public enum ClientState {Playing, WaitingPlayers, WaitingServer, Updating}
 
+    ClientState currentState = ClientState.Updating;
+
     private UdpNetworkDriver m_ClientDriver;
     private NativeArray<NetworkConnection> m_clientToServerConnection;
 
@@ -60,8 +62,8 @@ public class ClientController : MonoBehaviour
                     Debug.Log("Client connection completed");
                     // /////////////////////////////////////////////////////////////////////////
                     // ////////////////////////// SEND DATA TO SERVER /////////////////////
-                    // DataStreamWriter pingData = ClientData.DirectlyPackCliendData(1, 2,2, 4,4);
-                    // connection[0].Send(driver, pingData);
+                    DataStreamWriter pingData = PlayerTurnData.CreateAndPackPlayerTurnData(1, 2,2, 4,4);
+                    connection[0].Send(driver, pingData);
                     // ////////////////////////// SEND DATA TO SERVER /////////////////////
                     // /////////////////////////////////////////////////////////////////////////
 
@@ -70,7 +72,7 @@ public class ClientController : MonoBehaviour
                 {
                     /////////////////////////////////////////////////////////////////////////
                     ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
-                    ClientData dataFromServer = new ClientData(strm);
+                    PlayerTurnData dataFromServer = new PlayerTurnData(strm);
 
                     Debug.Log(dataFromServer.ToString()); // DEBUG METHOD TO CHECK COMMUNICATION
                     ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////

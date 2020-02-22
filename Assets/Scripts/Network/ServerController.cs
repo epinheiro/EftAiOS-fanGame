@@ -10,6 +10,8 @@ public class ServerController : MonoBehaviour
     public enum ServerState {WaitingPlayers, Processing, Updating}
     public enum ServerCommand {PutPlay, GetState, GetResults}
 
+    ServerState currentState = ServerState.Updating;
+
     public UdpNetworkDriver m_ServerDriver;
     private NativeList<NetworkConnection> m_connections;
 
@@ -29,9 +31,9 @@ public class ServerController : MonoBehaviour
             {
                 /////////////////////////////////////////////////////////////////////////
                 ////////////////////////// RECEIVE DATA FROM CLIENT /////////////////////
-                ClientData dataFromClient = new ClientData(strm);
+                PlayerTurnData dataFromClient = new PlayerTurnData(strm);
 
-                DataStreamWriter dataToClient = dataFromClient.PackClientData();
+                DataStreamWriter dataToClient = dataFromClient.PackPlayerTurnObjectData();
                 driver.Send(NetworkPipeline.Null, connection, dataToClient);
                 ////////////////////////// SENT DATA BACK TO CLIENT /////////////////////
                 /////////////////////////////////////////////////////////////////////////
