@@ -5,7 +5,7 @@ using Unity.Networking.Transport;
 using Unity.Jobs;
 
 
-public class ServerController : MonoBehaviour
+public class ServerCommunication : MonoBehaviour
 {
     public enum ServerState {WaitingPlayers, Processing, Updating}
     public enum ServerCommand {PutPlay, GetState, GetResults}
@@ -31,8 +31,8 @@ public class ServerController : MonoBehaviour
             {                
                 /////////////////////////////////////////////////////////////////////////
                 ////////////////////////// RECEIVE DATA FROM CLIENT /////////////////////
-                ServerCommand command = ServerController.ReadCommandReceived(strm);
-                ServerController.ProcessCommandReceived(command, driver, connection, strm);
+                ServerCommand command = ServerCommunication.ReadCommandReceived(strm);
+                ServerCommunication.ProcessCommandReceived(command, driver, connection, strm);
                 ////////////////////////// SENT DATA BACK TO CLIENT /////////////////////
                 /////////////////////////////////////////////////////////////////////////
             }

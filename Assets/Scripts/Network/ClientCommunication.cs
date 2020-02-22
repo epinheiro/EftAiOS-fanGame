@@ -5,7 +5,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using System.Text;  
 
-public class ClientController : MonoBehaviour
+public class ClientCommunication : MonoBehaviour
 {
     public enum ClientState {Playing, WaitingPlayers, WaitingServer, Updating}
 

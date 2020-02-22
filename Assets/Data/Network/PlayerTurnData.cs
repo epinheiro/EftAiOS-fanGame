@@ -8,7 +8,7 @@ public class PlayerTurnData{
 
     static int CLASS_HARDCODED_BYTE_SIZE = 24;
 
-    static public readonly int commandCode = (int) ServerController.ServerCommand.PutPlay;
+    static public readonly int commandCode = (int) ServerCommunication.ServerCommand.PutPlay;
     public readonly int playerId;
 
     Position movementTo;
@@ -54,7 +54,7 @@ public class PlayerTurnData{
 
     public override string ToString(){
         return string.Format("Command {0} : Player{1} - mov({2},{3}) - sound({4},{5})",
-        (ServerController.ServerCommand) commandCode, playerId, movementTo.column, movementTo.row, sound.column, sound.row);
+        (ServerCommunication.ServerCommand) commandCode, playerId, movementTo.column, movementTo.row, sound.column, sound.row);
     }
 }
 

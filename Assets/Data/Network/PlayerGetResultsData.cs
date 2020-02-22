@@ -9,7 +9,7 @@ public class PlayerGetResultsData
     static int CLASS_HARDCODED_BYTE_SIZE = 8;
 
 
-    static public readonly int commandCode = (int) ServerController.ServerCommand.GetState;
+    static public readonly int commandCode = (int) ServerCommunication.ServerCommand.GetState;
     public readonly int playerId;
 
     public PlayerGetResultsData(int playerId){
@@ -44,6 +44,6 @@ public class PlayerGetResultsData
 
     public override string ToString(){
         return string.Format("Command {0} : Player{1})",
-        (ServerController.ServerCommand) commandCode, playerId);
+        (ServerCommunication.ServerCommand) commandCode, playerId);
     }
 }

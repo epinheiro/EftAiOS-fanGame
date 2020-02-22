@@ -9,7 +9,7 @@ public class PlayerGetStateData : MonoBehaviour
     static int CLASS_HARDCODED_BYTE_SIZE = 12;
 
 
-    static public readonly int commandCode = (int) ServerController.ServerCommand.GetResults;
+    static public readonly int commandCode = (int) ServerCommunication.ServerCommand.GetResults;
     public readonly int playerId;
 
     public int playerAlive;
@@ -49,6 +49,6 @@ public class PlayerGetStateData : MonoBehaviour
 
     public override string ToString(){
         return string.Format("Command {0} : Player{1} - Alive{2})",
-        (ServerController.ServerCommand) commandCode, playerId, playerAlive);
+        (ServerCommunication.ServerCommand) commandCode, playerId, playerAlive);
     }
 }
