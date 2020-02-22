@@ -30,65 +30,6 @@ public class ClientCommunication : MonoBehaviour
         m_clientToServerConnection.Dispose();
     }
 
-    [BurstCompile]
-    struct PingJob : IJob{
-        public UdpNetworkDriver driver;
-        public NativeArray<NetworkConnection> connection;
-        public NetworkEndPoint serverEP;
-        public float fixedTime;
-
-        public void Execute()
-        {
-            // If the client ui indicates we should be sending pings but we do not have an active connection we create one
-            if (serverEP.IsValid && !connection[0].IsCreated){
-                Debug.Log("Client reconnection");
-                connection[0] = driver.Connect(serverEP);
-            }
-                
-            // If the client ui indicates we should not be sending pings but we do have a connection we close that connection
-            if (!serverEP.IsValid && connection[0].IsCreated)
-            {
-                connection[0].Disconnect(driver);
-                connection[0] = default(NetworkConnection);
-            }
-
-            DataStreamReader strm;
-            NetworkEvent.Type cmd;
-            // Process all events on the connection. If the connection is invalid it will return Empty immediately
-            while ((cmd = connection[0].PopEvent(driver, out strm)) != NetworkEvent.Type.Empty)
-            {
-                if (cmd == NetworkEvent.Type.Connect)
-                {
-                    Debug.Log("Client connection completed");
-                    // /////////////////////////////////////////////////////////////////////////
-                    // ////////////////////////// SEND DATA TO SERVER /////////////////////
-                    DataStreamWriter pingData = PlayerTurnData.CreateAndPackPlayerTurnData(1, 2,2, 4,4);
-                    connection[0].Send(driver, pingData);
-                    // ////////////////////////// SEND DATA TO SERVER /////////////////////
-                    // /////////////////////////////////////////////////////////////////////////
-
-                }
-                else if (cmd == NetworkEvent.Type.Data)
-                {
-                    /////////////////////////////////////////////////////////////////////////
-                    ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
-                    PlayerTurnData dataFromServer = new PlayerTurnData(strm);
-
-                    Debug.Log(dataFromServer.ToString()); // DEBUG METHOD TO CHECK COMMUNICATION
-                    ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
-                    /////////////////////////////////////////////////////////////////////////
-
-                    // When the pong message is received we calculate the ping time and disconnect
-                }
-                else if (cmd == NetworkEvent.Type.Disconnect)
-                {
-                    // If the server disconnected us we clear out connection
-                    connection[0] = default(NetworkConnection);
-                }
-            }
-        }
-    }
-
     void LateUpdate(){
         // On fast clients we can get more than 4 frames per fixed update, this call prevents warnings about TempJob
         // allocation longer than 4 frames in those cases
@@ -125,5 +66,64 @@ public class ClientCommunication : MonoBehaviour
         endpoint.Port = 9000;
 
         m_clientToServerConnection[0] = m_ClientDriver.Connect(endpoint);
+    }
+}
+
+[BurstCompile]
+struct PingJob : IJob{
+    public UdpNetworkDriver driver;
+    public NativeArray<NetworkConnection> connection;
+    public NetworkEndPoint serverEP;
+    public float fixedTime;
+
+    public void Execute()
+    {
+        // If the client ui indicates we should be sending pings but we do not have an active connection we create one
+        if (serverEP.IsValid && !connection[0].IsCreated){
+            Debug.Log("Client reconnection");
+            connection[0] = driver.Connect(serverEP);
+        }
+            
+        // If the client ui indicates we should not be sending pings but we do have a connection we close that connection
+        if (!serverEP.IsValid && connection[0].IsCreated)
+        {
+            connection[0].Disconnect(driver);
+            connection[0] = default(NetworkConnection);
+        }
+
+        DataStreamReader strm;
+        NetworkEvent.Type cmd;
+        // Process all events on the connection. If the connection is invalid it will return Empty immediately
+        while ((cmd = connection[0].PopEvent(driver, out strm)) != NetworkEvent.Type.Empty)
+        {
+            if (cmd == NetworkEvent.Type.Connect)
+            {
+                Debug.Log("Client connection completed");
+                // /////////////////////////////////////////////////////////////////////////
+                // ////////////////////////// SEND DATA TO SERVER /////////////////////
+                DataStreamWriter pingData = PlayerTurnData.CreateAndPackPlayerTurnData(1, 2,2, 4,4);
+                connection[0].Send(driver, pingData);
+                // ////////////////////////// SEND DATA TO SERVER /////////////////////
+                // /////////////////////////////////////////////////////////////////////////
+
+            }
+            else if (cmd == NetworkEvent.Type.Data)
+            {
+                /////////////////////////////////////////////////////////////////////////
+                ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
+                PlayerTurnData dataFromServer = new PlayerTurnData(strm);
+
+                Debug.Log(dataFromServer.ToString()); // DEBUG METHOD TO CHECK COMMUNICATION
+                ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
+                /////////////////////////////////////////////////////////////////////////
+
+                // When the pong message is received we calculate the ping time and disconnect
+            }
+            else if (cmd == NetworkEvent.Type.Disconnect)
+            {
+                // If the server disconnected us we clear out connection
+                connection[0] = default(NetworkConnection);
+            }
+        }
     }
 }

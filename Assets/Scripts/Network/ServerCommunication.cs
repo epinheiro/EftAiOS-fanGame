@@ -21,78 +21,6 @@ public class ServerCommunication : MonoBehaviour
         InitServer();
     }
 
-    static NetworkConnection ProcessSingleConnection(UdpNetworkDriver.Concurrent driver, NetworkConnection connection){
-        DataStreamReader strm;
-        NetworkEvent.Type cmd;
-        // Pop all events for the connection
-        while ((cmd = driver.PopEventForConnection(connection, out strm)) != NetworkEvent.Type.Empty)
-        {
-            if (cmd == NetworkEvent.Type.Data)
-            {                
-                /////////////////////////////////////////////////////////////////////////
-                ////////////////////////// RECEIVE DATA FROM CLIENT /////////////////////
-                ServerCommand command = ServerCommunication.ReadCommandReceived(strm);
-                ServerCommunication.ProcessCommandReceived(command, driver, connection, strm);
-                ////////////////////////// SENT DATA BACK TO CLIENT /////////////////////
-                /////////////////////////////////////////////////////////////////////////
-            }
-            else if (cmd == NetworkEvent.Type.Disconnect)
-            {
-                // When disconnected we make sure the connection return false to IsCreated so the next frames
-                // DriverUpdateJob will remove it
-                return default(NetworkConnection);
-            }
-        }
-
-        return connection;
-    }
-
-    [BurstCompile]
-    struct DriverUpdateJob : IJob{
-        public UdpNetworkDriver driver;
-        public NativeList<NetworkConnection> connections;
-
-        public void Execute()
-        {
-            // Remove connections which have been destroyed from the list of active connections
-            for (int i = 0; i < connections.Length; ++i)
-            {
-                if (!connections[i].IsCreated)
-                {
-                    connections.RemoveAtSwapBack(i);
-                    // Index i is a new connection since we did a swap back, check it again
-                    --i;
-                }
-            }
-
-            // Accept all new connections
-            while (true)
-            {
-                NetworkConnection con = driver.Accept();
-                // "Nothing more to accept" is signaled by returning an invalid connection from accept
-                if (con.IsCreated){
-                    connections.Add(con);
-                    // DEBUG //////////////////////////////////////////////////
-                    Debug.Log("Server connections: " + connections.Length); 
-                    // DEBUG //////////////////////////////////////////////////
-                }else{
-                    break;
-                }
-            }
-        }
-    }
-
-    [BurstCompile]
-    struct PongJob : IJobParallelForDefer{
-        public UdpNetworkDriver.Concurrent driver;
-        public NativeArray<NetworkConnection> connections;
-
-        public void Execute(int i)
-        {
-            connections[i] = ProcessSingleConnection(driver, connections[i]);
-        }
-    }
-
      void LateUpdate(){
         // On fast clients we can get more than 4 frames per fixed update, this call prevents warnings about TempJob
         // allocation longer than 4 frames in those cases
@@ -145,27 +73,101 @@ public class ServerCommunication : MonoBehaviour
 
         m_connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
     }
+}
 
-    static ServerCommand ReadCommandReceived(DataStreamReader reader){
+[BurstCompile]
+struct DriverUpdateJob : IJob{
+    public UdpNetworkDriver driver;
+    public NativeList<NetworkConnection> connections;
+
+    public void Execute()
+    {
+        // Remove connections which have been destroyed from the list of active connections
+        for (int i = 0; i < connections.Length; ++i)
+        {
+            if (!connections[i].IsCreated)
+            {
+                connections.RemoveAtSwapBack(i);
+                // Index i is a new connection since we did a swap back, check it again
+                --i;
+            }
+        }
+
+        // Accept all new connections
+        while (true)
+        {
+            NetworkConnection con = driver.Accept();
+            // "Nothing more to accept" is signaled by returning an invalid connection from accept
+            if (con.IsCreated){
+                connections.Add(con);
+                // DEBUG //////////////////////////////////////////////////
+                Debug.Log("Server connections: " + connections.Length); 
+                // DEBUG //////////////////////////////////////////////////
+            }else{
+                break;
+            }
+        }
+    }
+}
+
+[BurstCompile]
+struct PongJob : IJobParallelForDefer{
+    public UdpNetworkDriver.Concurrent driver;
+    public NativeArray<NetworkConnection> connections;
+
+    public void Execute(int i)
+    {
+        connections[i] = ProcessSingleConnection(driver, connections[i]);
+    }
+
+    
+    NetworkConnection ProcessSingleConnection(UdpNetworkDriver.Concurrent driver, NetworkConnection connection){
+        DataStreamReader strm;
+        NetworkEvent.Type cmd;
+        // Pop all events for the connection
+        while ((cmd = driver.PopEventForConnection(connection, out strm)) != NetworkEvent.Type.Empty)
+        {
+            if (cmd == NetworkEvent.Type.Data)
+            {                
+                /////////////////////////////////////////////////////////////////////////
+                ////////////////////////// RECEIVE DATA FROM CLIENT /////////////////////
+                ServerCommunication.ServerCommand command = ReadCommandReceived(strm);
+                ProcessCommandReceived(command, driver, connection, strm);
+                ////////////////////////// SENT DATA BACK TO CLIENT /////////////////////
+                /////////////////////////////////////////////////////////////////////////
+            }
+            else if (cmd == NetworkEvent.Type.Disconnect)
+            {
+                // When disconnected we make sure the connection return false to IsCreated so the next frames
+                // DriverUpdateJob will remove it
+                return default(NetworkConnection);
+            }
+        }
+
+        return connection;
+    }
+
+
+    ServerCommunication.ServerCommand ReadCommandReceived(DataStreamReader reader){
         DataStreamReader.Context readerCtx = default(DataStreamReader.Context);
         int command = reader.ReadInt(ref readerCtx);
 
         try{
-            return (ServerCommand) command;
+            return (ServerCommunication.ServerCommand) command;
         }catch{
             throw new System.Exception(string.Format("Command number {0} not found", command));
         }
     }
 
-    static void ProcessCommandReceived(ServerCommand command, UdpNetworkDriver.Concurrent driver, NetworkConnection connection, DataStreamReader strm){
+    void ProcessCommandReceived(ServerCommunication.ServerCommand command, UdpNetworkDriver.Concurrent driver, NetworkConnection connection, DataStreamReader strm){
         switch(command){
-            case ServerCommand.PutPlay:
+            case ServerCommunication.ServerCommand.PutPlay:
                 PutPlayCommand(driver, connection, strm);
             break;
-            case ServerCommand.GetState:
+            case ServerCommunication.ServerCommand.GetState:
                 GetStateCommand();
             break;
-            case ServerCommand.GetResults:
+            case ServerCommunication.ServerCommand.GetResults:
                 GetResults();
             break;
             default:
@@ -173,7 +175,7 @@ public class ServerCommunication : MonoBehaviour
         }
     }
 
-    static void PutPlayCommand(UdpNetworkDriver.Concurrent driver, NetworkConnection connection, DataStreamReader strm){
+    void PutPlayCommand(UdpNetworkDriver.Concurrent driver, NetworkConnection connection, DataStreamReader strm){
         PlayerTurnData dataFromClient = new PlayerTurnData(strm);
 
         DataStreamWriter dataToClient = dataFromClient.PackPlayerTurnObjectData();
@@ -181,11 +183,12 @@ public class ServerCommunication : MonoBehaviour
         driver.Send(NetworkPipeline.Null, connection, dataToClient);
     }
 
-    static void GetStateCommand(){
+    void GetStateCommand(){
 
     }
 
-    static void GetResults(){
+    void GetResults(){
 
     }
+
 }
