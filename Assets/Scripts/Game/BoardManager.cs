@@ -57,6 +57,13 @@ public class BoardManager : MonoBehaviour
 
             CreateTileInMap(row, column, tileType);
         }
+        FitMapOnScreen();
+    }
+
+    void FitMapOnScreen(){
+        // TODO - technical dept - rescalling map proportions to 16:10
+        mapReference.transform.position = new Vector3(-6, 4, 0);
+        mapReference.transform.localScale = new Vector3(.3f, .3f, 1);
     }
 
     void CreateTileInMap(string rowId, string columnId, string tileType){
