@@ -39,7 +39,7 @@ public class ServerCommunication : MonoBehaviour
         // enough since we can get multiple FixedUpdate per frame on slow clients
         m_updateHandle.Complete();
         DriverUpdateJob updateJob = new DriverUpdateJob {driver = m_ServerDriver, connections = m_connections};
-        PongJob pongJob = new PongJob
+        ServerCommandProcessJob commandJob = new ServerCommandProcessJob
         {
             // PongJob is a ParallelFor job, it must use the concurrent NetworkDriver
             driver = m_ServerDriver.ToConcurrent(),
@@ -55,7 +55,7 @@ public class ServerCommunication : MonoBehaviour
         // PongJob uses IJobParallelForDeferExtensions, we *must* schedule with a list as first parameter rather than
         // an int since the job needs to pick up new connections from DriverUpdateJob
         // The PongJob is the last job in the chain and it must depends on the DriverUpdateJob
-        m_updateHandle = pongJob.Schedule(m_connections, 1, m_updateHandle);
+        m_updateHandle = commandJob.Schedule(m_connections, 1, m_updateHandle);
     }
 
     //////////////////////////////////
@@ -77,122 +77,4 @@ public class ServerCommunication : MonoBehaviour
     public ServerState GetState(){
         return currentState;
     }
-}
-
-[BurstCompile]
-struct DriverUpdateJob : IJob{
-    public UdpNetworkDriver driver;
-    public NativeList<NetworkConnection> connections;
-
-    public void Execute()
-    {
-        // Remove connections which have been destroyed from the list of active connections
-        for (int i = 0; i < connections.Length; ++i)
-        {
-            if (!connections[i].IsCreated)
-            {
-                connections.RemoveAtSwapBack(i);
-                // Index i is a new connection since we did a swap back, check it again
-                --i;
-            }
-        }
-
-        // Accept all new connections
-        while (true)
-        {
-            NetworkConnection con = driver.Accept();
-            // "Nothing more to accept" is signaled by returning an invalid connection from accept
-            if (con.IsCreated){
-                connections.Add(con);
-                // DEBUG //////////////////////////////////////////////////
-                Debug.Log("Server connections: " + connections.Length); 
-                // DEBUG //////////////////////////////////////////////////
-            }else{
-                break;
-            }
-        }
-    }
-}
-
-[BurstCompile]
-struct PongJob : IJobParallelForDefer{
-    public UdpNetworkDriver.Concurrent driver;
-    public NativeArray<NetworkConnection> connections;
-
-    public void Execute(int i)
-    {
-        connections[i] = ProcessSingleConnection(driver, connections[i]);
-    }
-
-    
-    NetworkConnection ProcessSingleConnection(UdpNetworkDriver.Concurrent driver, NetworkConnection connection){
-        DataStreamReader strm;
-        NetworkEvent.Type cmd;
-        // Pop all events for the connection
-        while ((cmd = driver.PopEventForConnection(connection, out strm)) != NetworkEvent.Type.Empty)
-        {
-            if (cmd == NetworkEvent.Type.Data)
-            {                
-                /////////////////////////////////////////////////////////////////////////
-                ////////////////////////// RECEIVE DATA FROM CLIENT /////////////////////
-                ServerCommunication.ServerCommand command = ReadCommandReceived(strm);
-                ProcessCommandReceived(command, driver, connection, strm);
-                ////////////////////////// SENT DATA BACK TO CLIENT /////////////////////
-                /////////////////////////////////////////////////////////////////////////
-            }
-            else if (cmd == NetworkEvent.Type.Disconnect)
-            {
-                // When disconnected we make sure the connection return false to IsCreated so the next frames
-                // DriverUpdateJob will remove it
-                return default(NetworkConnection);
-            }
-        }
-
-        return connection;
-    }
-
-
-    ServerCommunication.ServerCommand ReadCommandReceived(DataStreamReader reader){
-        DataStreamReader.Context readerCtx = default(DataStreamReader.Context);
-        int command = reader.ReadInt(ref readerCtx);
-
-        try{
-            return (ServerCommunication.ServerCommand) command;
-        }catch{
-            throw new System.Exception(string.Format("Command number {0} not found", command));
-        }
-    }
-
-    void ProcessCommandReceived(ServerCommunication.ServerCommand command, UdpNetworkDriver.Concurrent driver, NetworkConnection connection, DataStreamReader strm){
-        switch(command){
-            case ServerCommunication.ServerCommand.PutPlay:
-                PutPlayCommand(driver, connection, strm);
-            break;
-            case ServerCommunication.ServerCommand.GetState:
-                GetStateCommand();
-            break;
-            case ServerCommunication.ServerCommand.GetResults:
-                GetResults();
-            break;
-            default:
-                throw new System.Exception(string.Format("Command number {0} not found", command));
-        }
-    }
-
-    void PutPlayCommand(UdpNetworkDriver.Concurrent driver, NetworkConnection connection, DataStreamReader strm){
-        PlayerTurnData dataFromClient = new PlayerTurnData(strm);
-
-        DataStreamWriter dataToClient = dataFromClient.PackPlayerTurnObjectData();
-
-        driver.Send(NetworkPipeline.Null, connection, dataToClient);
-    }
-
-    void GetStateCommand(){
-
-    }
-
-    void GetResults(){
-
-    }
-
 }
