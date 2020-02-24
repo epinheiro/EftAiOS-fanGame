@@ -67,6 +67,10 @@ public class ClientCommunication : MonoBehaviour
 
         m_clientToServerConnection[0] = m_ClientDriver.Connect(endpoint);
     }
+
+    public ClientState GetState(){
+        return currentState;
+    }
 }
 
 [BurstCompile]

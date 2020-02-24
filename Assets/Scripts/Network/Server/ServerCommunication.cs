@@ -73,6 +73,10 @@ public class ServerCommunication : MonoBehaviour
 
         m_connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
     }
+
+    public ServerState GetState(){
+        return currentState;
+    }
 }
 
 [BurstCompile]
