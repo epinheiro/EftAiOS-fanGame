@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,17 +9,20 @@ public class ClientController : MonoBehaviour
 
     ClientCommunication clientCommunication;
 
-    int clientId;
+    int _clientId;
+    public int ClientId{
+        get => _clientId;
+    }
 
     // Start is called before the first frame update
     void Start(){
-        clientCommunication = gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
     }
 
-    void onGui(){
-        if (GUILayout.Button("Start game")){
-            
-            
+    void OnGUI(){
+        if (currentState == ClientState.ToConnect && GUILayout.Button("JOIN GAME")){
+            SetClientIdentity();
+            clientCommunication = gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
+            currentState = ClientState.Updating;
         }
     }
 
@@ -40,5 +43,9 @@ public class ClientController : MonoBehaviour
             break;
         }
         
+    }
+
+    public void SetClientIdentity(){
+        _clientId = Mathf.Abs(this.GetInstanceID() + System.DateTime.Now.Second);
     }
 }

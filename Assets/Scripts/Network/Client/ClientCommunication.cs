@@ -16,9 +16,12 @@ public class ClientCommunication : MonoBehaviour
 
     NetworkEndPoint endpoint;
 
-    void Start(){
-        ConnectToServer();
+    void Awake(){
         SetClientIdentity();
+    }
+
+    void Start(){        
+        ConnectToServer();
     }
 
     void OnDestroy(){
@@ -68,7 +71,7 @@ public class ClientCommunication : MonoBehaviour
         m_clientToServerConnection[0] = m_ClientDriver.Connect(endpoint);
     }
     public void SetClientIdentity(){
-        clientId = Mathf.Abs(this.GetInstanceID() + System.DateTime.Now.Second);
+        clientId = this.GetComponent<ClientController>().ClientId;
     }
 }
 
