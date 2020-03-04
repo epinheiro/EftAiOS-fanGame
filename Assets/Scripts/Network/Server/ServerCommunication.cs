@@ -7,17 +7,15 @@ using Unity.Jobs;
 
 public class ServerCommunication : MonoBehaviour
 {
-    public enum ServerState {WaitingPlayers, Processing, Updating}
-    public enum ServerCommand {PutPlay, GetState, GetResults}
 
-    ServerState currentState = ServerState.Updating;
+    public enum ServerCommand {PutPlay, GetState, GetResults}
 
     public UdpNetworkDriver m_ServerDriver;
     private NativeList<NetworkConnection> m_connections;
 
     private JobHandle m_updateHandle;
 
-    void Start(){
+    void Awake(){
         InitServer();
     }
 
@@ -70,9 +68,5 @@ public class ServerCommunication : MonoBehaviour
             m_ServerDriver.Listen();
 
         m_connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
-    }
-
-    public ServerState GetState(){
-        return currentState;
     }
 }

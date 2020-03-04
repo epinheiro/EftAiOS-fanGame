@@ -4,26 +4,27 @@ using UnityEngine;
 
 public class ServerController : MonoBehaviour
 {
+    public enum ServerState {SetUp, WaitingPlayers, Processing, Updating}
+
+    ServerState currentState = ServerState.Updating;
+
     ServerCommunication serverCommunication;
 
-    ServerCommunication.ServerState currentState;
 
     void Start(){
-        serverCommunication = this.GetComponent<ServerCommunication>();
+        serverCommunication = gameObject.AddComponent(typeof(ServerCommunication)) as ServerCommunication;
     }
 
     // Update is called once per frame
     void Update(){
-        currentState = serverCommunication.GetState();
-
         switch(currentState){
-            case ServerCommunication.ServerState.WaitingPlayers:
+            case ServerState.WaitingPlayers:
                 // Keep last play on screen
             break;
-            case ServerCommunication.ServerState.Processing:
+            case ServerState.Processing:
                 // Show "animation" of the turn
             break;
-            case ServerCommunication.ServerState.Updating:
+            case ServerState.Updating:
                 // Update the board
             break;
             
