@@ -37,16 +37,8 @@ public class ServerCommunication : MonoBehaviour
     void FixedUpdate(){
         // Wait for the previous frames ping to complete before starting a new one, the Complete in LateUpdate is not
         // enough since we can get multiple FixedUpdate per frame on slow clients
-        m_updateHandle.Complete();
+        
         DriverUpdateJob updateJob = new DriverUpdateJob {driver = m_ServerDriver, connections = m_connections};
-        ServerCommandProcessJob commandJob = new ServerCommandProcessJob
-        {
-            // PongJob is a ParallelFor job, it must use the concurrent NetworkDriver
-            driver = m_ServerDriver.ToConcurrent(),
-            // PongJob uses IJobParallelForDeferExtensions, we *must* use AsDeferredJobArray in order to access the
-            // list from the job
-            connections = m_connections.AsDeferredJobArray()
-        };
         // Update the driver should be the first job in the chain
         m_updateHandle = m_ServerDriver.ScheduleUpdate();
         // The DriverUpdateJob which accepts new connections should be the second job in the chain, it needs to depend
@@ -55,7 +47,12 @@ public class ServerCommunication : MonoBehaviour
         // PongJob uses IJobParallelForDeferExtensions, we *must* schedule with a list as first parameter rather than
         // an int since the job needs to pick up new connections from DriverUpdateJob
         // The PongJob is the last job in the chain and it must depends on the DriverUpdateJob
-        m_updateHandle = commandJob.Schedule(m_connections, 1, m_updateHandle);
+
+        m_updateHandle.Complete();
+
+        foreach(NetworkConnection con in m_connections){
+            StartCoroutine(ProcessCommandCoroutine.ProcessSingleConnection(m_ServerDriver, con));
+        }
     }
 
     //////////////////////////////////
