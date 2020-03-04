@@ -7,10 +7,6 @@ using System.Text;
 
 public class ClientCommunication : MonoBehaviour
 {
-    public enum ClientState {Playing, WaitingPlayers, WaitingServer, Updating}
-
-    ClientState currentState = ClientState.Updating;
-
     int clientId;
 
     private UdpNetworkDriver m_ClientDriver;
@@ -71,11 +67,6 @@ public class ClientCommunication : MonoBehaviour
 
         m_clientToServerConnection[0] = m_ClientDriver.Connect(endpoint);
     }
-
-    public ClientState GetState(){
-        return currentState;
-    }
-
     public void SetClientIdentity(){
         clientId = Mathf.Abs(this.GetInstanceID() + System.DateTime.Now.Second);
     }

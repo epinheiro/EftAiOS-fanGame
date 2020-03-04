@@ -1,12 +1,13 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ClientController : MonoBehaviour
 {
-    ClientCommunication clientCommunication;
+    public enum ClientState {ToConnect, Playing, WaitingPlayers, WaitingServer, Updating}
+    ClientState currentState = ClientState.ToConnect;
 
-    ClientCommunication.ClientState currentState;
+    ClientCommunication clientCommunication;
 
     int clientId;
 
@@ -24,19 +25,17 @@ public class ClientController : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
-        currentState = clientCommunication.GetState();
-
         switch(currentState){
-            case ClientCommunication.ClientState.Playing:
+            case ClientState.Playing:
                 // Make play possible
             break;
-            case ClientCommunication.ClientState.WaitingPlayers:
+            case ClientState.WaitingPlayers:
                 // Screen of "Waiting Players"
             break;
-            case ClientCommunication.ClientState.WaitingServer:
+            case ClientState.WaitingServer:
                 // Screen of "What happened"
             break;
-            case ClientCommunication.ClientState.Updating:
+            case ClientState.Updating:
                 // Update player position and its possible moves
             break;
         }
