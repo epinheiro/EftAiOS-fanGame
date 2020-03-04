@@ -8,9 +8,18 @@ public class ClientController : MonoBehaviour
 
     ClientCommunication.ClientState currentState;
 
+    int clientId;
+
     // Start is called before the first frame update
     void Start(){
-        clientCommunication = this.GetComponent<ClientCommunication>();
+        clientCommunication = gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
+    }
+
+    void onGui(){
+        if (GUILayout.Button("Start game")){
+            
+            
+        }
     }
 
     // Update is called once per frame

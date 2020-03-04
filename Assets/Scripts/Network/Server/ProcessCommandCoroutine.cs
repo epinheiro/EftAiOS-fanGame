@@ -1,9 +1,20 @@
 ﻿using Unity.Networking.Transport;
 using System.Collections;
+using UnityEngine;
 
-public struct ProcessCommandCoroutine
+public class ProcessCommandCoroutine
 {
-    public static IEnumerator ProcessSingleConnection(UdpNetworkDriver driver, NetworkConnection connection){
+    public UdpNetworkDriver driver;
+    public NetworkConnection connection;
+
+    public ProcessCommandCoroutine(MonoBehaviour owner, UdpNetworkDriver driver, NetworkConnection connection){
+        this.driver = driver;
+        this.connection = connection;
+
+        owner.StartCoroutine(ProcessSingleConnection());
+    }
+
+    public IEnumerator ProcessSingleConnection(){
         DataStreamReader strm;
         NetworkEvent.Type cmd;
 
@@ -27,14 +38,12 @@ public struct ProcessCommandCoroutine
                 connection.Close(driver);
                 connection = default(NetworkConnection);
             }
-
-            yield return null;
         }
 
         yield return null;
     }
 
-    static ServerCommunication.ServerCommand ReadCommandReceived(DataStreamReader reader){
+    ServerCommunication.ServerCommand ReadCommandReceived(DataStreamReader reader){
         DataStreamReader.Context readerCtx = default(DataStreamReader.Context);
         int command = reader.ReadInt(ref readerCtx);
 
@@ -45,7 +54,7 @@ public struct ProcessCommandCoroutine
         }
     }
 
-    static void ProcessCommandReceived(ServerCommunication.ServerCommand command, UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+    void ProcessCommandReceived(ServerCommunication.ServerCommand command, UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         switch(command){
             case ServerCommunication.ServerCommand.PutPlay:
                 PutPlayCommand(driver, connection, strm);
@@ -61,7 +70,7 @@ public struct ProcessCommandCoroutine
         }
     }
 
-    static void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+    void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         PlayerTurnData dataFromClient = new PlayerTurnData(strm);
 
         DataStreamWriter dataToClient = dataFromClient.PackPlayerTurnObjectData();
@@ -69,11 +78,11 @@ public struct ProcessCommandCoroutine
         driver.Send(NetworkPipeline.Null, connection, dataToClient);
     }
 
-    static void GetStateCommand(){
+    void GetStateCommand(){
 
     }
 
-    static void GetResults(){
+    void GetResults(){
 
     }
 }

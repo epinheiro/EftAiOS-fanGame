@@ -50,8 +50,9 @@ public class ServerCommunication : MonoBehaviour
 
         m_updateHandle.Complete();
 
-        foreach(NetworkConnection con in m_connections){
-            StartCoroutine(ProcessCommandCoroutine.ProcessSingleConnection(m_ServerDriver, con));
+        for(int i=0 ; i<m_connections.Length ; i++){
+            ProcessCommandCoroutine pcc = new ProcessCommandCoroutine(this, m_ServerDriver, m_connections[i]);
+            m_connections[i] = pcc.connection;
         }
     }
 

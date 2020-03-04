@@ -11,6 +11,8 @@ public class ClientCommunication : MonoBehaviour
 
     ClientState currentState = ClientState.Updating;
 
+    int clientId;
+
     private UdpNetworkDriver m_ClientDriver;
     private NativeArray<NetworkConnection> m_clientToServerConnection;
 
@@ -20,6 +22,7 @@ public class ClientCommunication : MonoBehaviour
 
     void Start(){
         ConnectToServer();
+        SetClientIdentity();
     }
 
     void OnDestroy(){
@@ -48,7 +51,8 @@ public class ClientCommunication : MonoBehaviour
             driver = m_ClientDriver,
             connection = m_clientToServerConnection,
             serverEP = endpoint,
-            fixedTime = Time.fixedTime
+            fixedTime = Time.fixedTime,
+            clientId = clientId
         };
         // Schedule a chain with the driver update followed by the ping job
         m_updateHandle = m_ClientDriver.ScheduleUpdate();
@@ -71,6 +75,10 @@ public class ClientCommunication : MonoBehaviour
     public ClientState GetState(){
         return currentState;
     }
+
+    public void SetClientIdentity(){
+        clientId = Mathf.Abs(this.GetInstanceID() + System.DateTime.Now.Second);
+    }
 }
 
 [BurstCompile]
@@ -79,6 +87,7 @@ struct PingJob : IJob{
     public NativeArray<NetworkConnection> connection;
     public NetworkEndPoint serverEP;
     public float fixedTime;
+    public int clientId;
 
     public void Execute()
     {
@@ -102,10 +111,11 @@ struct PingJob : IJob{
         {
             if (cmd == NetworkEvent.Type.Connect)
             {
-                Debug.Log("Client connection completed");
                 // /////////////////////////////////////////////////////////////////////////
                 // ////////////////////////// SEND DATA TO SERVER /////////////////////
-                DataStreamWriter pingData = PlayerTurnData.CreateAndPackPlayerTurnData(1, 2,2, 4,4);
+                int value1 = clientId * 2;
+                int value2 = clientId * 3;
+                DataStreamWriter pingData = PlayerTurnData.CreateAndPackPlayerTurnData(clientId, value1,value1, value2,value2);
                 connection[0].Send(driver, pingData);
                 // ////////////////////////// SEND DATA TO SERVER /////////////////////
                 // /////////////////////////////////////////////////////////////////////////
