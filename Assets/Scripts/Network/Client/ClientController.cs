@@ -19,11 +19,32 @@ public class ClientController : MonoBehaviour
     }
 
     void OnGUI(){
-        if (currentState == ClientState.ToConnect && GUILayout.Button("JOIN GAME")){
-            SetClientIdentity();
-            clientCommunication = gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
-            currentState = ClientState.Updating;
+        switch(currentState){
+            case ClientState.ToConnect:
+                if (GUILayout.Button("JOIN GAME")){
+                    SetClientIdentity();
+                    clientCommunication = gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
+                    currentState = ClientState.Updating;
+                }
+            break;
+            case ClientState.WaitingPlayers:
+                createMidScreenText("Waiting players");
+            break;
+            case ClientState.WaitingServer:
+                createMidScreenText("What happened");
+            break;
+            case ClientState.Updating:
+                createMidScreenText("Updating ship");
+            break;
         }
+        
+    }
+
+    void createMidScreenText(string text){
+        Rect cameraRect = Camera.current.pixelRect;
+        GUILayout.BeginArea(new Rect(cameraRect.xMax/2, cameraRect.yMax/2, 100, 100));
+        GUILayout.TextArea(text);
+        GUILayout.EndArea();
     }
 
     // Update is called once per frame
