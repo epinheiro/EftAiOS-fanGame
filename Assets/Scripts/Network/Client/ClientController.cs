@@ -4,7 +4,16 @@ using UnityEngine;
 
 public class ClientController : MonoBehaviour
 {
-    public enum ClientState {ToConnect, Playing, WaitingPlayers, WaitingServer, Updating}
+    public enum ClientState {
+        // Pre-game states
+        ToConnect, 
+        WaitingGame, 
+        // In-game states
+        Playing, 
+        WaitingPlayers, 
+        WaitingServer, 
+        Updating
+    }
     ClientState currentState = ClientState.ToConnect;
 
     ClientCommunication clientCommunication;
@@ -24,11 +33,14 @@ public class ClientController : MonoBehaviour
                 if (GUILayout.Button("JOIN GAME")){
                     SetClientIdentity();
                     clientCommunication = gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
-                    currentState = ClientState.Updating;
+                    currentState = ClientState.WaitingGame;
                 }
             break;
+            case ClientState.WaitingGame:
+                createMidScreenText("Waiting players to enter");
+            break;
             case ClientState.WaitingPlayers:
-                createMidScreenText("Waiting players");
+                createMidScreenText("Waiting players turn");
             break;
             case ClientState.WaitingServer:
                 createMidScreenText("What happened");

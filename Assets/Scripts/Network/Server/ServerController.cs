@@ -9,7 +9,14 @@ using System.Text.RegularExpressions;
 
 public class ServerController : MonoBehaviour
 {
-    public enum ServerState {SetUp, WaitingPlayers, Processing, Updating}
+    public enum ServerState {
+        // Pre-game states
+        SetUp, 
+        // In-game states
+        WaitingPlayers, 
+        Processing, 
+        Updating
+    }
 
     ServerState currentState = ServerState.SetUp;
 
