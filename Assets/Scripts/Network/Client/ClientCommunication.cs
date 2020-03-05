@@ -60,16 +60,44 @@ public class ClientCommunication : MonoBehaviour
 
     //////////////////////////////////
     /////// Client functions /////////
-    void ConnectToServer(){
-        m_ClientDriver = new UdpNetworkDriver(new INetworkParameter[0]);
+    void ConnectToServer(string ip = "", ushort port = 0){
+        AllocateServerAttributes();
 
-        m_clientToServerConnection = new NativeArray<NetworkConnection>(1, Allocator.Persistent);
-
-        endpoint = NetworkEndPoint.LoopbackIpv4;
-        endpoint.Port = 9000;
-
-        m_clientToServerConnection[0] = m_ClientDriver.Connect(endpoint);
+        if(string.IsNullOrEmpty(ip)){
+            m_clientToServerConnection[0] = m_ClientDriver.Connect(GenerateNetworkEndPoint());
+        }else{
+            if (port == 0){
+                m_clientToServerConnection[0] = m_ClientDriver.Connect(GenerateNetworkEndPoint(ip));
+            }else{
+                m_clientToServerConnection[0] = m_ClientDriver.Connect(GenerateNetworkEndPoint(ip, port));
+            }
+        }
     }
+
+    void AllocateServerAttributes(){
+        m_ClientDriver = new UdpNetworkDriver(new INetworkParameter[0]);
+        m_clientToServerConnection = new NativeArray<NetworkConnection>(1, Allocator.Persistent);
+    }
+
+    NetworkEndPoint GenerateNetworkEndPoint(){
+        NetworkEndPoint outNet;
+        outNet = NetworkEndPoint.LoopbackIpv4;
+        outNet.Port = 9000;
+
+        endpoint = outNet;
+
+        return outNet;
+    }
+
+    NetworkEndPoint GenerateNetworkEndPoint(string ip, ushort port = 9000){
+        NetworkEndPoint outNet;
+        NetworkEndPoint.TryParse(ip, port, out outNet);
+
+        endpoint = outNet;
+
+        return outNet;
+    }
+
     public void SetClientIdentity(){
         clientId = this.GetComponent<ClientController>().ClientId;
     }
