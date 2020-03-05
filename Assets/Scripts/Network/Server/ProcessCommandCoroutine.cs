@@ -71,7 +71,7 @@ public class ProcessCommandCoroutine
     }
 
     void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
-        PlayerTurnData dataFromClient = new PlayerTurnData(strm);
+        PlayerTurnDataRequest dataFromClient = new PlayerTurnDataRequest(strm);
 
         DataStreamWriter dataToClient = dataFromClient.PackPlayerTurnObjectData();
 

@@ -69,7 +69,7 @@ struct ServerCommandProcessJob : IJobParallelForDefer{
     }
 
     void PutPlayCommand(UdpNetworkDriver.Concurrent driver, NetworkConnection connection, DataStreamReader strm){
-        PlayerTurnData dataFromClient = new PlayerTurnData(strm);
+        PlayerTurnDataRequest dataFromClient = new PlayerTurnDataRequest(strm);
 
         DataStreamWriter dataToClient = dataFromClient.PackPlayerTurnObjectData();
 

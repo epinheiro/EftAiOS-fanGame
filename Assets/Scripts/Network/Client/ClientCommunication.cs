@@ -137,7 +137,7 @@ struct PingJob : IJob{
                 // ////////////////////////// SEND DATA TO SERVER /////////////////////
                 int value1 = clientId * 2;
                 int value2 = clientId * 3;
-                DataStreamWriter pingData = PlayerTurnData.CreateAndPackPlayerTurnData(clientId, value1,value1, value2,value2);
+                DataStreamWriter pingData = PlayerTurnDataRequest.CreateAndPackPlayerTurnData(clientId, value1,value1, value2,value2, 0);
                 connection[0].Send(driver, pingData);
                 // ////////////////////////// SEND DATA TO SERVER /////////////////////
                 // /////////////////////////////////////////////////////////////////////////
@@ -147,7 +147,7 @@ struct PingJob : IJob{
             {
                 /////////////////////////////////////////////////////////////////////////
                 ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
-                PlayerTurnData dataFromServer = new PlayerTurnData(strm);
+                PlayerTurnDataRequest dataFromServer = new PlayerTurnDataRequest(strm);
 
                 Debug.Log(dataFromServer.ToString()); // DEBUG METHOD TO CHECK COMMUNICATION
                 ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
