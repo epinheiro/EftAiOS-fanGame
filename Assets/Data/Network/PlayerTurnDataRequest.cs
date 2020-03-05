@@ -4,38 +4,42 @@ using UnityEngine;
 using Unity.Networking.Transport;
 using Unity.Collections;
 
-public class PlayerTurnData{
+public class PlayerTurnDataRequest{
 
-    static int CLASS_HARDCODED_BYTE_SIZE = 24;
+    static int CLASS_HARDCODED_BYTE_SIZE = 28;
 
     static public readonly int commandCode = (int) ServerCommunication.ServerCommand.PutPlay;
     public readonly int playerId;
 
-    Position movementTo;
-    Position sound;
+    public readonly Vector2Int movementTo;
+    public readonly Vector2Int sound;
 
-    public PlayerTurnData(int playerId, int newPositionX, int newPositionY, int soundX, int soundY){
+    public readonly int playerAttacked;
+
+    public PlayerTurnDataRequest(int playerId, int newPositionX, int newPositionY, int soundX, int soundY, int playerAttacked){
         this.playerId = playerId;
-        movementTo = new Position{column = newPositionX, row = newPositionY};
-        sound = new Position{column = soundX, row = soundY};
+        this.movementTo = new Vector2Int(newPositionX, newPositionY);
+        this.sound = new Vector2Int(soundX, soundY);
+        this.playerAttacked = playerAttacked;
     }
 
-    public PlayerTurnData(DataStreamReader reader){
+    public PlayerTurnDataRequest(DataStreamReader reader){
         DataStreamReader.Context readerCtx = default(DataStreamReader.Context);
 
         int commandCheck = reader.ReadInt(ref readerCtx);
 
         if (commandCheck == commandCode){
             this.playerId = reader.ReadInt(ref readerCtx);
-            movementTo = new Position{column = reader.ReadInt(ref readerCtx), row = reader.ReadInt(ref readerCtx)};
-            sound = new Position{column = reader.ReadInt(ref readerCtx), row = reader.ReadInt(ref readerCtx)};
+            this.movementTo = new Vector2Int(reader.ReadInt(ref readerCtx), reader.ReadInt(ref readerCtx));
+            this.sound = new Vector2Int(reader.ReadInt(ref readerCtx), reader.ReadInt(ref readerCtx));
+            this.playerAttacked = reader.ReadInt(ref readerCtx);
         }else{
             readerCtx = default(DataStreamReader.Context);
             throw new System.Exception(string.Format("Command {0} received is not compatible with command {1}", commandCheck, commandCode));
         }
     }
 
-    static public DataStreamWriter CreateAndPackPlayerTurnData(int playerId, int newPositionX, int newPositionY, int soundX, int soundY){
+    static public DataStreamWriter CreateAndPackPlayerTurnData(int playerId, int newPositionX, int newPositionY, int soundX, int soundY, int playerAttacked){
         DataStreamWriter writer = new DataStreamWriter(CLASS_HARDCODED_BYTE_SIZE, Allocator.Temp);
 
         writer.Write(commandCode);
@@ -44,21 +48,17 @@ public class PlayerTurnData{
         writer.Write(newPositionY);
         writer.Write(soundX);
         writer.Write(soundY);
+        writer.Write(playerAttacked);
 
         return writer;
     }
 
     public DataStreamWriter PackPlayerTurnObjectData(){
-        return PlayerTurnData.CreateAndPackPlayerTurnData(playerId,movementTo.column,movementTo.row,sound.column, sound.row);
+        return PlayerTurnDataRequest.CreateAndPackPlayerTurnData(playerId,movementTo.x,movementTo.y,sound.x, sound.y, playerAttacked);
     }
 
     public override string ToString(){
         return string.Format("Command {0} : Player{1} - mov({2},{3}) - sound({4},{5})",
-        (ServerCommunication.ServerCommand) commandCode, playerId, movementTo.column, movementTo.row, sound.column, sound.row);
+        (ServerCommunication.ServerCommand) commandCode, playerId, movementTo.x, movementTo.y, sound.x, sound.y);
     }
-}
-
-public struct Position{
-    public int column;
-    public int row;
 }

@@ -1,22 +1,23 @@
-﻿using Unity.Burst;
-using Unity.Collections;
-using Unity.Networking.Transport;
-using Unity.Jobs;
+﻿using Unity.Networking.Transport;
+using System.Collections;
+using UnityEngine;
 
-[BurstCompile]
-struct ServerCommandProcessJob : IJobParallelForDefer{
-    public UdpNetworkDriver.Concurrent driver;
-    public NativeArray<NetworkConnection> connections;
+public class ProcessCommandCoroutine
+{
+    public UdpNetworkDriver driver;
+    public NetworkConnection connection;
 
-    public void Execute(int i)
-    {
-        connections[i] = ProcessSingleConnection(driver, connections[i]);
+    public ProcessCommandCoroutine(MonoBehaviour owner, UdpNetworkDriver driver, NetworkConnection connection){
+        this.driver = driver;
+        this.connection = connection;
+
+        owner.StartCoroutine(ProcessSingleConnection());
     }
 
-    
-    NetworkConnection ProcessSingleConnection(UdpNetworkDriver.Concurrent driver, NetworkConnection connection){
+    public IEnumerator ProcessSingleConnection(){
         DataStreamReader strm;
         NetworkEvent.Type cmd;
+
         // Pop all events for the connection
         while ((cmd = driver.PopEventForConnection(connection, out strm)) != NetworkEvent.Type.Empty)
         {
@@ -33,13 +34,14 @@ struct ServerCommandProcessJob : IJobParallelForDefer{
             {
                 // When disconnected we make sure the connection return false to IsCreated so the next frames
                 // DriverUpdateJob will remove it
-                return default(NetworkConnection);
+                connection.Disconnect(driver);
+                connection.Close(driver);
+                connection = default(NetworkConnection);
             }
         }
 
-        return connection;
+        yield return null;
     }
-
 
     ServerCommunication.ServerCommand ReadCommandReceived(DataStreamReader reader){
         DataStreamReader.Context readerCtx = default(DataStreamReader.Context);
@@ -52,7 +54,7 @@ struct ServerCommandProcessJob : IJobParallelForDefer{
         }
     }
 
-    void ProcessCommandReceived(ServerCommunication.ServerCommand command, UdpNetworkDriver.Concurrent driver, NetworkConnection connection, DataStreamReader strm){
+    void ProcessCommandReceived(ServerCommunication.ServerCommand command, UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         switch(command){
             case ServerCommunication.ServerCommand.PutPlay:
                 PutPlayCommand(driver, connection, strm);
@@ -68,8 +70,8 @@ struct ServerCommandProcessJob : IJobParallelForDefer{
         }
     }
 
-    void PutPlayCommand(UdpNetworkDriver.Concurrent driver, NetworkConnection connection, DataStreamReader strm){
-        PlayerTurnData dataFromClient = new PlayerTurnData(strm);
+    void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+        PlayerTurnDataRequest dataFromClient = new PlayerTurnDataRequest(strm);
 
         DataStreamWriter dataToClient = dataFromClient.PackPlayerTurnObjectData();
 
@@ -83,5 +85,4 @@ struct ServerCommandProcessJob : IJobParallelForDefer{
     void GetResults(){
 
     }
-
 }
