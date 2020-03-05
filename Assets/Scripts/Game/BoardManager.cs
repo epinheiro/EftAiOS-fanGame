@@ -25,12 +25,15 @@ public class BoardManager : MonoBehaviour
     readonly Spacing oddColumnSpacing = new Spacing{x = 1.65f, y = 0.95f};
 
     public GameObject hexagonPrefab;
-    public GameObject mapReference;
+    public GameObject mapGameObjectReference;
+
+    Dictionary<string, GameObject> mapTiles;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        mapTiles = new Dictionary<string, GameObject>();
         CreateMap("Galilei");
     }
 
@@ -62,8 +65,8 @@ public class BoardManager : MonoBehaviour
 
     void FitMapOnScreen(){
         // TODO - technical dept - rescalling map proportions to 16:10
-        mapReference.transform.position = new Vector3(-6, 4, 0);
-        mapReference.transform.localScale = new Vector3(.3f, .3f, 1);
+        mapGameObjectReference.transform.position = new Vector3(-6, 4, 0);
+        mapGameObjectReference.transform.localScale = new Vector3(.3f, .3f, 1);
     }
 
     void CreateTileInMap(string rowId, string columnId, string tileType){
@@ -83,8 +86,18 @@ public class BoardManager : MonoBehaviour
         }
 
         GameObject go = Instantiate(hexagonPrefab, new Vector3(xPos, yPos, 0), Quaternion.identity);
-        go.transform.parent = mapReference.transform;
-        go.GetComponent<SpriteRenderer>().color = colors[tileTypeNumber];        
+        go.transform.parent = mapGameObjectReference.transform;
+        go.GetComponent<SpriteRenderer>().color = colors[tileTypeNumber];
+
+        string name = string.Format("{0}{1:00}", columnId, rowNumber);
+
+        go.name = name;
+
+        mapTiles.Add(name, go);
+    }
+
+    string TranslateTileNumbersToString(int columnNumber, int rowNumber){
+        return string.Format("{0}{1}", TranslateNumberToRowId(columnNumber), TranslateNumberToColumnId(rowNumber));
     }
 
     int TranslateTileTypeToEnumNumber(string typeTypeString){
@@ -101,12 +114,21 @@ public class BoardManager : MonoBehaviour
         return Int32.Parse(rowId);
     }
 
+    string TranslateNumberToRowId(int rowNumber){
+        return string.Format("{0:00}", rowNumber);
+    }
+
     int TranslateColumnIdToNumber(string columnId){
         if (columnId.Length == 1){
             return (int) columnId[0] - 64;
         }else{
             throw new Exception("Not yet implemented column id with more than 1 character");
         }
+    }
+
+    string TranslateNumberToColumnId(int columnNumber){
+        int alphaCode = columnNumber + 64;
+        return string.Format("{0}", (char) alphaCode);
     }
 
     string[] ParseMap(string mapString){
