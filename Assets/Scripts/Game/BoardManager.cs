@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -49,11 +49,10 @@ public class BoardManager : MonoBehaviour
         for (int i=0; i < tileInfo.Length; i = i + 2){
             //// Separating tile id
             string tileId = tileInfo[i];
-            //https://stackoverflow.com/a/1968058
-            Regex re = new Regex(@"([a-zA-Z]+)(\d+)");
-            Match result = re.Match(tileInfo[i]);
-            string column = result.Groups[1].Value; //alphaPart
-            string row = result.Groups[2].Value; //numberPart
+
+            string[] result = ParseTileCode(tileInfo[i]);
+            string column = result[0];
+            string row = result[1];
 
             //// Separating tile type
             string tileType = tileInfo[i+1];
@@ -61,6 +60,17 @@ public class BoardManager : MonoBehaviour
             CreateTileInMap(row, column, tileType);
         }
         FitMapOnScreen();
+    }
+
+    string[] ParseTileCode(string code){
+        //https://stackoverflow.com/a/1968058
+        Regex re = new Regex(@"([a-zA-Z]+)(\d+)");
+        Match result = re.Match(code);
+
+        return new string[]{
+            result.Groups[1].Value, //alphaPart
+            result.Groups[2].Value  //numberPart
+        };
     }
 
     void FitMapOnScreen(){
@@ -89,15 +99,15 @@ public class BoardManager : MonoBehaviour
         go.transform.parent = mapGameObjectReference.transform;
         go.GetComponent<SpriteRenderer>().color = colors[tileTypeNumber];
 
-        string name = string.Format("{0}{1:00}", columnId, rowNumber);
+        string code = TranslateTileNumbersToString(columnNumber, rowNumber);
 
-        go.name = name;
+        go.name = code;
 
-        mapTiles.Add(name, go);
+        mapTiles.Add(code, go);
     }
 
     string TranslateTileNumbersToString(int columnNumber, int rowNumber){
-        return string.Format("{0}{1}", TranslateNumberToRowId(columnNumber), TranslateNumberToColumnId(rowNumber));
+        return string.Format("{0}{1:00}", TranslateNumberToColumnId(columnNumber), TranslateNumberToRowId(rowNumber));
     }
 
     int TranslateTileTypeToEnumNumber(string typeTypeString){
