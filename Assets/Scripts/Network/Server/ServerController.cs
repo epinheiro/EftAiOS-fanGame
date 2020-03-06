@@ -31,9 +31,8 @@ public class ServerController : MonoBehaviour
 
     void OnGUI(){
         if (currentState == ServerState.SetUp){
-            Rect cameraRect = Camera.current.pixelRect;
             // DEBUG positioning
-            GUILayout.BeginArea(new Rect(cameraRect.xMax/2-50, cameraRect.yMax/2-50, 175, 175));
+            GUILayout.BeginArea(new Rect(100, 100, 175, 175));
             // DEBUG positioning
 
             GUILayout.TextArea(string.Format("Connect to IP: {0}", serverIp));
