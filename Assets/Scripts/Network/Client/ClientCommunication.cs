@@ -1,4 +1,4 @@
-﻿using Unity.Burst;
+using Unity.Burst;
 using UnityEngine;
 using Unity.Networking.Transport;
 using Unity.Collections;
@@ -43,19 +43,24 @@ public class ClientCommunication : MonoBehaviour
         // enough since we can get multiple FixedUpdate per frame on slow clients
         m_updateHandle.Complete();
 
-        // Update the ping client UI with the ping statistics computed by teh job scheduled previous frame since that
-        // is now guaranteed to have completed
-        PingJob pingJob = new PingJob
+        // Schedule a chain with the driver update followed by the other jobs
+        m_updateHandle = m_ClientDriver.ScheduleUpdate();
+
+        ConnectionUpdateJob conUpdate = new ConnectionUpdateJob
         {
             driver = m_ClientDriver,
             connection = m_clientToServerConnection,
-            serverEP = endpoint,
-            fixedTime = Time.fixedTime,
+            serverEP = endpoint
+        };
+        m_updateHandle = conUpdate.Schedule(m_updateHandle);
+
+        ProcessDataJob processData = new ProcessDataJob
+        {
+            driver = m_ClientDriver,
+            connection = m_clientToServerConnection,
             clientId = clientId
         };
-        // Schedule a chain with the driver update followed by the ping job
-        m_updateHandle = m_ClientDriver.ScheduleUpdate();
-        m_updateHandle = pingJob.Schedule(m_updateHandle);
+        m_updateHandle = processData.Schedule(m_updateHandle);
     }
 
     //////////////////////////////////
@@ -104,12 +109,10 @@ public class ClientCommunication : MonoBehaviour
 }
 
 [BurstCompile]
-struct PingJob : IJob{
+struct ConnectionUpdateJob : IJob{
     public UdpNetworkDriver driver;
     public NativeArray<NetworkConnection> connection;
     public NetworkEndPoint serverEP;
-    public float fixedTime;
-    public int clientId;
 
     public void Execute()
     {
@@ -125,41 +128,54 @@ struct PingJob : IJob{
             connection[0].Disconnect(driver);
             connection[0] = default(NetworkConnection);
         }
+    }
+}
 
-        DataStreamReader strm;
-        NetworkEvent.Type cmd;
-        // Process all events on the connection. If the connection is invalid it will return Empty immediately
-        while ((cmd = connection[0].PopEvent(driver, out strm)) != NetworkEvent.Type.Empty)
-        {
-            if (cmd == NetworkEvent.Type.Connect)
+[BurstCompile]
+struct ProcessDataJob : IJob{
+    public UdpNetworkDriver driver;
+    public NativeArray<NetworkConnection> connection;
+    public int clientId;
+
+    public void Execute()
+    {
+        if(connection[0].IsCreated){
+            DataStreamReader strm;
+            NetworkEvent.Type cmd;
+            // Process all events on the connection. If the connection is invalid it will return Empty immediately
+            while ((cmd = connection[0].PopEvent(driver, out strm)) != NetworkEvent.Type.Empty)
             {
-                // /////////////////////////////////////////////////////////////////////////
-                // ////////////////////////// SEND DATA TO SERVER /////////////////////
-                int value1 = clientId * 2;
-                int value2 = clientId * 3;
-                DataStreamWriter pingData = PlayerTurnDataRequest.CreateAndPackPlayerTurnData(clientId, value1,value1, value2,value2, 0);
-                connection[0].Send(driver, pingData);
-                // ////////////////////////// SEND DATA TO SERVER /////////////////////
-                // /////////////////////////////////////////////////////////////////////////
+                if (cmd == NetworkEvent.Type.Connect)
+                {
+                    // /////////////////////////////////////////////////////////////////////////
+                    // ////////////////////////// SEND DATA TO SERVER /////////////////////
+                    int value1 = clientId * 2;
+                    int value2 = clientId * 3;
+                    DataStreamWriter pingData = PlayerTurnDataRequest.CreateAndPackPlayerTurnData(clientId, value1,value1, value2,value2, 0);
+                    connection[0].Send(driver, pingData);
+                    // ////////////////////////// SEND DATA TO SERVER /////////////////////
+                    // /////////////////////////////////////////////////////////////////////////
 
-            }
-            else if (cmd == NetworkEvent.Type.Data)
-            {
-                /////////////////////////////////////////////////////////////////////////
-                ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
-                PlayerTurnDataRequest dataFromServer = new PlayerTurnDataRequest(strm);
+                }
+                else if (cmd == NetworkEvent.Type.Data)
+                {
+                    /////////////////////////////////////////////////////////////////////////
+                    ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
+                    PlayerTurnDataRequest dataFromServer = new PlayerTurnDataRequest(strm);
 
-                Debug.Log(dataFromServer.ToString()); // DEBUG METHOD TO CHECK COMMUNICATION
-                ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
-                /////////////////////////////////////////////////////////////////////////
+                    Debug.Log(dataFromServer.ToString()); // DEBUG METHOD TO CHECK COMMUNICATION
+                    ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
+                    /////////////////////////////////////////////////////////////////////////
 
-                // When the pong message is received we calculate the ping time and disconnect
-            }
-            else if (cmd == NetworkEvent.Type.Disconnect)
-            {
-                // If the server disconnected us we clear out connection
-                connection[0] = default(NetworkConnection);
+                    // When the pong message is received we calculate the ping time and disconnect
+                }
+                else if (cmd == NetworkEvent.Type.Disconnect)
+                {
+                    // If the server disconnected us we clear out connection
+                    connection[0] = default(NetworkConnection);
+                }
             }
         }
     }
+        
 }
