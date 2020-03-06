@@ -1,9 +1,10 @@
-using Unity.Burst;
+﻿using Unity.Burst;
 using UnityEngine;
 using Unity.Networking.Transport;
 using Unity.Collections;
 using Unity.Jobs;
-using System.Text;  
+using System.Collections.Generic;
+using System;
 
 public class ClientCommunication : MonoBehaviour
 {
@@ -16,7 +17,10 @@ public class ClientCommunication : MonoBehaviour
 
     NetworkEndPoint endpoint;
 
+    Queue<IJob> jobsScheduleQueue;
+
     void Awake(){
+        jobsScheduleQueue = new Queue<IJob>();
         SetClientIdentity();
     }
 
@@ -52,7 +56,7 @@ public class ClientCommunication : MonoBehaviour
             connection = m_clientToServerConnection,
             serverEP = endpoint
         };
-        m_updateHandle = conUpdate.Schedule(m_updateHandle);
+        QueueJob(conUpdate);
 
         ProcessDataJob processData = new ProcessDataJob
         {
@@ -60,7 +64,32 @@ public class ClientCommunication : MonoBehaviour
             connection = m_clientToServerConnection,
             clientId = clientId
         };
-        m_updateHandle = processData.Schedule(m_updateHandle);
+        QueueJob(processData);
+
+        ScheduleJobsInQueue();
+    }
+
+    void QueueJob(IJob job){
+        jobsScheduleQueue.Enqueue(job);
+    }
+
+    void ScheduleJobsInQueue(){
+        while(jobsScheduleQueue.Count>0){
+            IJob job = jobsScheduleQueue.Dequeue();
+            ScheduleJob(job, job.GetType());
+        }
+    }
+
+    void ScheduleJob(IJob job, Type type){
+        if(type == typeof(ProcessDataJob)){
+            m_updateHandle = ((ProcessDataJob)job).Schedule(m_updateHandle);
+
+        }else if(type == typeof(ConnectionUpdateJob)){
+            m_updateHandle = ((ConnectionUpdateJob)job).Schedule(m_updateHandle);
+            
+        }else{
+            throw new Exception(string.Format("Type {0} not valid", type.ToString()));
+        }
     }
 
     //////////////////////////////////
