@@ -1,4 +1,4 @@
-﻿using Unity.Burst;
+using Unity.Burst;
 using UnityEngine;
 using Unity.Networking.Transport;
 using Unity.Collections;
@@ -87,6 +87,9 @@ public class ClientCommunication : MonoBehaviour
         }else if(type == typeof(ConnectionUpdateJob)){
             m_updateHandle = ((ConnectionUpdateJob)job).Schedule(m_updateHandle);
             
+        }else if(type == typeof(SendDataJob)){
+            m_updateHandle = ((SendDataJob)job).Schedule(m_updateHandle);
+
         }else{
             throw new Exception(string.Format("Type {0} not valid", type.ToString()));
         }
