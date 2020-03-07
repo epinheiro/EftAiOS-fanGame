@@ -6,18 +6,14 @@ using Unity.Jobs;
 using System.Collections.Generic;
 using System;
 
-public class ClientCommunication : MonoBehaviour
+public class ClientCommunication : CommunicationJobHandler
 {
     int clientId;
 
     private UdpNetworkDriver m_ClientDriver;
     private NativeArray<NetworkConnection> m_clientToServerConnection;
 
-    private JobHandle m_updateHandle;
-
     NetworkEndPoint endpoint;
-
-    Queue<IJob> jobsScheduleQueue;
 
     void Awake(){
         jobsScheduleQueue = new Queue<IJob>();
@@ -67,32 +63,6 @@ public class ClientCommunication : MonoBehaviour
         QueueJob(processData);
 
         ScheduleJobsInQueue();
-    }
-
-    void QueueJob(IJob job){
-        jobsScheduleQueue.Enqueue(job);
-    }
-
-    void ScheduleJobsInQueue(){
-        while(jobsScheduleQueue.Count>0){
-            IJob job = jobsScheduleQueue.Dequeue();
-            ScheduleJob(job, job.GetType());
-        }
-    }
-
-    void ScheduleJob(IJob job, Type type){
-        if(type == typeof(ProcessDataJob)){
-            m_updateHandle = ((ProcessDataJob)job).Schedule(m_updateHandle);
-
-        }else if(type == typeof(ConnectionUpdateJob)){
-            m_updateHandle = ((ConnectionUpdateJob)job).Schedule(m_updateHandle);
-            
-        }else if(type == typeof(SendDataJob)){
-            m_updateHandle = ((SendDataJob)job).Schedule(m_updateHandle);
-
-        }else{
-            throw new Exception(string.Format("Type {0} not valid", type.ToString()));
-        }
     }
 
     //////////////////////////////////
