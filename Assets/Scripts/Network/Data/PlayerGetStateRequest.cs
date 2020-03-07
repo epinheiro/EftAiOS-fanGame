@@ -1,17 +1,21 @@
 ﻿using Unity.Networking.Transport;
 using Unity.Collections;
 
-public static class PlayerGetStateRequest
+public class PlayerGetStateRequest : INetworkData
 {
     static int CLASS_HARDCODED_BYTE_SIZE = 4;
 
     static public readonly int commandCode = (int) ServerCommunication.ServerCommand.GetState;
 
-    static public DataStreamWriter PackRequest(){
+    public DataStreamWriter PackData(){
         DataStreamWriter writer = new DataStreamWriter(CLASS_HARDCODED_BYTE_SIZE, Allocator.Temp);
 
         writer.Write(commandCode);
 
         return writer;
     }
+
+    public int[] DataToArray(){
+        return null;
+    }    
 }

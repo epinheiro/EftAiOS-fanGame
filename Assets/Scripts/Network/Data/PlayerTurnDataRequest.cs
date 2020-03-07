@@ -4,7 +4,8 @@ using UnityEngine;
 using Unity.Networking.Transport;
 using Unity.Collections;
 
-public class PlayerTurnDataRequest{
+public class PlayerTurnDataRequest : INetworkData
+{
 
     static int CLASS_HARDCODED_BYTE_SIZE = 28;
 
@@ -21,6 +22,17 @@ public class PlayerTurnDataRequest{
         this.movementTo = new Vector2Int(newPositionX, newPositionY);
         this.sound = new Vector2Int(soundX, soundY);
         this.playerAttacked = playerAttacked;
+    }
+
+    public DataStreamWriter PackData(){
+        return PlayerTurnDataRequest.CreateAndPackPlayerTurnData(
+            this.playerId,
+            movementTo.x,
+            movementTo.y,
+            sound.x,
+            sound.y,
+            playerAttacked
+        );
     }
 
     public PlayerTurnDataRequest(DataStreamReader reader){
@@ -60,5 +72,9 @@ public class PlayerTurnDataRequest{
     public override string ToString(){
         return string.Format("Command {0} : Player{1} - mov({2},{3}) - sound({4},{5})",
         (ServerCommunication.ServerCommand) commandCode, playerId, movementTo.x, movementTo.y, sound.x, sound.y);
+    }
+
+    public int[] DataToArray(){
+        return null;
     }
 }
