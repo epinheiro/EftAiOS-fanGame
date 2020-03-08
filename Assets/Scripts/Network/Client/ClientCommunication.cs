@@ -6,17 +6,19 @@ using Unity.Jobs;
 using System.Collections.Generic;
 using System;
 
-public class ClientCommunication : CommunicationJobHandler
+public class ClientCommunication : MonoBehaviour
 {
     int clientId;
 
     private UdpNetworkDriver m_ClientDriver;
     private NativeArray<NetworkConnection> m_clientToServerConnection;
 
+    private CommunicationJobHandler jobHandler;
+
     NetworkEndPoint endpoint;
 
     void Awake(){
-        jobsScheduleQueue = new Queue<IJob>();
+        jobHandler = new CommunicationJobHandler();
         SetClientIdentity();
     }
 
@@ -26,7 +28,7 @@ public class ClientCommunication : CommunicationJobHandler
 
     void OnDestroy(){
         // All jobs must be completed before we can dispose the data they use
-        m_updateHandle.Complete();
+        jobHandler.Complete();
         m_ClientDriver.Disconnect(m_clientToServerConnection[0]);
         m_ClientDriver.Dispose();
         m_clientToServerConnection.Dispose();
@@ -35,16 +37,16 @@ public class ClientCommunication : CommunicationJobHandler
     void LateUpdate(){
         // On fast clients we can get more than 4 frames per fixed update, this call prevents warnings about TempJob
         // allocation longer than 4 frames in those cases
-        m_updateHandle.Complete();
+        jobHandler.Complete();
     }
 
     void FixedUpdate(){
         // Wait for the previous frames ping to complete before starting a new one, the Complete in LateUpdate is not
         // enough since we can get multiple FixedUpdate per frame on slow clients
-        m_updateHandle.Complete();
+        jobHandler.Complete();
 
         // Schedule a chain with the driver update followed by the other jobs
-        m_updateHandle = m_ClientDriver.ScheduleUpdate();
+        jobHandler.ScheduleDriverUpdate(m_ClientDriver);
 
         ConnectionUpdateJob conUpdate = new ConnectionUpdateJob
         {
@@ -52,7 +54,7 @@ public class ClientCommunication : CommunicationJobHandler
             connection = m_clientToServerConnection,
             serverEP = endpoint
         };
-        QueueJob(conUpdate);
+        jobHandler.QueueJob(conUpdate);
 
         ProcessDataJob processData = new ProcessDataJob
         {
@@ -60,9 +62,9 @@ public class ClientCommunication : CommunicationJobHandler
             connection = m_clientToServerConnection,
             clientId = clientId
         };
-        QueueJob(processData);
+        jobHandler.QueueJob(processData);
 
-        ScheduleJobsInQueue();
+        jobHandler.ScheduleJobsInQueue();
     }
 
     //////////////////////////////////
