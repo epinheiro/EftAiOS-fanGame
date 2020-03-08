@@ -3,9 +3,10 @@ using Unity.Collections;
 using UnityEngine;
 using Unity.Networking.Transport;
 using Unity.Jobs;
+using System.Collections.Generic;
 
 
-public class ServerCommunication : MonoBehaviour
+public class ServerCommunication : CommunicationJobHandler
 {
 
     public enum ServerCommand {PutPlay, GetState, GetResults}
@@ -13,9 +14,8 @@ public class ServerCommunication : MonoBehaviour
     public UdpNetworkDriver m_ServerDriver;
     private NativeList<NetworkConnection> m_connections;
 
-    private JobHandle m_updateHandle;
-
     void Awake(){
+        jobsScheduleQueue = new Queue<IJob>();
         InitServer();
     }
 
@@ -45,6 +45,8 @@ public class ServerCommunication : MonoBehaviour
         // PongJob uses IJobParallelForDeferExtensions, we *must* schedule with a list as first parameter rather than
         // an int since the job needs to pick up new connections from DriverUpdateJob
         // The PongJob is the last job in the chain and it must depends on the DriverUpdateJob
+
+        ScheduleJobsInQueue();
 
         m_updateHandle.Complete();
 
