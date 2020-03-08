@@ -1,15 +1,19 @@
 ﻿using Unity.Networking.Transport;
 using System.Collections;
 using UnityEngine;
+using Unity.Jobs;
 
 public class ProcessCommandCoroutine
 {
     public UdpNetworkDriver driver;
     public NetworkConnection connection;
 
-    public ProcessCommandCoroutine(MonoBehaviour owner, UdpNetworkDriver driver, NetworkConnection connection){
+    CommunicationJobHandler jobHandler;
+
+    public ProcessCommandCoroutine(MonoBehaviour owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler, NetworkConnection connection){
         this.driver = driver;
         this.connection = connection;
+        this.jobHandler = jobHandler;
 
         owner.StartCoroutine(ProcessSingleConnection());
     }
@@ -71,11 +75,13 @@ public class ProcessCommandCoroutine
     }
 
     void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
-        PlayerTurnDataRequest dataFromClient = new PlayerTurnDataRequest(strm);
+        PutPlayRequest requestReceived = new PutPlayRequest(strm);
+        Debug.Log(string.Format("SERVER RECEIVE - PutPlay ({0}) ({1},{2}) ({3},{4}) ({5})", 
+        requestReceived.playerId, requestReceived.movementTo.x, requestReceived.movementTo.y, requestReceived.sound.x, requestReceived.sound.y, requestReceived.PlayerAttacked));
 
-        DataStreamWriter dataToClient = dataFromClient.PackPlayerTurnObjectData();
-
-        driver.Send(NetworkPipeline.Null, connection, dataToClient);
+        PutPlayRequest request = new PutPlayRequest( 66, 6,6, 7,7, false);
+        IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, request.DataToArray());
+        jobHandler.QueueJob(job);
     }
 
     void GetStateCommand(){
