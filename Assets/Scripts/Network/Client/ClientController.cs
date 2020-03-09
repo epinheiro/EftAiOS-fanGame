@@ -43,7 +43,8 @@ public class ClientController : MonoBehaviour
             break;
             case ClientState.Playing:
                 if (GUILayout.Button("Set PutPlay")){
-                    clientCommunication.SchedulePutPlayRequest();
+                    clientCommunication.SchedulePutPlayRequest(_clientId, new Vector2Int(66,66), new Vector2Int(44,44), false);
+                    currentState = ClientState.WaitingPlayers;
                 }
             break;
             case ClientState.WaitingPlayers:

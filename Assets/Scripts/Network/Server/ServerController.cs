@@ -32,19 +32,33 @@ public class ServerController : MonoBehaviour
     }
 
     void OnGUI(){
-        if (_currentState == ServerState.SetUp){
-            // DEBUG positioning
-            GUILayout.BeginArea(new Rect(100, 100, 175, 175));
-            // DEBUG positioning
+        switch(_currentState){
+            case ServerState.SetUp:
+                // DEBUG positioning
+                GUILayout.BeginArea(new Rect(100, 100, 175, 175));
+                // DEBUG positioning
 
-            GUILayout.TextArea(string.Format("Connect to IP: {0}", serverIp));
-            if (GUILayout.Button("Start game")){
-                nextState = ServerState.WaitingPlayers;
-            }
-            
-            // DEBUG positioning
-            GUILayout.EndArea();
-            // DEBUG positioning
+                GUILayout.TextArea(string.Format("Connect to IP: {0}", serverIp));
+                if (GUILayout.Button("Start game")){
+                    nextState = ServerState.WaitingPlayers;
+                }
+                
+                // DEBUG positioning
+                GUILayout.EndArea();
+                // DEBUG positioning
+            break;
+
+            case ServerState.WaitingPlayers:
+                // DEBUG positioning
+                GUILayout.BeginArea(new Rect(100, 100, 175, 175));
+                // DEBUG positioning
+
+                GUILayout.TextArea("Waiting player to make their move");
+                
+                // DEBUG positioning
+                GUILayout.EndArea();
+                // DEBUG positioning
+            break;
         }
     }
 

@@ -63,8 +63,8 @@ public class ClientCommunication : MonoBehaviour
         m_clientToServerConnection[0] = pcc.connection;
     }
 
-    public void SchedulePutPlayRequest(){ // TODO improve inputs
-        PutPlayRequest request = new PutPlayRequest(clientId, 66,66, 44,44, false);
+    public void SchedulePutPlayRequest(int clientId, Vector2Int movementTo, Vector2Int sound, bool attacked){
+        PutPlayRequest request = new PutPlayRequest(clientId, movementTo.x,movementTo.y, sound.x,sound.y, attacked);
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
         jobHandler.QueueJob(job);
     }
