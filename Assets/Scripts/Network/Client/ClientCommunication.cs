@@ -56,13 +56,7 @@ public class ClientCommunication : MonoBehaviour
         };
         jobHandler.QueueJob(conUpdate);
 
-        ProcessDataJob processData = new ProcessDataJob
-        {
-            driver = m_ClientDriver,
-            connection = m_clientToServerConnection,
-            clientId = clientId
-        };
-        jobHandler.QueueJob(processData);
+        jobHandler.ScheduleJobsInQueue();
 
         jobHandler.ScheduleJobsInQueue();
     }
@@ -133,62 +127,4 @@ struct ConnectionUpdateJob : IJob{
             connection[0] = default(NetworkConnection);
         }
     }
-}
-
-[BurstCompile]
-struct ProcessDataJob : IJob{
-    public UdpNetworkDriver driver;
-    public NativeArray<NetworkConnection> connection;
-    public int clientId;
-
-    public void Execute()
-    {
-        if(connection[0].IsCreated){
-            DataStreamReader strm;
-            NetworkEvent.Type cmd;
-            // Process all events on the connection. If the connection is invalid it will return Empty immediately
-            while ((cmd = connection[0].PopEvent(driver, out strm)) != NetworkEvent.Type.Empty)
-            {
-                if (cmd == NetworkEvent.Type.Connect)
-                {
-                    // /////////////////////////////////////////////////////////////////////////
-                    // ////////////////////////// SEND DATA TO SERVER /////////////////////
-                    PutPlayRequest request = new PutPlayRequest(clientId, 66,66, 44,44, false);
-
-                    // Because of the type of allocation of DataPackage - DEBUG/TEST behaviour is made by hand
-                    NativeArray<int> array = new NativeArray<int>(request.DataToArray(), Allocator.Temp);
-                    SendDataJob sendData = new SendDataJob{
-                        driver = driver,
-                        connection = connection[0],
-                        varargs = array
-                    };
-                    // Because of the type of allocation of DataPackage - DEBUG/TEST behaviour is made by hand
-
-                    sendData.Execute();
-                    // ////////////////////////// SEND DATA TO SERVER /////////////////////
-                    // /////////////////////////////////////////////////////////////////////////
-
-                }
-                else if (cmd == NetworkEvent.Type.Data)
-                {
-                    /////////////////////////////////////////////////////////////////////////
-                    ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
-                    PutPlayResponse responseReceived = new PutPlayResponse(strm);
-
-                    Debug.Log(string.Format("CLIENT received response - {0}", 
-                        (ServerCommunication.ServerCommand) PutPlayResponse.commandCode)); // DEBUG METHOD TO CHECK COMMUNICATION
-                    ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
-                    /////////////////////////////////////////////////////////////////////////
-
-                    // When the pong message is received we calculate the ping time and disconnect
-                }
-                else if (cmd == NetworkEvent.Type.Disconnect)
-                {
-                    // If the server disconnected us we clear out connection
-                    connection[0] = default(NetworkConnection);
-                }
-            }
-        }
-    }
-        
 }

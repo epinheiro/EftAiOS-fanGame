@@ -53,10 +53,7 @@ public class CommunicationJobHandler
     /// Schedule jobs from the types: ConnectionUpdateJob, ProcessDataJob, SendDataJob
     /// </summary> 
     void ScheduleJob(IJob job, Type type){
-        if(type == typeof(ProcessDataJob)){
-            m_updateHandle = ((ProcessDataJob)job).Schedule(m_updateHandle);
-
-        }else if(type == typeof(ConnectionUpdateJob)){
+        if(type == typeof(ConnectionUpdateJob)){
             m_updateHandle = ((ConnectionUpdateJob)job).Schedule(m_updateHandle);
             
         }else if(type == typeof(SendDataJob)){
