@@ -14,7 +14,10 @@ public class ClientCommunication : MonoBehaviour
 
     NetworkEndPoint endpoint;
 
+    public ClientController clientController;
+
     void Awake(){
+        clientController = this.GetComponent<ClientController>();
         jobHandler = new CommunicationJobHandler();
         SetClientIdentity();
     }

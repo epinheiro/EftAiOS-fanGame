@@ -17,7 +17,7 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
                 PutPlayCommand(driver, connection, strm);
             break;
             case ServerCommunication.ServerCommand.GetState:
-                GetStateCommand();
+                GetStateCommand(driver, connection, strm);
             break;
             case ServerCommunication.ServerCommand.GetResults:
                 GetResults();
@@ -34,8 +34,11 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
             (ServerCommunication.ServerCommand) PutPlayResponse.commandCode)); // DEBUG METHOD TO CHECK COMMUNICATION
     }
 
-    void GetStateCommand(){
+    void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+        GetStateResponse responseReceived = new GetStateResponse(strm);
 
+        Debug.Log(string.Format("CLIENT received server with state {0}", responseReceived.ServerState));
+        ((ClientCommunication)owner).clientController.serverState = responseReceived.ServerState;
     }
 
     void GetResults(){

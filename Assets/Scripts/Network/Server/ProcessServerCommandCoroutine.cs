@@ -16,7 +16,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
                 PutPlayCommand(driver, connection, strm);
             break;
             case ServerCommunication.ServerCommand.GetState:
-                GetStateCommand();
+                GetStateCommand(driver, connection, strm);
             break;
             case ServerCommunication.ServerCommand.GetResults:
                 GetResults();
@@ -36,8 +36,13 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
         jobHandler.QueueJob(job);
     }
 
-    void GetStateCommand(){
+    void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+        GetStateRequest requestReceived = new GetStateRequest(strm);
+        Debug.Log("SERVER receive request - GetState");
 
+        GetStateResponse response = new GetStateResponse(((ServerCommunication)owner).serverController.CurrentState);
+        IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
+        jobHandler.QueueJob(job);
     }
 
     void GetResults(){

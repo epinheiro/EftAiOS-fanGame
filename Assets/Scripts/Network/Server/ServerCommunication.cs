@@ -1,4 +1,4 @@
-﻿using Unity.Collections;
+using Unity.Collections;
 using UnityEngine;
 using Unity.Networking.Transport;
 
@@ -12,7 +12,7 @@ public class ServerCommunication : MonoBehaviour
 
     private CommunicationJobHandler jobHandler;
 
-    ServerController serverController;
+    public ServerController serverController;
 
     void Awake(){
         serverController = this.GetComponent<ServerController>();
