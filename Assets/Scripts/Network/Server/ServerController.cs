@@ -18,7 +18,12 @@ public class ServerController : MonoBehaviour
         Updating
     }
 
-    ServerState currentState = ServerState.SetUp;
+    ServerState _currentState = ServerState.SetUp;
+    public ServerState CurrentState{
+        get { return _currentState; }
+    }
+
+    ServerState nextState = ServerState.SetUp;
 
     ServerCommunication serverCommunication;
     string serverIp;
@@ -30,12 +35,15 @@ public class ServerController : MonoBehaviour
     }
 
     void OnGUI(){
-        if (currentState == ServerState.SetUp){
+        if (_currentState == ServerState.SetUp){
             // DEBUG positioning
             GUILayout.BeginArea(new Rect(100, 100, 175, 175));
             // DEBUG positioning
 
             GUILayout.TextArea(string.Format("Connect to IP: {0}", serverIp));
+            if (GUILayout.Button("Start game")){
+                nextState = ServerState.WaitingPlayers;
+            }
             
             // DEBUG positioning
             GUILayout.EndArea();
@@ -45,7 +53,11 @@ public class ServerController : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
-        switch(currentState){
+        if (_currentState != nextState){
+            _currentState = nextState;
+        }
+
+        switch(_currentState){
             case ServerState.WaitingPlayers:
                 // Keep last play on screen
             break;

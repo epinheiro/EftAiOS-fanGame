@@ -9,6 +9,8 @@ struct DriverUpdateJob : IJob{
     public UdpNetworkDriver driver;
     public NativeList<NetworkConnection> connections;
 
+    public ServerController.ServerState serverState;
+
     public void Execute()
     {
         // Remove connections which have been destroyed from the list of active connections
@@ -22,19 +24,22 @@ struct DriverUpdateJob : IJob{
             }
         }
 
-        // Accept all new connections
-        while (true)
-        {
-            NetworkConnection con = driver.Accept();
-            // "Nothing more to accept" is signaled by returning an invalid connection from accept
-            if (con.IsCreated){
-                connections.Add(con);
-                // DEBUG //////////////////////////////////////////////////
-                Debug.Log("Server connections: " + connections.Length); 
-                // DEBUG //////////////////////////////////////////////////
-            }else{
-                break;
+        // Accept all new connections when server is on SET UP state
+        if(serverState == ServerController.ServerState.SetUp){
+            while (true)
+            {
+                NetworkConnection con = driver.Accept();
+                // "Nothing more to accept" is signaled by returning an invalid connection from accept
+                if (con.IsCreated){
+                    connections.Add(con);
+                    // DEBUG //////////////////////////////////////////////////
+                    Debug.Log("Server connections: " + connections.Length); 
+                    // DEBUG //////////////////////////////////////////////////
+                }else{
+                    break;
+                }
             }
+            
         }
     }
 }

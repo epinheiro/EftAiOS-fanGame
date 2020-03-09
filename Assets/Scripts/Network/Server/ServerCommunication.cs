@@ -12,7 +12,10 @@ public class ServerCommunication : MonoBehaviour
 
     private CommunicationJobHandler jobHandler;
 
+    ServerController serverController;
+
     void Awake(){
+        serverController = this.GetComponent<ServerController>();
         jobHandler = new CommunicationJobHandler();
         InitServer();
     }
@@ -34,7 +37,11 @@ public class ServerCommunication : MonoBehaviour
         // Wait for the previous frames ping to complete before starting a new one, the Complete in LateUpdate is not
         // enough since we can get multiple FixedUpdate per frame on slow clients
         
-        DriverUpdateJob updateJob = new DriverUpdateJob {driver = m_ServerDriver, connections = m_connections};
+        DriverUpdateJob updateJob = new DriverUpdateJob {
+            driver = m_ServerDriver, 
+            connections = m_connections,
+            serverState = serverController.CurrentState
+        };
         // Update the driver should be the first job in the chain
         jobHandler.ScheduleDriverUpdate(m_ServerDriver);
         // The DriverUpdateJob which accepts new connections should be the second job in the chain, it needs to depend
