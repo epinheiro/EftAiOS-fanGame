@@ -40,8 +40,7 @@ public class ClientCommunication : MonoBehaviour
     void FixedUpdate(){
         // Wait for the previous frames ping to complete before starting a new one, the Complete in LateUpdate is not
         // enough since we can get multiple FixedUpdate per frame on slow clients
-        jobHandler.Complete();
-
+        
         // Schedule a chain with the driver update followed by the other jobs
         jobHandler.ScheduleDriverUpdate(m_ClientDriver);
 
@@ -55,7 +54,16 @@ public class ClientCommunication : MonoBehaviour
 
         jobHandler.ScheduleJobsInQueue();
 
-        jobHandler.ScheduleJobsInQueue();
+        jobHandler.Complete();
+
+        ProcessClientCommandCoroutine pcc = new ProcessClientCommandCoroutine(this, m_ClientDriver, jobHandler, m_clientToServerConnection[0]);
+        m_clientToServerConnection[0] = pcc.connection;
+    }
+
+    public void SchedulePutPlayRequest(){ // TODO improve inputs
+        PutPlayRequest request = new PutPlayRequest(clientId, 66,66, 44,44, false);
+        IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
+        jobHandler.QueueJob(job);
     }
 
     //////////////////////////////////
