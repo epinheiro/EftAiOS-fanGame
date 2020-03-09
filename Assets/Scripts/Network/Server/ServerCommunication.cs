@@ -49,7 +49,7 @@ public class ServerCommunication : MonoBehaviour
         jobHandler.Complete();
 
         for(int i=0 ; i<m_connections.Length ; i++){
-            ProcessCommandCoroutine pcc = new ProcessCommandCoroutine(this, m_ServerDriver, jobHandler, m_connections[i]);
+            ProcessServerCommandCoroutine pcc = new ProcessServerCommandCoroutine(this, m_ServerDriver, jobHandler, m_connections[i]);
             m_connections[i] = pcc.connection;
         }
     }
