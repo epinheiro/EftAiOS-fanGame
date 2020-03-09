@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -53,8 +53,7 @@ public class ClientController : MonoBehaviour
     }
 
     void createMidScreenText(string text){
-        Rect cameraRect = Camera.current.pixelRect;
-        GUILayout.BeginArea(new Rect(cameraRect.xMax/2, cameraRect.yMax/2, 100, 100));
+        GUILayout.BeginArea(new Rect(100, 10, 100, 100));
         GUILayout.TextArea(text);
         GUILayout.EndArea();
     }
