@@ -1,10 +1,6 @@
-﻿using Unity.Burst;
-using UnityEngine;
-using Unity.Networking.Transport;
+﻿using Unity.Networking.Transport;
 using Unity.Collections;
 using Unity.Jobs;
-using System.Collections.Generic;
-using System;
 
 public static class DataPackageWrapper
 {

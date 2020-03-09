@@ -1,7 +1,6 @@
-using Unity.Networking.Transport;
+﻿using Unity.Networking.Transport;
 using System.Collections;
 using UnityEngine;
-using Unity.Jobs;
 
 public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommunication>
 {
