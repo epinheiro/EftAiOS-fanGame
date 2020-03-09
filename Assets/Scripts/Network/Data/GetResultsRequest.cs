@@ -1,0 +1,35 @@
+﻿using Unity.Networking.Transport;
+
+public class GetResultsRequest : INetworkData
+{
+    static public readonly int commandCode = (int) ServerCommunication.ServerCommand.GetResults;
+
+    public int userId;
+
+    public int[] DataToArray(){
+        return new int[]{commandCode, userId};
+    }
+
+    /// <summary>
+    /// This constructor is for WRAPPING the data to make a request
+    /// </summary> 
+    public GetResultsRequest(int userId){
+        this.userId = userId;
+    }
+
+    /// <summary>
+    /// This constructor is for UNWRAPPING the data to read a request
+    /// </summary> 
+    public GetResultsRequest(DataStreamReader reader){
+        DataStreamReader.Context readerCtx = default(DataStreamReader.Context);
+
+        int commandCheck = reader.ReadInt(ref readerCtx);
+
+        if (commandCheck == commandCode){
+            this.userId = reader.ReadInt(ref readerCtx);
+        }else{
+            readerCtx = default(DataStreamReader.Context);
+            throw new System.Exception(string.Format("Command {0} received is not compatible with this class command {1}", commandCheck, commandCode));
+        }
+    }
+}
