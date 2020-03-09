@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using Unity.Networking.Transport;
+﻿using Unity.Networking.Transport;
 
 public class PutPlayResponse : INetworkData
 {
