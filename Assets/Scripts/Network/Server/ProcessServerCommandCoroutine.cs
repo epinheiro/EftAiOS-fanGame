@@ -1,10 +1,10 @@
-﻿using Unity.Networking.Transport;
+using Unity.Networking.Transport;
 using UnityEngine;
 using Unity.Jobs;
 
-public class ProcessServerCommandCoroutine : ProcessCommandCoroutine
+public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommunication>
 {
-    public ProcessServerCommandCoroutine(MonoBehaviour owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler, NetworkConnection connection) : 
+    public ProcessServerCommandCoroutine(ServerCommunication owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler, NetworkConnection connection) : 
         base(owner, driver, jobHandler, connection){
     }
     

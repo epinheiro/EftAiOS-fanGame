@@ -2,17 +2,20 @@
 using System.Collections;
 using UnityEngine;
 
-public class ProcessCommandCoroutine
+public class ProcessCommandCoroutine<T> where T : MonoBehaviour
 {
     public UdpNetworkDriver driver;
     public NetworkConnection connection;
 
     protected CommunicationJobHandler jobHandler;
 
-    public ProcessCommandCoroutine(MonoBehaviour owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler, NetworkConnection connection){
+    protected T owner;
+
+    public ProcessCommandCoroutine(T owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler, NetworkConnection connection){
         this.driver = driver;
         this.connection = connection;
         this.jobHandler = jobHandler;
+        this.owner = owner;
 
         owner.StartCoroutine(ProcessSingleConnection());
     } 
