@@ -153,10 +153,18 @@ struct ProcessDataJob : IJob{
                 {
                     // /////////////////////////////////////////////////////////////////////////
                     // ////////////////////////// SEND DATA TO SERVER /////////////////////
-                    int value1 = clientId * 2;
-                    int value2 = clientId * 3;
-                    DataStreamWriter pingData = PlayerTurnDataRequest.CreateAndPackPlayerTurnData(clientId, value1,value1, value2,value2, 0);
-                    connection[0].Send(driver, pingData);
+                    PutPlayRequest request = new PutPlayRequest(clientId, 66,66, 44,44, false);
+
+                    // Because of the type of allocation of DataPackage - DEBUG/TEST behaviour is made by hand
+                    NativeArray<int> array = new NativeArray<int>(request.DataToArray(), Allocator.Temp);
+                    SendDataJob sendData = new SendDataJob{
+                        driver = driver,
+                        connection = connection[0],
+                        varargs = array
+                    };
+                    // Because of the type of allocation of DataPackage - DEBUG/TEST behaviour is made by hand
+
+                    sendData.Execute();
                     // ////////////////////////// SEND DATA TO SERVER /////////////////////
                     // /////////////////////////////////////////////////////////////////////////
 
@@ -165,9 +173,10 @@ struct ProcessDataJob : IJob{
                 {
                     /////////////////////////////////////////////////////////////////////////
                     ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
-                    PlayerTurnDataRequest dataFromServer = new PlayerTurnDataRequest(strm);
+                    PutPlayResponse responseReceived = new PutPlayResponse(strm);
 
-                    Debug.Log(dataFromServer.ToString()); // DEBUG METHOD TO CHECK COMMUNICATION
+                    Debug.Log(string.Format("CLIENT received response - {0}", 
+                        (ServerCommunication.ServerCommand) PutPlayResponse.commandCode)); // DEBUG METHOD TO CHECK COMMUNICATION
                     ////////////////////////// RECEIVE DATA FROM SERVER /////////////////////
                     /////////////////////////////////////////////////////////////////////////
 

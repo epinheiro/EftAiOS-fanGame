@@ -28,11 +28,11 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine
 
     void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         PutPlayRequest requestReceived = new PutPlayRequest(strm);
-        Debug.Log(string.Format("SERVER RECEIVE - PutPlay ({0}) ({1},{2}) ({3},{4}) ({5})", 
+        Debug.Log(string.Format("SERVER receive request - PutPlay ({0}) ({1},{2}) ({3},{4}) ({5})", 
         requestReceived.playerId, requestReceived.movementTo.x, requestReceived.movementTo.y, requestReceived.sound.x, requestReceived.sound.y, requestReceived.PlayerAttacked));
 
-        PutPlayRequest request = new PutPlayRequest( 66, 6,6, 7,7, false);
-        IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, request.DataToArray());
+        PutPlayResponse response = new PutPlayResponse();
+        IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
         jobHandler.QueueJob(job);
     }
 
