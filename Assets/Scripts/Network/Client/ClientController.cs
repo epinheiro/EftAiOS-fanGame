@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +16,8 @@ public class ClientController : MonoBehaviour
     }
     ClientState currentState = ClientState.ToConnect;
 
+    public ServerController.ServerState serverState;
+
     ClientCommunication clientCommunication;
 
     int _clientId;
@@ -25,6 +27,7 @@ public class ClientController : MonoBehaviour
 
     // Start is called before the first frame update
     void Start(){
+        InvokeRepeating("UpdateStati", 1f, 1f);
     }
 
     void OnGUI(){
@@ -38,6 +41,11 @@ public class ClientController : MonoBehaviour
             break;
             case ClientState.WaitingGame:
                 createMidScreenText("Waiting players to enter");
+            break;
+            case ClientState.Playing:
+                if (GUILayout.Button("Set PutPlay")){
+                    clientCommunication.SchedulePutPlayRequest();
+                }
             break;
             case ClientState.WaitingPlayers:
                 createMidScreenText("Waiting players turn");
@@ -58,9 +66,16 @@ public class ClientController : MonoBehaviour
         GUILayout.EndArea();
     }
 
-    // Update is called once per frame
-    void Update(){
+    // Update is called once per second
+    void UpdateStati(){
         switch(currentState){
+            case ClientState.WaitingGame:
+                if(serverState == ServerController.ServerState.SetUp){
+                    clientCommunication.ScheduleGetStateRequest();
+                }else{
+                    currentState = ClientState.Playing;
+                }
+            break;
             case ClientState.Playing:
                 // Make play possible
             break;
