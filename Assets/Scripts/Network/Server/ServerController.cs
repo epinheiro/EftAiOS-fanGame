@@ -44,6 +44,10 @@ public class ServerController : MonoBehaviour
             case ServerState.WaitingPlayers:
                 GUIWaitingPlayersState();
             break;
+
+            case ServerState.Processing:
+                GUIProcessingState();
+            break;
         }
     }
 
@@ -129,16 +133,43 @@ public class ServerController : MonoBehaviour
         GUILayout.EndArea();
         // DEBUG positioning
     }
+    void GUIProcessingState(){
+        // DEBUG positioning
+        GUILayout.BeginArea(new Rect(100, 100, 175, 175));
+        // DEBUG positioning
+
+        GUILayout.TextArea("Server processing");
+        
+        // DEBUG positioning
+        GUILayout.EndArea();
+        // DEBUG positioning
+    }
     
     //////// Update logic methods
     void WaitingPlayersState(){
-
+        if (AllPlayersPlayed()){
+            Debug.Log("SERVER - all players played");
+            nextState = ServerController.ServerState.Processing;
+        }
     }
     void ProcessingState(){
 
     }
     void UpdatingState(){
 
+    }
+
+    bool AllPlayersPlayed(){
+        if (serverCommunication.ConnectionQuantity != playerTurnControl.Count){
+            return false; // The lists are inserted in the first PutPlay
+        }
+
+        foreach(KeyValuePair<int, bool> entry in playerTurnControl){
+            if (!entry.Value){
+                return false;
+            }
+        }
+        return true;
     }
 
     // Based on the Stackoverflow answer https://stackoverflow.com/a/6803109

@@ -31,6 +31,8 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
         Debug.Log(string.Format("SERVER receive request - PutPlay ({0}) ({1},{2}) ({3},{4}) ({5})", 
         requestReceived.playerId, requestReceived.movementTo.x, requestReceived.movementTo.y, requestReceived.sound.x, requestReceived.sound.y, requestReceived.PlayerAttacked));
 
+        ((ServerCommunication)owner).serverController.InsertNewPlayTurnData(requestReceived);
+
         PutPlayResponse response = new PutPlayResponse();
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
         jobHandler.QueueJob(job);

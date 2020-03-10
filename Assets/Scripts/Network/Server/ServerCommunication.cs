@@ -9,6 +9,9 @@ public class ServerCommunication : MonoBehaviour
 
     public UdpNetworkDriver m_ServerDriver;
     private NativeList<NetworkConnection> m_connections;
+    public int ConnectionQuantity{
+        get { return m_connections.Length; }
+    }
 
     private CommunicationJobHandler jobHandler;
 

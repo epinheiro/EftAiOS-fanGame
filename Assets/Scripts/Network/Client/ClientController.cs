@@ -109,7 +109,7 @@ public class ClientController : MonoBehaviour
     }
 
     void GUIWaitingServerState(){
-        createMidScreenText("What happened");
+        createMidScreenText("What happened:");
     }
 
     void GUIUpdatingState(){
@@ -129,7 +129,11 @@ public class ClientController : MonoBehaviour
         }
     }
     void WaitingPlayersState(){
-
+        if(serverState == ServerController.ServerState.WaitingPlayers){
+            clientCommunication.ScheduleGetStateRequest();
+        }else{
+            currentState = ClientState.WaitingServer;
+        }
     }
     void PlayingState(){
 
