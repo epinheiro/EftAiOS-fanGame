@@ -57,23 +57,23 @@ public class ClientController : MonoBehaviour
     void UpdateStati(){
         switch(currentState){
             case ClientState.WaitingGame:
-                if(serverState == ServerController.ServerState.SetUp){
-                    clientCommunication.ScheduleGetStateRequest();
-                }else{
-                    currentState = ClientState.Playing;
-                }
+                WaitingGameState();                
             break;
             case ClientState.Playing:
                 // Make play possible
+                PlayingState();
             break;
             case ClientState.WaitingPlayers:
                 // Screen of "Waiting Players"
+                WaitingPlayersState();
             break;
             case ClientState.WaitingServer:
                 // Screen of "What happened"
+                WaitingServerState();
             break;
             case ClientState.Updating:
                 // Update player position and its possible moves
+                UpdatingState();
             break;
         }
         
@@ -118,6 +118,28 @@ public class ClientController : MonoBehaviour
 
 
     //////// Update logic methods
+    void ToConnectState(){
+
+    }
+    void WaitingGameState(){
+        if(serverState == ServerController.ServerState.SetUp){
+            clientCommunication.ScheduleGetStateRequest();
+        }else{
+            currentState = ClientState.Playing;
+        }
+    }
+    void WaitingPlayersState(){
+
+    }
+    void PlayingState(){
+
+    }
+    void WaitingServerState(){
+
+    }
+    void UpdatingState(){
+
+    }
 
 
     public void SetClientIdentity(){
