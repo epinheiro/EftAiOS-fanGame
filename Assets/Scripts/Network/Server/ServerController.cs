@@ -48,6 +48,10 @@ public class ServerController : MonoBehaviour
             case ServerState.Processing:
                 GUIProcessingState();
             break;
+
+            case ServerState.Updating:
+                GUIUpdatingState();
+            break;
         }
     }
 
@@ -64,11 +68,13 @@ public class ServerController : MonoBehaviour
             break;
             case ServerState.Processing:
                 // Show "animation" of the turn
-                ProcessingState();
+                Invoke("ProcessingState", 1.2f); // DEBUG DELAY - TODO change
+                // ProcessingState();
             break;
             case ServerState.Updating:
                 // Update the board
-                UpdatingState();
+                Invoke("UpdatingState", 1.2f); // DEBUG DELAY - TODO change
+                // UpdatingState();
             break;
             
         }
@@ -102,8 +108,15 @@ public class ServerController : MonoBehaviour
     }
 
     public void ResetPlayerTurnControl(){
-        foreach(KeyValuePair<int, bool> entry in playerTurnControl){
-            playerTurnControl[entry.Key] = false;
+        List<int> keys = new List<int>();
+
+        foreach(int key in playerTurnControl.Keys){
+            keys.Add(key);
+        }
+
+        foreach(int key in keys){
+            playerTurnControl.Remove(key);
+            playerTurnControl.Add(key, false);
         }
     }
 
@@ -144,6 +157,18 @@ public class ServerController : MonoBehaviour
         GUILayout.EndArea();
         // DEBUG positioning
     }
+
+    void GUIUpdatingState(){
+        // DEBUG positioning
+        GUILayout.BeginArea(new Rect(100, 100, 175, 175));
+        // DEBUG positioning
+
+        GUILayout.TextArea("Board Updating");
+        
+        // DEBUG positioning
+        GUILayout.EndArea();
+        // DEBUG positioning
+    }
     
     //////// Update logic methods
     void WaitingPlayersState(){
@@ -153,10 +178,11 @@ public class ServerController : MonoBehaviour
         }
     }
     void ProcessingState(){
-
+        nextState = ServerController.ServerState.Updating;
     }
     void UpdatingState(){
-
+        ResetPlayerTurnControl();
+        nextState = ServerController.ServerState.WaitingPlayers;
     }
 
     bool AllPlayersPlayed(){

@@ -131,10 +131,10 @@ public class ClientController : MonoBehaviour
 
     }
     void WaitingServerState(){
-
+        ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientState.Updating);
     }
     void UpdatingState(){
-
+        currentState = ClientState.Playing;
     }
 
     /// <summary>
