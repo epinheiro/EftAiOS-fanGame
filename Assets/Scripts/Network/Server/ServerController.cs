@@ -34,30 +34,11 @@ public class ServerController : MonoBehaviour
     void OnGUI(){
         switch(_currentState){
             case ServerState.SetUp:
-                // DEBUG positioning
-                GUILayout.BeginArea(new Rect(100, 100, 175, 175));
-                // DEBUG positioning
-
-                GUILayout.TextArea(string.Format("Connect to IP: {0}", serverIp));
-                if (GUILayout.Button("Start game")){
-                    nextState = ServerState.WaitingPlayers;
-                }
-                
-                // DEBUG positioning
-                GUILayout.EndArea();
-                // DEBUG positioning
+                GUISetUpState();
             break;
 
             case ServerState.WaitingPlayers:
-                // DEBUG positioning
-                GUILayout.BeginArea(new Rect(100, 100, 175, 175));
-                // DEBUG positioning
-
-                GUILayout.TextArea("Waiting player to make their move");
-                
-                // DEBUG positioning
-                GUILayout.EndArea();
-                // DEBUG positioning
+                GUIWaitingPlayersState();
             break;
         }
     }
@@ -71,15 +52,56 @@ public class ServerController : MonoBehaviour
         switch(_currentState){
             case ServerState.WaitingPlayers:
                 // Keep last play on screen
+                WaitingPlayersState();
             break;
             case ServerState.Processing:
                 // Show "animation" of the turn
+                ProcessingState();
             break;
             case ServerState.Updating:
                 // Update the board
+                UpdatingState();
             break;
             
         }
+    }
+
+    //////// On GUI methods
+    void GUISetUpState(){
+        // DEBUG positioning
+        GUILayout.BeginArea(new Rect(100, 100, 175, 175));
+        // DEBUG positioning
+
+        GUILayout.TextArea(string.Format("Connect to IP: {0}", serverIp));
+        if (GUILayout.Button("Start game")){
+            nextState = ServerState.WaitingPlayers;
+        }
+        
+        // DEBUG positioning
+        GUILayout.EndArea();
+        // DEBUG positioning
+    }
+    void GUIWaitingPlayersState(){
+        // DEBUG positioning
+        GUILayout.BeginArea(new Rect(100, 100, 175, 175));
+        // DEBUG positioning
+
+        GUILayout.TextArea("Waiting player to make their move");
+        
+        // DEBUG positioning
+        GUILayout.EndArea();
+        // DEBUG positioning
+    }
+    
+    //////// Update logic methods
+    void WaitingPlayersState(){
+
+    }
+    void ProcessingState(){
+
+    }
+    void UpdatingState(){
+
     }
 
     // Based on the Stackoverflow answer https://stackoverflow.com/a/6803109
