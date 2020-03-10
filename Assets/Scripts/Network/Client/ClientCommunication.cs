@@ -78,6 +78,12 @@ public class ClientCommunication : MonoBehaviour
         jobHandler.QueueJob(job);
     }
 
+    public void ScheduleGetResultsRequest(){
+        GetResultsRequest request = new GetResultsRequest(_clientId);
+        IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
+        jobHandler.QueueJob(job);
+    }
+
     //////////////////////////////////
     /////// Client functions /////////
     void ConnectToServer(string ip = "", ushort port = 0){
