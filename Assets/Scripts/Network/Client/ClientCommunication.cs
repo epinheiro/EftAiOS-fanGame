@@ -5,7 +5,10 @@ using Unity.Jobs;
 
 public class ClientCommunication : MonoBehaviour
 {
-    int clientId;
+    int _clientId;
+    public int ClientId{
+        get { return _clientId; }
+    }
 
     private UdpNetworkDriver m_ClientDriver;
     private NativeArray<NetworkConnection> m_clientToServerConnection;
@@ -116,6 +119,6 @@ public class ClientCommunication : MonoBehaviour
     }
 
     public void SetClientIdentity(){
-        clientId = this.GetComponent<ClientController>().ClientId;
+        _clientId = this.GetComponent<ClientController>().ClientId;
     }
 }
