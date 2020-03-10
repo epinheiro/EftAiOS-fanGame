@@ -29,14 +29,15 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
     void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         PutPlayResponse responseReceived = new PutPlayResponse(strm);
 
-        Debug.Log(string.Format("CLIENT received response - {0}", 
+        Debug.Log(string.Format("CLIENT {0} received response - {1}", 
+            ((ClientCommunication)owner).ClientId,
             (ServerCommunication.ServerCommand) PutPlayResponse.commandCode)); // DEBUG METHOD TO CHECK COMMUNICATION
     }
 
     void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         GetStateResponse responseReceived = new GetStateResponse(strm);
 
-        Debug.Log(string.Format("CLIENT received server with state {0}", responseReceived.ServerState));
+        Debug.Log(string.Format("CLIENT {0} received server with state {1}", ((ClientCommunication)owner).ClientId, responseReceived.ServerState));
         ((ClientCommunication)owner).clientController.serverState = responseReceived.ServerState;
     }
 
