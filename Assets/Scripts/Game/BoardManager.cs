@@ -28,6 +28,14 @@ public class BoardManager : MonoBehaviour
     public GameObject mapGameObjectReference;
 
     Dictionary<string, GameObject> mapTiles;
+    GameObject _humanDormObj;
+    public GameObject HumanDormObject {
+        get { return _humanDormObj; }
+    }
+    GameObject _alienNestObj;
+    public GameObject AlienNestObj {
+        get { return _alienNestObj; }
+    }
 
 
     // Start is called before the first frame update
@@ -172,6 +180,16 @@ public class BoardManager : MonoBehaviour
         GameObject go = Instantiate(hexagonPrefab, new Vector3(xPos, yPos, 0), Quaternion.identity);
         go.transform.parent = mapGameObjectReference.transform;
         go.GetComponent<SpriteRenderer>().color = colors[tileTypeNumber];
+
+        switch((PossibleTypes) tileTypeNumber){
+            case PossibleTypes.AlienNest:
+                _alienNestObj = go;
+            break;
+            
+            case PossibleTypes.HumanDorm:
+                _humanDormObj = go;
+            break;
+        }
 
         string code = TranslateTileNumbersToString(columnNumber, rowNumber);
 
