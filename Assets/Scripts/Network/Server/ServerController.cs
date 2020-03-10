@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
-
+using System.Collections.Generic;
 
 public class ServerController : MonoBehaviour
 {
@@ -25,8 +25,12 @@ public class ServerController : MonoBehaviour
     ServerCommunication serverCommunication;
     string serverIp;
 
+    Dictionary<int, PutPlayRequest> playersLastTurn;
+    Dictionary<int, bool> playerTurnControl;
 
     void Start(){
+        playersLastTurn = new Dictionary<int, PutPlayRequest>();
+        playerTurnControl = new Dictionary<int, bool>();
         serverCommunication = gameObject.AddComponent(typeof(ServerCommunication)) as ServerCommunication;
         serverIp = GetLocalIPAddress();
     }
@@ -81,6 +85,40 @@ public class ServerController : MonoBehaviour
             
         }
     }
+
+    public void InsertNewPlayTurnData(int playerId, Vector2Int movementTo, Vector2Int soundIn, bool attacked){
+        PutPlayRequest playerData = new PutPlayRequest(playerId, movementTo.x, movementTo.y, soundIn.x, soundIn.y, attacked);
+        InsertNewPlayTurnData(playerData);
+    }
+
+    public void InsertNewPlayTurnData(PutPlayRequest putPlayData){
+        bool playerAlreadyPlayed = false;
+        playerTurnControl.TryGetValue(putPlayData.playerId, out playerAlreadyPlayed);
+
+        if(!playerAlreadyPlayed){
+            bool sucess = playersLastTurn.ContainsKey(putPlayData.playerId);
+            if (sucess){
+                playersLastTurn.Remove(putPlayData.playerId);
+            }
+
+            playersLastTurn.Add(putPlayData.playerId, putPlayData);
+            UpdatePlayerTurnControl(true, putPlayData);
+        }else{
+            throw new System.Exception(string.Format("Player {0} already marked as PLAYED", putPlayData.playerId));
+        }
+    }
+
+    public void UpdatePlayerTurnControl(bool alreadyPlay, PutPlayRequest playerTurnData){
+        playerTurnControl.Remove(playerTurnData.playerId);
+        playerTurnControl.Add(playerTurnData.playerId, alreadyPlay);
+    }
+
+    public void ResetPlayerTurnControl(){
+        foreach(KeyValuePair<int, bool> entry in playerTurnControl){
+            playerTurnControl[entry.Key] = false;
+        }
+    }
+
 
     // Based on the Stackoverflow answer https://stackoverflow.com/a/6803109
     public static string GetLocalIPAddress()
