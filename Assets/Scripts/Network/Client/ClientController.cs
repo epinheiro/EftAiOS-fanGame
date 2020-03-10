@@ -32,38 +32,25 @@ public class ClientController : MonoBehaviour
     void OnGUI(){
         switch(currentState){
             case ClientState.ToConnect:
-                if (GUILayout.Button("JOIN GAME")){
-                    SetClientIdentity();
-                    clientCommunication = gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
-                    currentState = ClientState.WaitingGame;
-                }
+                GUIToConnectState();
             break;
             case ClientState.WaitingGame:
-                createMidScreenText("Waiting players to enter");
+                GUIWaitingGameState();
             break;
             case ClientState.Playing:
-                if (GUILayout.Button("Set PutPlay")){
-                    clientCommunication.SchedulePutPlayRequest(_clientId, new Vector2Int(66,66), new Vector2Int(44,44), false);
-                    currentState = ClientState.WaitingPlayers;
-                }
+                GUIPlayingState();
             break;
             case ClientState.WaitingPlayers:
-                createMidScreenText("Waiting players turn");
+                GUIWaitingPlayersState();
             break;
             case ClientState.WaitingServer:
-                createMidScreenText("What happened");
+                GUIWaitingServerState();
             break;
             case ClientState.Updating:
-                createMidScreenText("Updating ship");
+                GUIUpdatingState();
             break;
         }
         
-    }
-
-    void createMidScreenText(string text){
-        GUILayout.BeginArea(new Rect(100, 10, 100, 100));
-        GUILayout.TextArea(text);
-        GUILayout.EndArea();
     }
 
     // Update is called once per second
@@ -91,6 +78,47 @@ public class ClientController : MonoBehaviour
         }
         
     }
+
+    //////// On GUI methods
+    void createMidScreenText(string text){
+        GUILayout.BeginArea(new Rect(100, 10, 100, 100));
+        GUILayout.TextArea(text);
+        GUILayout.EndArea();
+    }
+    void GUIToConnectState(){
+        if (GUILayout.Button("JOIN GAME")){
+            SetClientIdentity();
+            clientCommunication = gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
+            currentState = ClientState.WaitingGame;
+        }
+    }
+
+    void GUIWaitingGameState(){
+        createMidScreenText("Waiting players to enter");
+    }
+
+    void GUIWaitingPlayersState(){
+        createMidScreenText("Waiting players turn");
+    }
+
+    void GUIPlayingState(){
+        if (GUILayout.Button("Set PutPlay")){
+            clientCommunication.SchedulePutPlayRequest(_clientId, new Vector2Int(66,66), new Vector2Int(44,44), false);
+            currentState = ClientState.WaitingPlayers;
+        }
+    }
+
+    void GUIWaitingServerState(){
+        createMidScreenText("What happened");
+    }
+
+    void GUIUpdatingState(){
+        createMidScreenText("Updating ship");
+    }
+
+
+    //////// Update logic methods
+
 
     public void SetClientIdentity(){
         _clientId = Mathf.Abs(this.GetInstanceID() + System.DateTime.Now.Second);
