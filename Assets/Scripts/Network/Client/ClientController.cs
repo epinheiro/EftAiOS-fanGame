@@ -122,18 +122,10 @@ public class ClientController : MonoBehaviour
 
     }
     void WaitingGameState(){
-        if(serverState == ServerController.ServerState.SetUp){
-            clientCommunication.ScheduleGetStateRequest();
-        }else{
-            currentState = ClientState.Playing;
-        }
+        ChangeClientStateBaseOnServer(ServerController.ServerState.SetUp, ClientState.Playing);
     }
     void WaitingPlayersState(){
-        if(serverState == ServerController.ServerState.WaitingPlayers){
-            clientCommunication.ScheduleGetStateRequest();
-        }else{
-            currentState = ClientState.WaitingServer;
-        }
+        ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientState.WaitingServer);
     }
     void PlayingState(){
 
@@ -143,6 +135,17 @@ public class ClientController : MonoBehaviour
     }
     void UpdatingState(){
 
+    }
+
+    /// <summary>
+    /// Check if the server is on a specific state, when it changes the client moves to another state
+    /// </summary> 
+    void ChangeClientStateBaseOnServer(ServerController.ServerState checkCurrentServerState, ClientController.ClientState nextClientState){
+        if(serverState == checkCurrentServerState){
+            clientCommunication.ScheduleGetStateRequest();
+        }else{
+            currentState = nextClientState;
+        }
     }
 
 
