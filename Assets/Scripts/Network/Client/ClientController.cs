@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 
 public class ClientController : MonoBehaviour
@@ -13,6 +13,16 @@ public class ClientController : MonoBehaviour
         WaitingServer, 
         Updating
     }
+
+    public enum PlayerState {Unassigned, Alien, Human, Died, Escaped};
+
+    PlayerState currentPlayerState = PlayerState.Unassigned;
+    PlayerState _nextPlayerState = PlayerState.Unassigned;
+    public PlayerState NextPlayerState{
+        get { return _nextPlayerState; }
+        set { _nextPlayerState = value;}
+    }
+
     ClientState currentState = ClientState.ToConnect;
 
     public ServerController.ServerState serverState;
