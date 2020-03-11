@@ -27,7 +27,7 @@ public class BoardManager : MonoBehaviour
     public GameObject hexagonPrefab;
     public GameObject mapGameObjectReference;
 
-    Dictionary<string, GameObject> mapTiles;
+    Dictionary<string, TileData> mapTiles;
     GameObject _humanDormObj;
     public GameObject HumanDormObject {
         get { return _humanDormObj; }
@@ -41,7 +41,7 @@ public class BoardManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        mapTiles = new Dictionary<string, GameObject>();
+        mapTiles = new Dictionary<string, TileData>();
         CreateMap("Galilei");
     }
 
@@ -129,17 +129,10 @@ public class BoardManager : MonoBehaviour
         string[] tileInfo = ParseMap(FileAsset.GetMapTileInfo(mapName));
 
         for (int i=0; i < tileInfo.Length; i = i + 2){
-            //// Separating tile id
             string tileId = tileInfo[i];
-
-            string[] result = ParseTileCode(tileInfo[i]);
-            string column = result[0];
-            string row = result[1];
-
-            //// Separating tile type
             string tileType = tileInfo[i+1];
 
-            CreateTileInMap(row, column, tileType);
+            CreateTileInMap(tileId, tileType);
         }
         FitMapOnScreen();
     }
@@ -160,10 +153,14 @@ public class BoardManager : MonoBehaviour
         mapGameObjectReference.transform.position = new Vector3(-6, 4, 0);
         mapGameObjectReference.transform.localScale = new Vector3(.3f, .3f, 1);
     }
+    void CreateTileInMap(string tileId, string tileType){
+        string[] result = ParseTileCode(tileId);
+        string columnId = result[0];
+        string rowId = result[1];
 
-    void CreateTileInMap(string rowId, string columnId, string tileType){
         int rowNumber = TranslateRowIdToNumber(rowId);
         int columnNumber = TranslateColumnIdToNumber(columnId);
+
         int tileTypeNumber = TranslateTileTypeToEnumNumber(tileType);
 
         float xPos;
@@ -195,7 +192,15 @@ public class BoardManager : MonoBehaviour
 
         go.name = code;
 
-        mapTiles.Add(code, go);
+        mapTiles.Add(
+            code, 
+            new TileData(
+                go, 
+                (PossibleTypes) tileTypeNumber, 
+                tileId, 
+                new Vector2Int(rowNumber, columnNumber)
+            )
+        );
     }
 
     string TranslateTileNumbersToString(int columnNumber, int rowNumber){
