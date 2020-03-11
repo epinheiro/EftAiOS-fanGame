@@ -43,4 +43,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16ac9ab597f5eb849a9f81c99050d100, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverState: 0
+  boardManagerPrefab: {fileID: 6133883100209881065, guid: 3122c128a4651bd4d9715f864e23f419,
+    type: 3}
