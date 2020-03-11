@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
@@ -28,6 +28,8 @@ public class ServerController : MonoBehaviour
     Dictionary<int, PlayerTurnData> playerTurnDict;
 
     ExtendedList<ClientController.PlayerState> playerRolesToGive;
+
+    public GameObject boardManagerPrefab;
 
     BoardManager boardManager;
 
@@ -195,6 +197,8 @@ public class ServerController : MonoBehaviour
     //////// Update logic methods
     void SetUpStateEnd(){
         PreparePossibleRoles();
+        GameObject go = Instantiate(boardManagerPrefab, new Vector2(0, 0), Quaternion.identity);
+        boardManager = go.GetComponent<BoardManager>();
         nextState = ServerState.WaitingPlayers;
     }
     void PreparePossibleRoles(){
