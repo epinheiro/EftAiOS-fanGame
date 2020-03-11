@@ -28,13 +28,13 @@ public class BoardManager : MonoBehaviour
     public GameObject mapGameObjectReference;
 
     Dictionary<string, TileData> mapTiles;
-    GameObject _humanDormObj;
-    public GameObject HumanDormObject {
-        get { return _humanDormObj; }
+    string humanDormCode;
+    public string HumanDormCode {
+        get { return humanDormCode; }
     }
-    GameObject _alienNestObj;
-    public GameObject AlienNestObj {
-        get { return _alienNestObj; }
+    string alienNestCode;
+    public string AlienNestCode {
+        get { return alienNestCode; }
     }
 
 
@@ -180,11 +180,11 @@ public class BoardManager : MonoBehaviour
 
         switch((PossibleTypes) tileTypeNumber){
             case PossibleTypes.AlienNest:
-                _alienNestObj = go;
+                alienNestCode = tileId;
             break;
             
             case PossibleTypes.HumanDorm:
-                _humanDormObj = go;
+                humanDormCode = tileId;
             break;
         }
 
