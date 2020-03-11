@@ -25,12 +25,10 @@ public class ServerController : MonoBehaviour
     ServerCommunication serverCommunication;
     string serverIp;
 
-    Dictionary<int, PutPlayRequest> playersLastTurn;
-    Dictionary<int, bool> playerTurnControl;
+    Dictionary<int, PlayerTurnData> playerTurnDict;
 
     void Start(){
-        playersLastTurn = new Dictionary<int, PutPlayRequest>();
-        playerTurnControl = new Dictionary<int, bool>();
+        playerTurnDict = new Dictionary<int, PlayerTurnData>();
         serverCommunication = gameObject.AddComponent(typeof(ServerCommunication)) as ServerCommunication;
         serverIp = GetLocalIPAddress();
     }
@@ -86,37 +84,27 @@ public class ServerController : MonoBehaviour
     }
 
     public void InsertNewPlayTurnData(PutPlayRequest putPlayData){
-        bool playerAlreadyPlayed = false;
-        playerTurnControl.TryGetValue(putPlayData.playerId, out playerAlreadyPlayed);
+        int playerId = putPlayData.playerId;
 
-        if(!playerAlreadyPlayed){
-            bool sucess = playersLastTurn.ContainsKey(putPlayData.playerId);
-            if (sucess){
-                playersLastTurn.Remove(putPlayData.playerId);
-            }
-
-            playersLastTurn.Add(putPlayData.playerId, putPlayData);
-            UpdatePlayerTurnControl(true, putPlayData);
+        PlayerTurnData turnData;
+        if(playerTurnDict.TryGetValue(playerId, out turnData)){
+            turnData.InputNewPutPlay(putPlayData);
         }else{
-            throw new System.Exception(string.Format("Player {0} already marked as PLAYED", putPlayData.playerId));
+            playerTurnDict.Add(playerId, new PlayerTurnData(putPlayData));
         }
-    }
-
-    public void UpdatePlayerTurnControl(bool alreadyPlay, PutPlayRequest playerTurnData){
-        playerTurnControl.Remove(playerTurnData.playerId);
-        playerTurnControl.Add(playerTurnData.playerId, alreadyPlay);
     }
 
     public void ResetPlayerTurnControl(){
         List<int> keys = new List<int>();
 
-        foreach(int key in playerTurnControl.Keys){
+        foreach(int key in playerTurnDict.Keys){
             keys.Add(key);
         }
 
         foreach(int key in keys){
-            playerTurnControl.Remove(key);
-            playerTurnControl.Add(key, false);
+            PlayerTurnData data;
+            playerTurnDict.TryGetValue(key, out data);
+            data.playedThisTurn = false;
         }
     }
 
@@ -186,12 +174,12 @@ public class ServerController : MonoBehaviour
     }
 
     bool AllPlayersPlayed(){
-        if (serverCommunication.ConnectionQuantity != playerTurnControl.Count){
+        if (serverCommunication.ConnectionQuantity != playerTurnDict.Count){
             return false; // The lists are inserted in the first PutPlay
         }
 
-        foreach(KeyValuePair<int, bool> entry in playerTurnControl){
-            if (!entry.Value){
+        foreach(KeyValuePair<int, PlayerTurnData> entry in playerTurnDict){
+            if (!entry.Value.playedThisTurn){
                 return false;
             }
         }
