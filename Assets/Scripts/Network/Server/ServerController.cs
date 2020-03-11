@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
@@ -28,6 +28,8 @@ public class ServerController : MonoBehaviour
     Dictionary<int, PlayerTurnData> playerTurnDict;
 
     ExtendedList<ClientController.PlayerState> playerRolesToGive;
+
+    BoardManager boardManager;
 
     void Start(){
         playerRolesToGive = new ExtendedList<ClientController.PlayerState>();
@@ -124,7 +126,7 @@ public class ServerController : MonoBehaviour
             finalState = data.role;
         }else{ // Setup
             finalState = playerRolesToGive.PopValue();
-            finalPosition = new Vector2Int(playerId, playerId); // TODO get proper SPAWN point
+            finalPosition = boardManager.GetSpawnPointTileData(finalState).tilePosition;
 
             playerTurnDict.Add(
                 playerId, 
