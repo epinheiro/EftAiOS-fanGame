@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 
 public class ClientController : MonoBehaviour
@@ -42,7 +42,7 @@ public class ClientController : MonoBehaviour
     public GameObject boardManagerPrefab;
 
     BoardManager _boardManager;
-    public BoardManager BoardManager{
+    public BoardManager BoardManagerRef{
         get { return _boardManager; }
         set { 
             if(_boardManager==null){
@@ -57,7 +57,7 @@ public class ClientController : MonoBehaviour
     ClientControllerDelegateAction delegateBoardInstantiation = InstantiateBoardManager; 
     static void InstantiateBoardManager(ClientController client){
         GameObject go = Instantiate(client.boardManagerPrefab, new Vector2(0, 0), Quaternion.identity);
-        client.BoardManager = go.GetComponent<BoardManager>();
+        client.BoardManagerRef = go.GetComponent<BoardManager>();
     }
 
     // Start is called before the first frame update
