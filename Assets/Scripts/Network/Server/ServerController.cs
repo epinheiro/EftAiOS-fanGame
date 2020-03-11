@@ -27,7 +27,10 @@ public class ServerController : MonoBehaviour
 
     Dictionary<int, PlayerTurnData> playerTurnDict;
 
+    ExtendedList<ClientController.PlayerState> playerRolesToGive;
+
     void Start(){
+        playerRolesToGive = new ExtendedList<ClientController.PlayerState>();
         playerTurnDict = new Dictionary<int, PlayerTurnData>();
         serverCommunication = gameObject.AddComponent(typeof(ServerCommunication)) as ServerCommunication;
         serverIp = GetLocalIPAddress();
@@ -116,7 +119,7 @@ public class ServerController : MonoBehaviour
 
         GUILayout.TextArea(string.Format("Connect to IP: {0}", serverIp));
         if (GUILayout.Button("Start game")){
-            nextState = ServerState.WaitingPlayers;
+            SetUpStateEnd();            
         }
         
         // DEBUG positioning
@@ -159,6 +162,20 @@ public class ServerController : MonoBehaviour
     }
     
     //////// Update logic methods
+    void SetUpStateEnd(){
+        PreparePossibleRoles();
+        nextState = ServerState.WaitingPlayers;
+    }
+    void PreparePossibleRoles(){
+        int playersNumber = serverCommunication.ConnectionQuantity;
+        int numberHalf = playersNumber/2;
+        int alienModifier = playersNumber%2==0 ? 0 : 1; // There is always an even number of aliens - or 1 more
+
+        playerRolesToGive.AddRedundant(ClientController.PlayerState.Alien, numberHalf + alienModifier);
+        playerRolesToGive.AddRedundant(ClientController.PlayerState.Human, numberHalf);
+
+        playerRolesToGive.Shuffle();
+    }
     void WaitingPlayersState(){
         if (AllPlayersPlayed()){
             Debug.Log("SERVER - all players played");
