@@ -123,7 +123,7 @@ public class ServerController : MonoBehaviour
             finalPosition = data.lastPlay.movementTo;
             finalState = data.role;
         }else{ // Setup
-            finalState = ClientController.PlayerState.Human; // TODO get proper player role
+            finalState = playerRolesToGive.PopValue();
             finalPosition = new Vector2Int(playerId, playerId); // TODO get proper SPAWN point
 
             playerTurnDict.Add(
