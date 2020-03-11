@@ -231,6 +231,10 @@ public class BoardManager : MonoBehaviour
     ///////// Static board methods /////////
     ////////////////////////////////////////
 
+    static public string TranslateTilePositionToCode(Vector2Int tilePosition){
+        return TranslateTileNumbersToCode(tilePosition.x, tilePosition.y);
+    }
+
     static public string TranslateTileNumbersToCode(int columnNumber, int rowNumber){
         return string.Format("{0}{1:00}", TranslateNumberToColumnId(columnNumber), TranslateNumberToRowId(rowNumber));
     }
