@@ -22,6 +22,7 @@ public class ClientController : MonoBehaviour
         get { return _nextPlayerState; }
         set { _nextPlayerState = value;}
     }
+    public Vector2Int playerCurrentPosition;
 
     ClientState currentState = ClientState.ToConnect;
 

@@ -49,5 +49,6 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
             ((ClientCommunication)owner).ClientId, playerState, responseReceived.playerPosition));
         
         ((ClientCommunication)owner).clientController.NextPlayerState = playerState;
+        ((ClientCommunication)owner).clientController.playerCurrentPosition = responseReceived.playerPosition;
     }
 }
