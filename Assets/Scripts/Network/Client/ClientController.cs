@@ -38,6 +38,27 @@ public class ClientController : MonoBehaviour
         get => _clientId;
     }
 
+    public GameObject boardManagerPrefab;
+
+    BoardManager _boardManager;
+    public BoardManager BoardManager{
+        get { return _boardManager; }
+        set { 
+            if(_boardManager==null){
+                _boardManager = value;
+            }else{
+                throw new System.Exception("BoardManager already exists on client");
+            }
+        }
+    }
+
+    delegate void ClientControllerDelegateAction(ClientController client);
+    ClientControllerDelegateAction delegateBoardInstantiation = InstantiateBoardManager; 
+    static void InstantiateBoardManager(ClientController client){
+        GameObject go = Instantiate(client.boardManagerPrefab, new Vector2(0, 0), Quaternion.identity);
+        client.BoardManager = go.GetComponent<BoardManager>();
+    }
+
     // Start is called before the first frame update
     void Start(){
         InvokeRepeating("UpdateStati", 1f, 1f);
@@ -147,7 +168,7 @@ public class ClientController : MonoBehaviour
 
     }
     void WaitingGameState(){
-        ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientState.Updating);
+        ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientState.Updating, delegateBoardInstantiation);
     }
     void WaitingPlayersState(){
         ChangeClientStateBaseOnServer(ServerController.ServerState.Processing, ClientState.WaitingServer);
@@ -182,6 +203,15 @@ public class ClientController : MonoBehaviour
             clientCommunication.ScheduleGetStateRequest();
         }else{
             currentState = nextClientState;
+        }
+    }
+
+    void ChangeClientStateBaseOnServer(ServerController.ServerState expectedServerState, ClientController.ClientState nextClientState, ClientControllerDelegateAction delegation){
+        if(_serverState != expectedServerState){
+            clientCommunication.ScheduleGetStateRequest();
+        }else{
+            currentState = nextClientState;
+            delegation(this);
         }
     }
 
