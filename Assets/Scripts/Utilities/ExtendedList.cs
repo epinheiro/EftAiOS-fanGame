@@ -41,5 +41,15 @@ public class ExtendedList<T> : List<T>{
             this.Add(listEntry);
         }
     }
+    public T PopValue(){
+        if(this.Count == 0){
+            return default(T);
+        }else{
+            int lastIndex = this.Count-1;
+            T popValue = this[lastIndex];
+            this.RemoveAt(lastIndex);
+            return popValue;
+        }
+    }
 
 }
