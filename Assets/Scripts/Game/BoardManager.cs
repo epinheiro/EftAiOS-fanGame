@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -224,11 +224,15 @@ public class BoardManager : MonoBehaviour
         );
     }
 
-    string TranslateTileNumbersToString(int columnNumber, int rowNumber){
+    ////////////////////////////////////////
+    ///////// Static board methods /////////
+    ////////////////////////////////////////
+
+    static public string TranslateTileNumbersToString(int columnNumber, int rowNumber){
         return string.Format("{0}{1:00}", TranslateNumberToColumnId(columnNumber), TranslateNumberToRowId(rowNumber));
     }
 
-    int TranslateTileTypeToEnumNumber(string typeTypeString){
+    static public int TranslateTileTypeToEnumNumber(string typeTypeString){
         if (Enum.IsDefined(typeof(PossibleTypes), typeTypeString)){
             PossibleTypes output;
             Enum.TryParse(typeTypeString, false, out output);
@@ -238,15 +242,15 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    int TranslateRowIdToNumber(string rowId){
+    static public int TranslateRowIdToNumber(string rowId){
         return Int32.Parse(rowId);
     }
 
-    string TranslateNumberToRowId(int rowNumber){
+    static public string TranslateNumberToRowId(int rowNumber){
         return string.Format("{0:00}", rowNumber);
     }
 
-    int TranslateColumnIdToNumber(string columnId){
+    static public int TranslateColumnIdToNumber(string columnId){
         if (columnId.Length == 1){
             return (int) columnId[0] - 64;
         }else{
@@ -254,12 +258,12 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    string TranslateNumberToColumnId(int columnNumber){
+    static public string TranslateNumberToColumnId(int columnNumber){
         int alphaCode = columnNumber + 64;
         return string.Format("{0}", (char) alphaCode);
     }
 
-    string[] ParseMap(string mapString){
+    static public string[] ParseMap(string mapString){
         char[] delimiterChars = { ' ', ',', '{', '}', '"', ':', '\n', '\r'};
         return mapString.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
     }
