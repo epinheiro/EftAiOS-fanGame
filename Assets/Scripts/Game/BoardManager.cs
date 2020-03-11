@@ -24,8 +24,8 @@ public class BoardManager : MonoBehaviour
     readonly Spacing evenColumnSpacing = new Spacing{x = 0, y = 0};
     readonly Spacing oddColumnSpacing = new Spacing{x = 1.65f, y = 0.95f};
 
-    public GameObject hexagonPrefab;
-    public GameObject mapGameObjectReference;
+    GameObject hexagonPrefab;
+    GameObject mapInSceneReference;
 
     Dictionary<string, TileData> mapTiles;
     string humanDormCode;
@@ -41,6 +41,9 @@ public class BoardManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        hexagonPrefab = GameObject.Find("Hexagon");
+        mapInSceneReference = GameObject.Find("Map");
+
         mapTiles = new Dictionary<string, TileData>();
         CreateMap("Galilei");
     }
@@ -152,6 +155,7 @@ public class BoardManager : MonoBehaviour
             CreateTileInMap(tileId, tileType);
         }
         FitMapOnScreen();
+        hexagonPrefab.SetActive(false); // Hide prefab hexagon on screen
     }
 
     string[] ParseTileCode(string code){
@@ -167,8 +171,8 @@ public class BoardManager : MonoBehaviour
 
     void FitMapOnScreen(){
         // TODO - technical dept - rescalling map proportions to 16:10
-        mapGameObjectReference.transform.position = new Vector3(-6, 4, 0);
-        mapGameObjectReference.transform.localScale = new Vector3(.3f, .3f, 1);
+        mapInSceneReference.transform.position = new Vector3(-6, 4, 0);
+        mapInSceneReference.transform.localScale = new Vector3(.3f, .3f, 1);
     }
     void CreateTileInMap(string tileId, string tileType){
         string[] result = ParseTileCode(tileId);
@@ -192,7 +196,7 @@ public class BoardManager : MonoBehaviour
         }
 
         GameObject go = Instantiate(hexagonPrefab, new Vector3(xPos, yPos, 0), Quaternion.identity);
-        go.transform.parent = mapGameObjectReference.transform;
+        go.transform.parent = mapInSceneReference.transform;
         go.GetComponent<SpriteRenderer>().color = colors[tileTypeNumber];
 
         switch((PossibleTypes) tileTypeNumber){
