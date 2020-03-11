@@ -8,10 +8,10 @@ public class PlayerTurnData
     public bool playedThisTurn;
     public ClientController.PlayerState role;
 
-    public PlayerTurnData(PutPlayRequest lastPutPlay){
+    public PlayerTurnData(PutPlayRequest lastPutPlay, ClientController.PlayerState role){
         this.lastPlay = lastPutPlay;
-        this.playedThisTurn = true;
-        this.role = ClientController.PlayerState.Unassigned;
+        this.playedThisTurn = false;
+        this.role = role;
     }
 
     public void InputNewPutPlay(PutPlayRequest newPutPlay){

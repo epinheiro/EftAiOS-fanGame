@@ -94,7 +94,7 @@ public class ServerController : MonoBehaviour
         if(playerTurnDict.TryGetValue(playerId, out turnData)){
             turnData.InputNewPutPlay(putPlayData);
         }else{
-            playerTurnDict.Add(playerId, new PlayerTurnData(putPlayData));
+            throw new System.Exception(string.Format("SERVER - client {0} should have a play entry already", putPlayData.playerId));
         }
     }
 
@@ -113,8 +113,31 @@ public class ServerController : MonoBehaviour
     }
 
     public void GetPlayerData(int playerId, out Vector2Int position, out ClientController.PlayerState state){
-        position = Vector2Int.zero; // TODO change
-        state = ClientController.PlayerState.Human; // TODO change
+        Vector2Int finalPosition;
+        ClientController.PlayerState finalState;
+
+        if(playerTurnDict.ContainsKey(playerId)){
+            PlayerTurnData data;
+            playerTurnDict.TryGetValue(playerId, out data);
+
+            finalPosition = data.lastPlay.movementTo;
+            finalState = data.role;
+        }else{ // Setup
+            finalState = ClientController.PlayerState.Human; // TODO get proper player role
+            finalPosition = new Vector2Int(playerId, playerId); // TODO get proper SPAWN point
+
+            playerTurnDict.Add(
+                playerId, 
+                new PlayerTurnData(
+                    new PutPlayRequest(playerId, finalPosition.x, finalPosition.y, finalPosition.x, finalPosition.y, false),
+                    finalState
+                )                
+            );
+        }
+
+        // Method outputs
+        position = finalPosition;
+        state = finalState;
     }
 
     //////// On GUI methods
