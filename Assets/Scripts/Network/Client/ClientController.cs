@@ -25,7 +25,11 @@ public class ClientController : MonoBehaviour
 
     ClientState currentState = ClientState.ToConnect;
 
-    public ServerController.ServerState serverState;
+    ServerController.ServerState _serverState;
+    public ServerController.ServerState ServerState{
+        get { return _serverState; }
+        set { _serverState = value; }
+    }
 
     ClientCommunication clientCommunication;
 
@@ -174,7 +178,7 @@ public class ClientController : MonoBehaviour
     /// Check if the server is on a specific state, when it gets there the client moves to another state
     /// </summary> 
     void ChangeClientStateBaseOnServer(ServerController.ServerState expectedServerState, ClientController.ClientState nextClientState){
-        if(serverState != expectedServerState){
+        if(_serverState != expectedServerState){
             clientCommunication.ScheduleGetStateRequest();
         }else{
             currentState = nextClientState;
