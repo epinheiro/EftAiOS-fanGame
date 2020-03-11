@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -71,8 +71,8 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    List<string> PossibleMovements(string currentTileCode, int movement = 1){
-        List<string> movementsList = new List<string>();
+    public List<TileData> PossibleMovements(string currentTileCode, int movement = 1){
+        List<TileData> movementsList = new List<TileData>();
 
         if (movement < 1 || movement > 2) throw new Exception("Movement must be 1 or 2");
     
@@ -134,11 +134,14 @@ public class BoardManager : MonoBehaviour
         return movementsList;
     }
 
-    void CheckTileCodeAndInsert(List<string> list, int columnNumber, int rowNumber){
-        string tileCode = TranslateTileNumbersToString(columnNumber, rowNumber);
+    void CheckTileCodeAndInsert(List<TileData> list, int columnNumber, int rowNumber){
+        string tileCode = TranslateTileNumbersToCode(columnNumber, rowNumber);
         
-        if (IsTileCodeExists(tileCode)) 
-            list.Add(tileCode);
+        if (IsTileCodeExists(tileCode)) {
+            TileData data;
+            mapTiles.TryGetValue(tileCode, out data);
+            list.Add(data);
+        }
     }
 
     bool IsTileCodeExists(string tileCode){
@@ -209,7 +212,7 @@ public class BoardManager : MonoBehaviour
             break;
         }
 
-        string code = TranslateTileNumbersToString(columnNumber, rowNumber);
+        string code = TranslateTileNumbersToCode(columnNumber, rowNumber);
 
         go.name = code;
 
@@ -228,7 +231,7 @@ public class BoardManager : MonoBehaviour
     ///////// Static board methods /////////
     ////////////////////////////////////////
 
-    static public string TranslateTileNumbersToString(int columnNumber, int rowNumber){
+    static public string TranslateTileNumbersToCode(int columnNumber, int rowNumber){
         return string.Format("{0}{1:00}", TranslateNumberToColumnId(columnNumber), TranslateNumberToRowId(rowNumber));
     }
 
