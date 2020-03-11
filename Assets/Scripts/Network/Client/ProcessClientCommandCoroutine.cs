@@ -19,7 +19,7 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
                 GetStateCommand(driver, connection, strm);
             break;
             case ServerCommunication.ServerCommand.GetResults:
-                GetResults();
+                GetResults(driver, connection, strm);
             break;
             default:
                 throw new System.Exception(string.Format("Command number {0} not found", enumCommandNumber));
@@ -41,7 +41,13 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
         ((ClientCommunication)owner).clientController.serverState = responseReceived.ServerState;
     }
 
-    void GetResults(){
+    void GetResults(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+        GetResultsResponse responseReceived = new GetResultsResponse(strm);
 
+        ClientController.PlayerState playerState = (ClientController.PlayerState) responseReceived.playerState;
+        Debug.Log(string.Format("CLIENT {0} received server results with player ({1}) at {2}", 
+            ((ClientCommunication)owner).ClientId, playerState, responseReceived.playerPosition));
+        
+        ((ClientCommunication)owner).clientController.NextPlayerState = playerState;
     }
 }

@@ -1,4 +1,4 @@
-
+﻿
 using UnityEngine;
 
 public class ClientController : MonoBehaviour
@@ -123,7 +123,18 @@ public class ClientController : MonoBehaviour
     }
 
     void GUIUpdatingState(){
-        createMidScreenText("Updating ship");
+        switch(NextPlayerState){
+            case PlayerState.Died:
+                createMidScreenText("You died!");
+            break;
+            case PlayerState.Escaped:
+                createMidScreenText("You won!");
+            break;
+
+            default:
+                createMidScreenText("Updating ship");
+            break;
+        }
     }
 
 
@@ -144,7 +155,19 @@ public class ClientController : MonoBehaviour
         ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientState.Updating);
     }
     void UpdatingState(){
-        currentState = ClientState.Playing;
+        switch(NextPlayerState){
+            case PlayerState.Unassigned:
+                clientCommunication.ScheduleGetResultsRequest();
+            break;
+
+            case PlayerState.Alien:
+            case PlayerState.Human:
+                currentPlayerState = NextPlayerState;
+                NextPlayerState = PlayerState.Unassigned;
+                
+                currentState = ClientState.Playing;
+            break;
+        }
     }
 
     /// <summary>

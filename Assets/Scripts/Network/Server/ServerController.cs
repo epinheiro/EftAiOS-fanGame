@@ -32,6 +32,7 @@ public class ServerController : MonoBehaviour
     void Start(){
         playerRolesToGive = new ExtendedList<ClientController.PlayerState>();
         playerTurnDict = new Dictionary<int, PlayerTurnData>();
+
         serverCommunication = gameObject.AddComponent(typeof(ServerCommunication)) as ServerCommunication;
         serverIp = GetLocalIPAddress();
     }
@@ -109,6 +110,11 @@ public class ServerController : MonoBehaviour
             playerTurnDict.TryGetValue(key, out data);
             data.playedThisTurn = false;
         }
+    }
+
+    public void GetPlayerData(int playerId, out Vector2Int position, out ClientController.PlayerState state){
+        position = Vector2Int.zero; // TODO change
+        state = ClientController.PlayerState.Human; // TODO change
     }
 
     //////// On GUI methods
