@@ -219,7 +219,7 @@ public class BoardManager : MonoBehaviour
                 go, 
                 (PossibleTypes) tileTypeNumber, 
                 tileId, 
-                new Vector2Int(rowNumber, columnNumber)
+                new Vector2Int(columnNumber, rowNumber)
             )
         );
     }
