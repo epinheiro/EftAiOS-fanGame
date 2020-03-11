@@ -51,6 +51,23 @@ public class BoardManager : MonoBehaviour
         
     }
 
+    public TileData GetSpawnPointTileData(ClientController.PlayerState state){
+        TileData data;
+
+        switch(state){
+            case ClientController.PlayerState.Alien:{}
+                mapTiles.TryGetValue(alienNestCode, out data);
+                return data;
+
+            case ClientController.PlayerState.Human:
+                mapTiles.TryGetValue(humanDormCode, out data);
+                return data;
+
+            default:
+                throw new System.Exception(string.Format("Tile {0} has no spawn point", (ClientController.PlayerState) state));
+        }
+    }
+
     List<string> PossibleMovements(string currentTileCode, int movement = 1){
         List<string> movementsList = new List<string>();
 
