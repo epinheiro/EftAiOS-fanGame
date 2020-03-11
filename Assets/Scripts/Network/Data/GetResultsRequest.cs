@@ -4,7 +4,7 @@ public class GetResultsRequest : INetworkData
 {
     static public readonly int commandCode = (int) ServerCommunication.ServerCommand.GetResults;
 
-    public int playerId;
+    public readonly int playerId;
 
     public int[] DataToArray(){
         return new int[]{commandCode, playerId};

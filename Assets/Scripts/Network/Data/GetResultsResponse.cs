@@ -5,22 +5,20 @@ public class GetResultsResponse : INetworkData
 {
     static public readonly int commandCode = (int) ServerCommunication.ServerCommand.GetResults;
 
-    public int playerState; // TODO proper enum of player states
-
-    public int playerRole; // TODO proper enum of player roles
+    public readonly int playerState;
 
     public readonly Vector2Int playerPosition; 
 
     public int[] DataToArray(){
-        return new int[]{commandCode, playerState};
+        return new int[]{commandCode, playerState, playerPosition.x, playerPosition.y};
     }
 
     /// <summary>
     /// This constructor is for WRAPPING the data to make a request
     /// </summary> 
-    public GetResultsResponse(int playerState, int playerPositionX, int playerPositionY){
-        this.playerState = playerState;
-        playerPosition = new Vector2Int(playerPositionX, playerPositionY);
+    public GetResultsResponse(ClientController.PlayerState playerState, Vector2Int playerPosition){
+        this.playerState = (int) playerState;
+        this.playerPosition = playerPosition;
     }
 
     /// <summary>
