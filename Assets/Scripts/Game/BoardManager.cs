@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -72,7 +72,7 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    void GlowPossibleMovements(string tileCode, int movement = 1){
+    public void GlowPossibleMovements(string tileCode, int movement){
         List<TileData> movementsList = PossibleMovements(tileCode, movement);
 
         foreach(TileData data in movementsList){
@@ -92,77 +92,58 @@ public class BoardManager : MonoBehaviour
         go.transform.position = new Vector2(worldPosition.x, worldPosition.y);
     }
 
-    public List<TileData> PossibleMovements(string currentTileCode, int movement = 1){
+    List<TileData> PossibleMovements(string startingTile, int movement){
         List<TileData> movementsList = new List<TileData>();
 
-        if (movement < 1 || movement > 2) throw new Exception("Movement must be 1 or 2");
-    
-        string[] parseResult = ParseTileCode(currentTileCode);
-        string columnId = parseResult[0];
-        string rowId = parseResult[1];
+        PropagateMovement(movementsList, startingTile, startingTile, movement); 
 
-        int columnNumber = TranslateColumnIdToNumber(columnId);
-        int rowNumber = TranslateRowIdToNumber(rowId);
-
-        // TODO - Technical debt - the tile selection is almost hardcoded and disconsider navigation by jumping obstacles
-
-        ///////// Check 1 radius /////////
-        // Same column
-        CheckTileCodeAndInsert(movementsList, columnNumber, rowNumber-1);
-        CheckTileCodeAndInsert(movementsList, columnNumber, rowNumber+1);
-        // Neighbor column
-        if (columnNumber % 2 == 0){
-            CheckTileCodeAndInsert(movementsList, columnNumber-1, rowNumber  );
-            CheckTileCodeAndInsert(movementsList, columnNumber-1, rowNumber+1);
-            CheckTileCodeAndInsert(movementsList, columnNumber+1, rowNumber  );
-            CheckTileCodeAndInsert(movementsList, columnNumber+1, rowNumber+1);
-        }else{
-            CheckTileCodeAndInsert(movementsList, columnNumber-1, rowNumber-1);
-            CheckTileCodeAndInsert(movementsList, columnNumber-1, rowNumber  );
-            CheckTileCodeAndInsert(movementsList, columnNumber+1, rowNumber-1);
-            CheckTileCodeAndInsert(movementsList, columnNumber+1, rowNumber  );
-        }
-        ///////// Check 1 radius /////////
-
-        ///////// Check 2 radius /////////
-        if (movement == 2){
-            // Same column
-            CheckTileCodeAndInsert(movementsList, columnNumber, rowNumber-2);
-            CheckTileCodeAndInsert(movementsList, columnNumber, rowNumber+2);
-            // Neighbor column
-            if (columnNumber % 2 == 0){
-                CheckTileCodeAndInsert(movementsList, columnNumber-1, rowNumber-1);
-                CheckTileCodeAndInsert(movementsList, columnNumber-1, rowNumber+2);
-                CheckTileCodeAndInsert(movementsList, columnNumber+1, rowNumber-1);
-                CheckTileCodeAndInsert(movementsList, columnNumber+1, rowNumber+2);
-            }else{
-                CheckTileCodeAndInsert(movementsList, columnNumber-1, rowNumber-2);
-                CheckTileCodeAndInsert(movementsList, columnNumber-1, rowNumber+1);
-                CheckTileCodeAndInsert(movementsList, columnNumber+1, rowNumber-2);
-                CheckTileCodeAndInsert(movementsList, columnNumber+1, rowNumber+1);
-            }
-
-            // Neighbor's Neighbor column
-            CheckTileCodeAndInsert(movementsList, columnNumber-2, rowNumber-1);
-            CheckTileCodeAndInsert(movementsList, columnNumber-2, rowNumber  );
-            CheckTileCodeAndInsert(movementsList, columnNumber-2, rowNumber+1);
-            CheckTileCodeAndInsert(movementsList, columnNumber+2, rowNumber-1);
-            CheckTileCodeAndInsert(movementsList, columnNumber+2, rowNumber  );
-            CheckTileCodeAndInsert(movementsList, columnNumber+2, rowNumber+1);
-        }
-        ///////// Check 2 radius /////////
-        
         return movementsList;
     }
 
-    void CheckTileCodeAndInsert(List<TileData> list, int columnNumber, int rowNumber){
-        string tileCode = TranslateTileNumbersToCode(columnNumber, rowNumber);
-        
-        if (TileExistsInMap(tileCode)) {
-            TileData data;
-            mapTiles.TryGetValue(tileCode, out data);
-            list.Add(data);
+    void PropagateMovement(List<TileData> list, string startingTileCode, string tileCode, int movementsLeft){
+        if(movementsLeft==0) return;
+
+        string[] parseResult = ParseTileCode(tileCode);
+        int columnNumber = TranslateColumnIdToNumber(parseResult[0]);
+        int rowNumber = TranslateRowIdToNumber(parseResult[1]);
+
+        CheckTileCodeAndInsert(list, startingTileCode, columnNumber, rowNumber-1, movementsLeft);
+        CheckTileCodeAndInsert(list, startingTileCode, columnNumber, rowNumber+1, movementsLeft);
+        // Neighbor column
+        if (columnNumber % 2 == 0){
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber-1, rowNumber  , movementsLeft);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber-1, rowNumber+1, movementsLeft);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber+1, rowNumber  , movementsLeft);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber+1, rowNumber+1, movementsLeft);
+        }else{
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber-1, rowNumber-1, movementsLeft);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber-1, rowNumber  , movementsLeft);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber+1, rowNumber-1, movementsLeft);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber+1, rowNumber  , movementsLeft);
         }
+    }
+
+    void CheckTileCodeAndInsert(List<TileData> list, string startingTileCode, int columnNumber, int rowNumber, int movementsLeft){
+        string tileCode = TranslateTileNumbersToCode(columnNumber, rowNumber);
+
+        if(string.Equals(startingTileCode, tileCode)) return;
+        
+
+        if (TileExistsInMap(tileCode)) {
+            if(!TileExistsInList(list, tileCode)){
+                TileData data;
+                mapTiles.TryGetValue(tileCode, out data);
+                list.Add(data);
+            }
+            PropagateMovement(list, startingTileCode, tileCode, movementsLeft-1);
+        }
+    }
+
+    bool TileExistsInList(List<TileData> list, string tileCode){
+        foreach(TileData data in list){
+            if(data.tileCode == tileCode) return true;
+        }
+        return false;
     }
 
     bool TileExistsInMap(string tileCode){
