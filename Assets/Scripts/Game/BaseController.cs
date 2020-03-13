@@ -20,5 +20,6 @@ public class BaseController : MonoBehaviour
     static protected void InstantiateBoardManager(BaseController controller){
         GameObject go = Instantiate(controller.boardManagerPrefab, new Vector2(0, 0), Quaternion.identity);
         controller.BoardManagerRef = go.GetComponent<BoardManager>();
+        go.name = "BoardManager";
     }
 }

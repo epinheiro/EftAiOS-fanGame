@@ -87,6 +87,7 @@ public class BoardManager : MonoBehaviour
         Vector2 worldPosition = data.gameObjectReference.transform.position;
 
         GameObject go = Instantiate(glowPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        go.name = tileCode;
         FitUIElementOnScreen(go);
         go.transform.parent = glowTilesAggregator.transform;
         go.transform.position = new Vector2(worldPosition.x, worldPosition.y);
