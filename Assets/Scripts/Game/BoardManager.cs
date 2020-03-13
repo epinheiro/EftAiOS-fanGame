@@ -25,6 +25,7 @@ public class BoardManager : MonoBehaviour
     readonly Spacing oddColumnSpacing = new Spacing{x = 1.65f, y = 0.95f};
 
     public GameObject hexagonPrefab;
+    public GameObject glowPrefab;
 
     Dictionary<string, TileData> mapTiles;
     string humanDormCode;
