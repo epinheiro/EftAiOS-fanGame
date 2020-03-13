@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -154,7 +154,7 @@ public class BoardManager : MonoBehaviour
 
             CreateTileInMap(tileId, tileType);
         }
-        FitMapOnScreen();
+        FitUIElementOnScreen(this.gameObject);
     }
 
     string[] ParseTileCode(string code){
@@ -168,10 +168,10 @@ public class BoardManager : MonoBehaviour
         };
     }
 
-    void FitMapOnScreen(){
+    void FitUIElementOnScreen(GameObject go){
         // TODO - technical dept - rescalling map proportions to 16:10
-        this.transform.position = new Vector3(-6, 4, 0);
-        this.transform.localScale = new Vector3(.3f, .3f, 1);
+        go.transform.position = new Vector3(-6, 4, 0);
+        go.transform.localScale = new Vector3(.3f, .3f, 1);
     }
     void CreateTileInMap(string tileId, string tileType){
         string[] result = ParseTileCode(tileId);
