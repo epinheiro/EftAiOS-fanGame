@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -170,17 +170,6 @@ public class BoardManager : MonoBehaviour
         FitUIElementOnScreen(this.gameObject);
     }
 
-    string[] ParseTileCode(string code){
-        //https://stackoverflow.com/a/1968058
-        Regex re = new Regex(@"([a-zA-Z]+)(\d+)");
-        Match result = re.Match(code);
-
-        return new string[]{
-            result.Groups[1].Value, //alphaPart
-            result.Groups[2].Value  //numberPart
-        };
-    }
-
     void FitUIElementOnScreen(GameObject go){
         // TODO - technical dept - rescalling map proportions to 16:10
         go.transform.position = new Vector3(-6, 4, 0);
@@ -239,6 +228,21 @@ public class BoardManager : MonoBehaviour
     ////////////////////////////////////////
     ///////// Static board methods /////////
     ////////////////////////////////////////
+
+    static public string[] ParseTileCode(string code){
+        //https://stackoverflow.com/a/1968058
+        Regex re = new Regex(@"([a-zA-Z]+)(\d+)");
+        Match result = re.Match(code);
+
+        return new string[]{
+            result.Groups[1].Value, //alphaPart
+            result.Groups[2].Value  //numberPart
+        };
+    }
+    static public Vector2Int TileCodeToVector2Int(string tileCode){
+        string[] parts = ParseTileCode(tileCode);
+        return new Vector2Int(TranslateColumnIdToNumber(parts[0]), TranslateRowIdToNumber(parts[1]));
+    }
 
     static public string TranslateTilePositionToCode(Vector2Int tilePosition){
         return TranslateTileNumbersToCode(tilePosition.x, tilePosition.y);
