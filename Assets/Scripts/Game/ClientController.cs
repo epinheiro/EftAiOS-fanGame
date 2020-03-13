@@ -1,4 +1,4 @@
-
+﻿
 using UnityEngine;
 
 public class ClientController : MonoBehaviour
@@ -23,6 +23,7 @@ public class ClientController : MonoBehaviour
         set { _nextPlayerState = value;}
     }
     public Vector2Int playerCurrentPosition;
+    Vector2Int playerNextPosition;
 
     ClientState currentState = ClientState.ToConnect;
 
@@ -175,7 +176,7 @@ public class ClientController : MonoBehaviour
         ChangeClientStateBaseOnServer(ServerController.ServerState.Processing, ClientState.WaitingServer);
     }
     void PlayingState(){
-
+        // List<TileData> tileList = BoardManagerRef.PossibleMovements(BoardManager.TranslateTileNumbersToString(playerCurrentPosition.x, playerCurrentPosition.y));
     }
     void WaitingServerState(){
         ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientState.Updating);
