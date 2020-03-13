@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -158,14 +158,14 @@ public class BoardManager : MonoBehaviour
     void CheckTileCodeAndInsert(List<TileData> list, int columnNumber, int rowNumber){
         string tileCode = TranslateTileNumbersToCode(columnNumber, rowNumber);
         
-        if (IsTileCodeExists(tileCode)) {
+        if (TileExistsInMap(tileCode)) {
             TileData data;
             mapTiles.TryGetValue(tileCode, out data);
             list.Add(data);
         }
     }
 
-    bool IsTileCodeExists(string tileCode){
+    bool TileExistsInMap(string tileCode){
         return mapTiles.ContainsKey(tileCode);
     }
 
