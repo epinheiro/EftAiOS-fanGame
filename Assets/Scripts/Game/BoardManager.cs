@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -28,6 +28,7 @@ public class BoardManager : MonoBehaviour
     public GameObject glowPrefab;
 
     Dictionary<string, TileData> mapTiles;
+    GameObject glowTilesAggregator;
     string humanDormCode;
     public string HumanDormCode {
         get { return humanDormCode; }
@@ -41,6 +42,9 @@ public class BoardManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        glowTilesAggregator = new GameObject("Glow tiles");
+        glowTilesAggregator.transform.parent = this.transform;
+
         mapTiles = new Dictionary<string, TileData>();
         CreateMap("Galilei");
     }
@@ -66,6 +70,26 @@ public class BoardManager : MonoBehaviour
             default:
                 throw new System.Exception(string.Format("Tile {0} has no spawn point", (ClientController.PlayerState) state));
         }
+    }
+
+    void GlowPossibleMovements(string tileCode, int movement = 1){
+        List<TileData> movementsList = PossibleMovements(tileCode, movement);
+
+        foreach(TileData data in movementsList){
+            GlowTile(data.tileCode);
+        }
+    }
+
+    void GlowTile(string tileCode){
+        TileData data;
+        mapTiles.TryGetValue(tileCode, out data);
+
+        Vector2 worldPosition = data.gameObjectReference.transform.position;
+
+        GameObject go = Instantiate(glowPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        FitUIElementOnScreen(go);
+        go.transform.parent = glowTilesAggregator.transform;
+        go.transform.position = new Vector2(worldPosition.x, worldPosition.y);
     }
 
     public List<TileData> PossibleMovements(string currentTileCode, int movement = 1){
