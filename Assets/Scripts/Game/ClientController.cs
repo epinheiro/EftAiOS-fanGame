@@ -10,6 +10,7 @@ public class ClientController : BaseController
         WaitingGame, 
         // In-game states
         BeginTurn, 
+        Playing,
         WaitingPlayers, 
         WaitingServer, 
         Updating
@@ -42,7 +43,11 @@ public class ClientController : BaseController
     }
 
     delegate void ClientControllerDelegateAction(ClientController client);
-    ClientControllerDelegateAction delegateBoardInstantiation = InstantiateBoardManager; 
+    ClientControllerDelegateAction delegateBoardInstantiation = InstantiateBoardManager;
+
+    static protected void InvokeCleanHighlights(BaseController controller){
+        controller.BoardManagerRef.CleanHighlightedTiles();
+    }
 
     // Start is called before the first frame update
     void Start(){
@@ -57,8 +62,8 @@ public class ClientController : BaseController
             case ClientState.WaitingGame:
                 GUIWaitingGameState();
             break;
-            case ClientState.BeginTurn:
-                GUIBeginTurnState();
+            case ClientState.Playing:
+                GUIPlayingTurnState();
             break;
             case ClientState.WaitingPlayers:
                 GUIWaitingPlayersState();
@@ -121,9 +126,14 @@ public class ClientController : BaseController
         createMidScreenText("Waiting players turn");
     }
 
-    void GUIBeginTurnState(){
+    void GUIPlayingTurnState(){
         if (GUILayout.Button("Set PutPlay")){
-            clientCommunication.SchedulePutPlayRequest(_clientId, new Vector2Int(66,66), new Vector2Int(44,44), false);
+            clientCommunication.SchedulePutPlayRequest(
+                _clientId, 
+                BoardManager.TileCodeToVector2Int(BoardManagerRef.HumanDormCode), //Movement DEBUG
+                BoardManager.TileCodeToVector2Int(BoardManagerRef.AlienNestCode), //Sound DEBUG
+                false
+            );
             currentState = ClientState.WaitingPlayers;
         }
     }
@@ -156,10 +166,21 @@ public class ClientController : BaseController
         ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientState.Updating, delegateBoardInstantiation);
     }
     void WaitingPlayersState(){
-        ChangeClientStateBaseOnServer(ServerController.ServerState.Processing, ClientState.WaitingServer);
+        ChangeClientStateBaseOnServer(ServerController.ServerState.Processing, ClientState.WaitingServer, InvokeCleanHighlights);
     }
     void BeginTurnState(){
-        // List<TileData> tileList = BoardManagerRef.PossibleMovements(BoardManager.TranslateTileNumbersToString(playerCurrentPosition.x, playerCurrentPosition.y));
+        string currentTileCode = BoardManager.TranslateTileNumbersToCode(playerCurrentPosition.x, playerCurrentPosition.y);
+        int movement = 0;
+        switch(currentPlayerState){
+            case PlayerState.Alien:
+                movement = 2;
+                break;
+            case PlayerState.Human:
+                movement = 1;
+                break;
+        }
+        BoardManagerRef.GlowPossibleMovements(currentTileCode, movement);
+        currentState = ClientState.Playing;
     }
     void WaitingServerState(){
         ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientState.Updating);
