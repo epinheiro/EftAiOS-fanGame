@@ -158,7 +158,7 @@ public class ServerController : BaseController
         // DEBUG positioning
     }
     bool IsPossibleToBeginMatch(){
-        return serverCommunication.ConnectionQuantity > 1;
+        return serverCommunication.ConnectionQuantity > 0; // DEBUG value - Correct value is 1 
     }
     void GUIWaitingPlayersState(){
         // DEBUG positioning
