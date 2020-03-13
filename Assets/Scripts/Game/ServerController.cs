@@ -147,13 +147,18 @@ public class ServerController : BaseController
         // DEBUG positioning
 
         GUILayout.TextArea(string.Format("Connect to IP: {0}", serverIp));
-        if (GUILayout.Button("Start game")){
-            SetUpStateEnd();            
+        if(IsPossibleToBeginMatch()){
+            if (GUILayout.Button("Start game")){
+                SetUpStateEnd();
+            }
         }
-        
+
         // DEBUG positioning
         GUILayout.EndArea();
         // DEBUG positioning
+    }
+    bool IsPossibleToBeginMatch(){
+        return serverCommunication.ConnectionQuantity > 1;
     }
     void GUIWaitingPlayersState(){
         // DEBUG positioning
