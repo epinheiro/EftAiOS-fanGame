@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
-public class ServerController : MonoBehaviour
+public class ServerController : BaseController
 {
     public enum ServerState {
         // Pre-game states
@@ -28,10 +28,6 @@ public class ServerController : MonoBehaviour
     Dictionary<int, PlayerTurnData> playerTurnDict;
 
     ExtendedList<ClientController.PlayerState> playerRolesToGive;
-
-    public GameObject boardManagerPrefab;
-
-    BoardManager boardManager;
 
     void Start(){
         playerRolesToGive = new ExtendedList<ClientController.PlayerState>();
@@ -128,7 +124,7 @@ public class ServerController : MonoBehaviour
             finalState = data.role;
         }else{ // Setup
             finalState = playerRolesToGive.PopValue();
-            finalPosition = boardManager.GetSpawnPointTileData(finalState).tilePosition;
+            finalPosition = _boardManager.GetSpawnPointTileData(finalState).tilePosition;
 
             playerTurnDict.Add(
                 playerId, 
@@ -197,8 +193,7 @@ public class ServerController : MonoBehaviour
     //////// Update logic methods
     void SetUpStateEnd(){
         PreparePossibleRoles();
-        GameObject go = Instantiate(boardManagerPrefab, new Vector2(0, 0), Quaternion.identity);
-        boardManager = go.GetComponent<BoardManager>();
+        InstantiateBoardManager(this);
         nextState = ServerState.WaitingPlayers;
     }
     void PreparePossibleRoles(){

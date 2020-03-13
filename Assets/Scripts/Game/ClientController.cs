@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 
-public class ClientController : MonoBehaviour
+public class ClientController : BaseController
 {
     public enum ClientState {
         // Pre-game states
@@ -40,26 +40,8 @@ public class ClientController : MonoBehaviour
         get => _clientId;
     }
 
-    public GameObject boardManagerPrefab;
-
-    BoardManager _boardManager;
-    public BoardManager BoardManagerRef{
-        get { return _boardManager; }
-        set { 
-            if(_boardManager==null){
-                _boardManager = value;
-            }else{
-                throw new System.Exception("BoardManager already exists on client");
-            }
-        }
-    }
-
     delegate void ClientControllerDelegateAction(ClientController client);
     ClientControllerDelegateAction delegateBoardInstantiation = InstantiateBoardManager; 
-    static void InstantiateBoardManager(ClientController client){
-        GameObject go = Instantiate(client.boardManagerPrefab, new Vector2(0, 0), Quaternion.identity);
-        client.BoardManagerRef = go.GetComponent<BoardManager>();
-    }
 
     // Start is called before the first frame update
     void Start(){
