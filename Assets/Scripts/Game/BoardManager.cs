@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -148,6 +148,14 @@ public class BoardManager : MonoBehaviour
 
     bool TileExistsInMap(string tileCode){
         return mapTiles.ContainsKey(tileCode);
+    }
+    public void CleanHighlightedTiles(){
+        int glowTilesNumber = glowTilesAggregator.transform.childCount;
+
+        for (int i=0 ; i<glowTilesNumber ; i++){
+            GameObject child = glowTilesAggregator.transform.GetChild(i).gameObject;
+            GameObject.Destroy(child);
+        }
     }
 
     void CreateMap(string mapName){
