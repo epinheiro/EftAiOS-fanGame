@@ -1,5 +1,6 @@
 ﻿
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ClientController : BaseController
 {
@@ -8,7 +9,7 @@ public class ClientController : BaseController
         ToConnect, 
         WaitingGame, 
         // In-game states
-        Playing, 
+        BeginTurn, 
         WaitingPlayers, 
         WaitingServer, 
         Updating
@@ -56,8 +57,8 @@ public class ClientController : BaseController
             case ClientState.WaitingGame:
                 GUIWaitingGameState();
             break;
-            case ClientState.Playing:
-                GUIPlayingState();
+            case ClientState.BeginTurn:
+                GUIBeginTurnState();
             break;
             case ClientState.WaitingPlayers:
                 GUIWaitingPlayersState();
@@ -78,9 +79,9 @@ public class ClientController : BaseController
             case ClientState.WaitingGame:
                 WaitingGameState();                
             break;
-            case ClientState.Playing:
+            case ClientState.BeginTurn:
                 // Make play possible
-                PlayingState();
+                BeginTurnState();
             break;
             case ClientState.WaitingPlayers:
                 // Screen of "Waiting Players"
@@ -120,7 +121,7 @@ public class ClientController : BaseController
         createMidScreenText("Waiting players turn");
     }
 
-    void GUIPlayingState(){
+    void GUIBeginTurnState(){
         if (GUILayout.Button("Set PutPlay")){
             clientCommunication.SchedulePutPlayRequest(_clientId, new Vector2Int(66,66), new Vector2Int(44,44), false);
             currentState = ClientState.WaitingPlayers;
@@ -157,7 +158,7 @@ public class ClientController : BaseController
     void WaitingPlayersState(){
         ChangeClientStateBaseOnServer(ServerController.ServerState.Processing, ClientState.WaitingServer);
     }
-    void PlayingState(){
+    void BeginTurnState(){
         // List<TileData> tileList = BoardManagerRef.PossibleMovements(BoardManager.TranslateTileNumbersToString(playerCurrentPosition.x, playerCurrentPosition.y));
     }
     void WaitingServerState(){
@@ -174,7 +175,7 @@ public class ClientController : BaseController
                 currentPlayerState = NextPlayerState;
                 NextPlayerState = PlayerState.Unassigned;
                 
-                currentState = ClientState.Playing;
+                currentState = ClientState.BeginTurn;
             break;
         }
     }
