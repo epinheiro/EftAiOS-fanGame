@@ -209,7 +209,7 @@ public class ClientController : BaseController
                     _clientId, 
                     (Vector2Int) _playerNextPosition,
                     _playerNextSound.HasValue ? (Vector2Int) _playerNextSound : new Vector2Int(-1,-1), // TODO - check if is there better solutions than V(-1,-1)
-                    (bool) _playerWillAttack
+                    _playerWillAttack.HasValue ? (bool) _playerWillAttack : false
                 );
                 currentState = ClientState.WaitingPlayers;
                 currentTurnStep = TurnSteps.Movement;
