@@ -194,6 +194,8 @@ public class BoardManager : MonoBehaviour
             GameObject child = aggregatorUsed.transform.GetChild(i).gameObject;
             if(!string.Equals(child.name, remainingTileCode)){
                 GameObject.Destroy(child);
+            }else{
+                Destroy(child.GetComponent<PolygonCollider2D>());
             }
         }
     }
