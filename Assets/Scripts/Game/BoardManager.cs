@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Text.RegularExpressions;
+using UnityEngine.UI;
 
 public class BoardManager : MonoBehaviour
 {
@@ -38,6 +39,7 @@ public class BoardManager : MonoBehaviour
         get { return alienNestCode; }
     }
 
+    public BaseController controller;
 
     // Start is called before the first frame update
     void Start()
@@ -88,6 +90,7 @@ public class BoardManager : MonoBehaviour
 
         GameObject go = Instantiate(glowPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         go.name = tileCode;
+        go.GetComponent<GlowTileBehavior>().controller = (ClientController) this.controller;
         FitUIElementOnScreen(go);
         go.transform.parent = glowTilesAggregator.transform;
         go.transform.position = new Vector2(worldPosition.x, worldPosition.y);
