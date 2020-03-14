@@ -28,10 +28,12 @@ public class BoardManager : MonoBehaviour
     public GameObject hexagonPrefab;
     public GameObject glowMovementPrefab;
     public GameObject glowSoundPrefab;
+    public GameObject soundEffectPrefab;
 
     Dictionary<string, TileData> mapTiles;
     GameObject glowMovementTilesAggregator;
     GameObject glowSoundTilesAggregator;
+    GameObject soundEffectsAggregator;
     string humanDormCode;
     public string HumanDormCode {
         get { return humanDormCode; }
@@ -48,8 +50,10 @@ public class BoardManager : MonoBehaviour
     {
         glowMovementTilesAggregator = new GameObject("Glow movement tiles");
         glowSoundTilesAggregator = new GameObject("Glow sound tiles");
+        soundEffectsAggregator = new GameObject("Sound effects");
         glowMovementTilesAggregator.transform.parent = this.transform;
         glowSoundTilesAggregator.transform.parent = this.transform;
+        soundEffectsAggregator.transform.parent = this.transform;
 
         mapTiles = new Dictionary<string, TileData>();
         CreateMap("Galilei");
@@ -77,6 +81,21 @@ public class BoardManager : MonoBehaviour
                 throw new System.Exception(string.Format("Tile {0} has no spawn point", (ClientController.PlayerState) state));
         }
     }
+
+    public void LastSoundEffects(List<string> soundTileCodes){
+        foreach(string code in soundTileCodes){
+            GlowTile(code, soundEffectPrefab, soundEffectsAggregator);
+        }
+    }
+
+    public void CleanLastSoundEffects(){
+        int objectsNumber = soundEffectsAggregator.transform.childCount;
+
+        for (int i=0 ; i<objectsNumber ; i++){
+            GameObject child = soundEffectsAggregator.transform.GetChild(i).gameObject;
+            GameObject.Destroy(child);
+        }
+    } 
 
     public void GlowPossibleNoises(){
         foreach(string key in mapTiles.Keys){

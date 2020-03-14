@@ -214,6 +214,7 @@ public class ServerController : BaseController
     void WaitingPlayersState(){
         if (AllPlayersPlayed()){
             Debug.Log("SERVER - all players played");
+            BoardManagerRef.CleanLastSoundEffects();
             nextState = ServerController.ServerState.Processing;
         }
     }
@@ -221,6 +222,7 @@ public class ServerController : BaseController
         nextState = ServerController.ServerState.Updating;
     }
     void UpdatingState(){
+        SpawnLastNoises();
         ResetPlayerTurnControl();
         nextState = ServerController.ServerState.WaitingPlayers;
     }
@@ -236,6 +238,23 @@ public class ServerController : BaseController
             }
         }
         return true;
+    }
+
+    void SpawnLastNoises(){
+        List<string> noises = new List<string>();
+        foreach(int key in playerTurnDict.Keys){
+            PlayerTurnData data;
+            playerTurnDict.TryGetValue(key, out data);
+
+            if(data.playedThisTurn==false) return; // TODO - this function has been called several times this is a :poop: way to correct it poorly
+
+            Vector2Int sound = data.lastPlay.sound;
+            if(sound.x != -1){
+                noises.Add(BoardManager.TranslateTileNumbersToCode(sound.x, sound.y));
+            }
+        }
+
+        BoardManagerRef.LastSoundEffects(noises);
     }
 
     // Based on the Stackoverflow answer https://stackoverflow.com/a/6803109
