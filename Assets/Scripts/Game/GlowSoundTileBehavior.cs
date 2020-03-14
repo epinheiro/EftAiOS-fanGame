@@ -13,7 +13,7 @@ public class GlowSoundTileBehavior : MonoBehaviour
     }
 
     void OnMouseDown(){
-        Debug.Log(string.Format("CLIENT {0} - clicked tile {1}", controller.ClientId, this.name));
+        Debug.Log(string.Format("CLIENT {0} - chose sound tile {1}", controller.ClientId, this.name));
         controller.PlayerNextSound = this.name;
         controller.BoardManagerRef.CleanSoundGlowTiles(this.name);
     }
