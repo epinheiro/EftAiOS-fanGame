@@ -1,6 +1,7 @@
 ﻿
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class ClientController : BaseController
 {
@@ -25,9 +26,12 @@ public class ClientController : BaseController
         set { _nextPlayerState = value;}
     }
     public Vector2Int playerCurrentPosition;
-    Vector2Int _playerNextPosition;
+    Nullable<Vector2Int> _playerNextPosition;
     public string PlayerNextPosition{
-        get{ return BoardManager.TranslateTileNumbersToCode(_playerNextPosition.x, _playerNextPosition.y);}
+        get{ 
+            if (_playerNextPosition.HasValue) return BoardManager.TranslateTileNumbersToCode(_playerNextPosition.Value.x, _playerNextPosition.Value.y);
+            else return "";
+        }
         set{ _playerNextPosition = BoardManager.TileCodeToVector2Int(value);}
     }
 
@@ -131,14 +135,15 @@ public class ClientController : BaseController
     }
 
     void GUIPlayingTurnState(){
-        if (GUILayout.Button("Set PutPlay")){
+        if ( _playerNextPosition.HasValue && GUILayout.Button("Set PutPlay")){
             clientCommunication.SchedulePutPlayRequest(
                 _clientId, 
-                BoardManager.TileCodeToVector2Int(BoardManagerRef.HumanDormCode), //Movement DEBUG
-                BoardManager.TileCodeToVector2Int(BoardManagerRef.AlienNestCode), //Sound DEBUG
+                (Vector2Int) _playerNextPosition, //Movement DEBUG
+                playerCurrentPosition, //Sound DEBUG
                 false
             );
             currentState = ClientState.WaitingPlayers;
+            _playerNextPosition = null;
         }
     }
 
