@@ -54,7 +54,7 @@ public class ClientController : BaseController
     ClientControllerDelegateAction delegateBoardInstantiation = InstantiateBoardManager;
 
     static protected void InvokeCleanHighlights(BaseController controller){
-        controller.BoardManagerRef.CleanHighlightedTiles();
+        controller.BoardManagerRef.CleanGlowTiles();
     }
 
     // Start is called before the first frame update

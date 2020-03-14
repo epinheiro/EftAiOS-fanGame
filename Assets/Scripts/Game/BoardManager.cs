@@ -153,7 +153,7 @@ public class BoardManager : MonoBehaviour
     bool TileExistsInMap(string tileCode){
         return mapTiles.ContainsKey(tileCode);
     }
-    public void CleanHighlightedTiles(){
+    public void CleanGlowTiles(){
         int glowTilesNumber = glowTilesAggregator.transform.childCount;
 
         for (int i=0 ; i<glowTilesNumber ; i++){
