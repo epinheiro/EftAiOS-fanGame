@@ -52,5 +52,6 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 0, a: 1}
   hexagonPrefab: {fileID: 6607437516753735529, guid: 4c5ef64159f29c149870b5a88930faba,
     type: 3}
-  glowPrefab: {fileID: 1699664651827865904, guid: e6a368a60b508124a85c8b153a646f66,
+  glowMovementPrefab: {fileID: 1699664651827865904, guid: e6a368a60b508124a85c8b153a646f66,
     type: 3}
+  controller: {fileID: 0}

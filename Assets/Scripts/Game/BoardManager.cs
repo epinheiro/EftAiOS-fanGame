@@ -26,7 +26,7 @@ public class BoardManager : MonoBehaviour
     readonly Spacing oddColumnSpacing = new Spacing{x = 1.65f, y = 0.95f};
 
     public GameObject hexagonPrefab;
-    public GameObject glowPrefab;
+    public GameObject glowMovementPrefab;
 
     Dictionary<string, TileData> mapTiles;
     GameObject glowTilesAggregator;
@@ -44,7 +44,7 @@ public class BoardManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        glowTilesAggregator = new GameObject("Glow tiles");
+        glowTilesAggregator = new GameObject("Glow movement tiles");
         glowTilesAggregator.transform.parent = this.transform;
 
         mapTiles = new Dictionary<string, TileData>();
@@ -74,23 +74,29 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    // public void GlowPossibleNoises(){
+    //     foreach(string key in mapTiles.Keys){
+    //         GlowTile(key);
+    //     }
+    // }
+
     public void GlowPossibleMovements(string tileCode, int movement){
         List<TileData> movementsList = PossibleMovements(tileCode, movement);
 
         foreach(TileData data in movementsList){
-            GlowTile(data.tileCode);
+            GlowTile(data.tileCode, glowMovementPrefab);
         }
     }
 
-    void GlowTile(string tileCode){
+    void GlowTile(string tileCode, GameObject glowUsed){
         TileData data;
         mapTiles.TryGetValue(tileCode, out data);
 
         Vector2 worldPosition = data.gameObjectReference.transform.position;
 
-        GameObject go = Instantiate(glowPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        GameObject go = Instantiate(glowUsed, new Vector3(0, 0, 0), Quaternion.identity);
         go.name = tileCode;
-        go.GetComponent<GlowTileBehavior>().controller = (ClientController) this.controller;
+        go.GetComponent<GlowMovementTileBehavior>().controller = (ClientController) this.controller;
         FitUIElementOnScreen(go);
         go.transform.parent = glowTilesAggregator.transform;
         go.transform.position = new Vector2(worldPosition.x, worldPosition.y);
