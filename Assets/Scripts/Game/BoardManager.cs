@@ -162,6 +162,17 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    public void CleanGlowTiles(string remainingTileCode){
+        int glowTilesNumber = glowTilesAggregator.transform.childCount;
+
+        for (int i=0 ; i<glowTilesNumber ; i++){
+            GameObject child = glowTilesAggregator.transform.GetChild(i).gameObject;
+            if(!string.Equals(child.name, remainingTileCode)){
+                GameObject.Destroy(child);
+            }
+        }
+    }
+
     void CreateMap(string mapName){
         string[] tileInfo = ParseMap(FileAsset.GetMapTileInfo(mapName));
 
