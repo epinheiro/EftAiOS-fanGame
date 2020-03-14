@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8873468209291017486}
   - component: {fileID: 8023909556378236294}
-  - component: {fileID: 9012568831326763640}
+  - component: {fileID: 6521177721778312679}
   - component: {fileID: 4765988364953000365}
   m_Layer: 0
   m_Name: GlowSound
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &9012568831326763640
+--- !u!114 &6521177721778312679
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7490219587171723989}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b10c6fd13503ebe4a8b888a8668621e2, type: 3}
+  m_Script: {fileID: 11500000, guid: 30c5d1e987aecc34a9dc7aff932a1763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 0}

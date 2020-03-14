@@ -100,7 +100,6 @@ public class BoardManager : MonoBehaviour
 
         GameObject go = Instantiate(glowUsed, new Vector3(0, 0, 0), Quaternion.identity);
         go.name = tileCode;
-        go.GetComponent<GlowMovementTileBehavior>().controller = (ClientController) this.controller;
         FitUIElementOnScreen(go);
         go.transform.parent = aggregatorUsed.transform;
         go.transform.position = new Vector2(worldPosition.x, worldPosition.y);
