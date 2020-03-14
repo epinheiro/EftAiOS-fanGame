@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 using System.Collections.Generic;
 using System;
@@ -33,6 +33,16 @@ public class ClientController : BaseController
             else return "";
         }
         set{ _playerNextPosition = BoardManager.TileCodeToVector2Int(value);}
+    }
+
+    public Vector2Int playerCurrentSound;
+    Nullable<Vector2Int> _playerNextSound;
+    public string PlayerNextSound{
+        get{ 
+            if (_playerNextSound.HasValue) return BoardManager.TranslateTileNumbersToCode(_playerNextSound.Value.x, _playerNextSound.Value.y);
+            else return "";
+        }
+        set{ _playerNextSound = BoardManager.TileCodeToVector2Int(value);}
     }
 
     ClientState currentState = ClientState.ToConnect;
