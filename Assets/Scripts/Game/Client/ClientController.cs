@@ -1,4 +1,4 @@
-
+﻿
 using UnityEngine;
 using System.Collections.Generic;
 using System;
@@ -16,6 +16,16 @@ public class ClientController : BaseController
         WaitingServer, 
         Updating
     }
+
+    public enum TurnSteps {
+        Movement, 
+        Card,
+        Noise,
+        DecideToAttack,
+        SendData
+    }
+
+    TurnSteps currentTurnStep = TurnSteps.Movement;
 
     public enum PlayerState {Unassigned, Alien, Human, Died, Escaped};
 
@@ -145,15 +155,40 @@ public class ClientController : BaseController
     }
 
     void GUIPlayingTurnState(){
-        if ( _playerNextPosition.HasValue && GUILayout.Button("Set PutPlay")){
-            clientCommunication.SchedulePutPlayRequest(
-                _clientId, 
-                (Vector2Int) _playerNextPosition, //Movement DEBUG
-                playerCurrentPosition, //Sound DEBUG
-                false
-            );
-            currentState = ClientState.WaitingPlayers;
-            _playerNextPosition = null;
+        switch(currentTurnStep){
+            case TurnSteps.Movement:
+                if(_playerNextPosition.HasValue){
+                    currentTurnStep = TurnSteps.Card;
+                }
+
+                break;
+            case TurnSteps.Card:
+                if(true){ // TODO - sort card!
+                    BoardManagerRef.GlowPossibleNoises();                    
+                }
+                currentTurnStep = TurnSteps.Noise;
+                break;
+            case TurnSteps.Noise:
+                if(_playerNextSound.HasValue){
+                    currentTurnStep = TurnSteps.DecideToAttack;
+                }
+                break;
+            case TurnSteps.DecideToAttack:
+                currentTurnStep = TurnSteps.SendData; // TODO - GUI to decide if attacks or not
+                break;
+
+            case TurnSteps.SendData:
+                clientCommunication.SchedulePutPlayRequest(
+                    _clientId, 
+                    (Vector2Int) _playerNextPosition,
+                    (Vector2Int) _playerNextSound,
+                    false
+                );
+                currentState = ClientState.WaitingPlayers;
+                currentTurnStep = TurnSteps.Movement;
+                _playerNextPosition = null;
+                _playerNextSound = null;
+                break;
         }
     }
 
