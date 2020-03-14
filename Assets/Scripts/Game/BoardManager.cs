@@ -30,7 +30,8 @@ public class BoardManager : MonoBehaviour
     public GameObject glowSoundPrefab;
 
     Dictionary<string, TileData> mapTiles;
-    GameObject glowTilesAggregator;
+    GameObject glowMovementTilesAggregator;
+    GameObject glowSoundTilesAggregator;
     string humanDormCode;
     public string HumanDormCode {
         get { return humanDormCode; }
@@ -45,8 +46,10 @@ public class BoardManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        glowTilesAggregator = new GameObject("Glow movement tiles");
-        glowTilesAggregator.transform.parent = this.transform;
+        glowMovementTilesAggregator = new GameObject("Glow movement tiles");
+        glowSoundTilesAggregator = new GameObject("Glow sound tiles");
+        glowMovementTilesAggregator.transform.parent = this.transform;
+        glowSoundTilesAggregator.transform.parent = this.transform;
 
         mapTiles = new Dictionary<string, TileData>();
         CreateMap("Galilei");
@@ -77,7 +80,7 @@ public class BoardManager : MonoBehaviour
 
     public void GlowPossibleNoises(){
         foreach(string key in mapTiles.Keys){
-            GlowTile(key, glowSoundPrefab);
+            GlowTile(key, glowSoundPrefab, glowSoundTilesAggregator);
         }
     }
 
@@ -85,11 +88,11 @@ public class BoardManager : MonoBehaviour
         List<TileData> movementsList = PossibleMovements(tileCode, movement);
 
         foreach(TileData data in movementsList){
-            GlowTile(data.tileCode, glowMovementPrefab);
+            GlowTile(data.tileCode, glowMovementPrefab, glowMovementTilesAggregator);
         }
     }
 
-    void GlowTile(string tileCode, GameObject glowUsed){
+    void GlowTile(string tileCode, GameObject glowUsed, GameObject aggregatorUsed){
         TileData data;
         mapTiles.TryGetValue(tileCode, out data);
 
@@ -99,7 +102,7 @@ public class BoardManager : MonoBehaviour
         go.name = tileCode;
         go.GetComponent<GlowMovementTileBehavior>().controller = (ClientController) this.controller;
         FitUIElementOnScreen(go);
-        go.transform.parent = glowTilesAggregator.transform;
+        go.transform.parent = aggregatorUsed.transform;
         go.transform.position = new Vector2(worldPosition.x, worldPosition.y);
     }
 
@@ -161,19 +164,34 @@ public class BoardManager : MonoBehaviour
         return mapTiles.ContainsKey(tileCode);
     }
     public void CleanGlowTiles(){
-        int glowTilesNumber = glowTilesAggregator.transform.childCount;
+        int glowTilesNumber = glowMovementTilesAggregator.transform.childCount;
 
         for (int i=0 ; i<glowTilesNumber ; i++){
-            GameObject child = glowTilesAggregator.transform.GetChild(i).gameObject;
+            GameObject child = glowMovementTilesAggregator.transform.GetChild(i).gameObject;
+            GameObject.Destroy(child);
+        }
+
+        glowTilesNumber = glowSoundTilesAggregator.transform.childCount;
+
+        for (int i=0 ; i<glowTilesNumber ; i++){
+            GameObject child = glowSoundTilesAggregator.transform.GetChild(i).gameObject;
             GameObject.Destroy(child);
         }
     }
 
+    public void CleanSoundGlowTiles(string remainingTileCode){
+        CleanGlowTiles(remainingTileCode, glowSoundTilesAggregator);
+    }
+
     public void CleanMovementGlowTiles(string remainingTileCode){
-        int glowTilesNumber = glowTilesAggregator.transform.childCount;
+        CleanGlowTiles(remainingTileCode, glowMovementTilesAggregator);
+    }
+
+    public void CleanGlowTiles(string remainingTileCode, GameObject aggregatorUsed){
+        int glowTilesNumber = aggregatorUsed.transform.childCount;
 
         for (int i=0 ; i<glowTilesNumber ; i++){
-            GameObject child = glowTilesAggregator.transform.GetChild(i).gameObject;
+            GameObject child = aggregatorUsed.transform.GetChild(i).gameObject;
             if(!string.Equals(child.name, remainingTileCode)){
                 GameObject.Destroy(child);
             }
