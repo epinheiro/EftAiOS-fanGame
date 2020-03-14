@@ -169,7 +169,7 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void CleanGlowTiles(string remainingTileCode){
+    public void CleanMovementGlowTiles(string remainingTileCode){
         int glowTilesNumber = glowTilesAggregator.transform.childCount;
 
         for (int i=0 ; i<glowTilesNumber ; i++){
