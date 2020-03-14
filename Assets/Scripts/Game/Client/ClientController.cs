@@ -18,10 +18,10 @@ public class ClientController : BaseController
     }
 
     public enum TurnSteps {
-        Movement, 
+        Movement,
+        PlayerWillAttack,
         Card,
         Noise,
-        DecideToAttack,
         SendData
     }
 
@@ -160,26 +160,14 @@ public class ClientController : BaseController
         switch(currentTurnStep){
             case TurnSteps.Movement:
                 if(_playerNextPosition.HasValue){
-                    currentTurnStep = TurnSteps.Card;
+                    currentTurnStep = TurnSteps.PlayerWillAttack;
                 }
 
                 break;
-            case TurnSteps.Card:
-                if(true){ // TODO - sort card!
-                    BoardManagerRef.GlowPossibleNoises();                    
-                }
-                currentTurnStep = TurnSteps.Noise;
-                break;
-            case TurnSteps.Noise:
-                if(_playerNextSound.HasValue){
-                    currentTurnStep = TurnSteps.DecideToAttack;
-                }
-                break;
-            case TurnSteps.DecideToAttack:
-                if(_playerWillAttack.HasValue){
-                    currentTurnStep = TurnSteps.SendData; // TODO - GUI to decide if attacks or not
-                }else{
-                    if(currentPlayerState == PlayerState.Alien){
+
+            case TurnSteps.PlayerWillAttack:
+                if(currentPlayerState == PlayerState.Alien){
+                    if(!_playerWillAttack.HasValue){
                         GUILayout.BeginArea(new Rect(0, 0, 175, 175));
                         if(GUILayout.Button("Attack")){
                             _playerWillAttack = true;
@@ -188,19 +176,39 @@ public class ClientController : BaseController
                             _playerWillAttack = false;
                         }
                         GUILayout.EndArea();
-                        
                     }else{
-                        _playerWillAttack = false;
-                    }                    
+                        if(_playerWillAttack.Value){
+                            _playerNextSound = _playerNextPosition;
+                            currentTurnStep = TurnSteps.SendData;
+                        }else{
+                            currentTurnStep = TurnSteps.Card;
+                        }
+                    }
+                }else{
+                    currentTurnStep = TurnSteps.Card;
                 }
-                
+                break;
+
+            case TurnSteps.Card:
+                if(true){ // TODO - sort card!
+                    BoardManagerRef.GlowPossibleNoises();
+                    currentTurnStep = TurnSteps.Noise;
+                }else{
+                    currentTurnStep = TurnSteps.SendData;
+                }
+                break;
+
+            case TurnSteps.Noise:
+                if(_playerNextSound.HasValue){
+                    currentTurnStep = TurnSteps.SendData;
+                }
                 break;
 
             case TurnSteps.SendData:
                 clientCommunication.SchedulePutPlayRequest(
                     _clientId, 
                     (Vector2Int) _playerNextPosition,
-                    (Vector2Int) _playerNextSound,
+                    _playerNextSound.HasValue ? (Vector2Int) _playerNextSound : new Vector2Int(-1,-1), // TODO - check if is there better solutions than V(-1,-1)
                     (bool) _playerWillAttack
                 );
                 currentState = ClientState.WaitingPlayers;
