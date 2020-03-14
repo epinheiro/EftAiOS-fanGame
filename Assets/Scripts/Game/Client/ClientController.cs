@@ -55,6 +55,8 @@ public class ClientController : BaseController
         set{ _playerNextSound = BoardManager.TileCodeToVector2Int(value);}
     }
 
+    Nullable<bool> _playerWillAttack;
+
     ClientState currentState = ClientState.ToConnect;
 
     ServerController.ServerState _serverState;
@@ -174,7 +176,24 @@ public class ClientController : BaseController
                 }
                 break;
             case TurnSteps.DecideToAttack:
-                currentTurnStep = TurnSteps.SendData; // TODO - GUI to decide if attacks or not
+                if(_playerWillAttack.HasValue){
+                    currentTurnStep = TurnSteps.SendData; // TODO - GUI to decide if attacks or not
+                }else{
+                    if(currentPlayerState == PlayerState.Alien){
+                        GUILayout.BeginArea(new Rect(0, 0, 175, 175));
+                        if(GUILayout.Button("Attack")){
+                            _playerWillAttack = true;
+                        }
+                        if(GUILayout.Button("Quiet")){
+                            _playerWillAttack = false;
+                        }
+                        GUILayout.EndArea();
+                        
+                    }else{
+                        _playerWillAttack = false;
+                    }                    
+                }
+                
                 break;
 
             case TurnSteps.SendData:
@@ -182,12 +201,13 @@ public class ClientController : BaseController
                     _clientId, 
                     (Vector2Int) _playerNextPosition,
                     (Vector2Int) _playerNextSound,
-                    false
+                    (bool) _playerWillAttack
                 );
                 currentState = ClientState.WaitingPlayers;
                 currentTurnStep = TurnSteps.Movement;
                 _playerNextPosition = null;
                 _playerNextSound = null;
+                _playerWillAttack = null;
                 break;
         }
     }
