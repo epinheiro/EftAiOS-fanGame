@@ -27,6 +27,7 @@ public class BoardManager : MonoBehaviour
 
     public GameObject hexagonPrefab;
     public GameObject glowMovementPrefab;
+    public GameObject glowSoundPrefab;
 
     Dictionary<string, TileData> mapTiles;
     GameObject glowTilesAggregator;
@@ -74,11 +75,11 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    // public void GlowPossibleNoises(){
-    //     foreach(string key in mapTiles.Keys){
-    //         GlowTile(key);
-    //     }
-    // }
+    public void GlowPossibleNoises(){
+        foreach(string key in mapTiles.Keys){
+            GlowTile(key, glowSoundPrefab);
+        }
+    }
 
     public void GlowPossibleMovements(string tileCode, int movement){
         List<TileData> movementsList = PossibleMovements(tileCode, movement);

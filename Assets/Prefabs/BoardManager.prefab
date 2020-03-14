@@ -54,4 +54,6 @@ MonoBehaviour:
     type: 3}
   glowMovementPrefab: {fileID: 1699664651827865904, guid: e6a368a60b508124a85c8b153a646f66,
     type: 3}
+  glowSoundPrefab: {fileID: 7490219587171723989, guid: bba15df4106731543aad704289172814,
+    type: 3}
   controller: {fileID: 0}
