@@ -25,7 +25,11 @@ public class ClientController : BaseController
         set { _nextPlayerState = value;}
     }
     public Vector2Int playerCurrentPosition;
-    Vector2Int playerNextPosition;
+    Vector2Int _playerNextPosition;
+    public string PlayerNextPosition{
+        get{ return BoardManager.TranslateTileNumbersToCode(_playerNextPosition.x, _playerNextPosition.y);}
+        set{ _playerNextPosition = BoardManager.TileCodeToVector2Int(value);}
+    }
 
     ClientState currentState = ClientState.ToConnect;
 
