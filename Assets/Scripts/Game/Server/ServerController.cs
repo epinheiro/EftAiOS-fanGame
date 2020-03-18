@@ -29,6 +29,9 @@ public class ServerController : BaseController
     string serverIp;
 
     Dictionary<int, PlayerTurnData> playerTurnDict;
+    public Dictionary<int, PlayerTurnData> PlayerTurnDict{
+        get{ return playerTurnDict; }
+    }
 
     ExtendedList<ClientController.PlayerState> playerRolesToGive;
     public ExtendedList<ClientController.PlayerState> PlayerRolesToGive{
@@ -45,6 +48,7 @@ public class ServerController : BaseController
 
         states = new Dictionary<ServerState, IStateController>();
         states.Add(ServerState.SetUp, new SetUpState(this, serverCommunication));
+        states.Add(ServerState.WaitingPlayers, new WaitingPlayersState(this, serverCommunication));
 
     }
 
@@ -54,10 +58,6 @@ public class ServerController : BaseController
         if(state != null) state.ShowGUI(); // TODO - if statement only during refactor
 
         switch(_currentState){
-            case ServerState.WaitingPlayers:
-                GUIWaitingPlayersState();
-            break;
-
             case ServerState.Processing:
                 GUIProcessingState();
             break;
@@ -79,10 +79,6 @@ public class ServerController : BaseController
         if(state != null) state.ExecuteLogic(); // TODO - if statement only during refactor
 
         switch(_currentState){
-            case ServerState.WaitingPlayers:
-                // Keep last play on screen
-                WaitingPlayersState();
-            break;
             case ServerState.Processing:
                 // Show "animation" of the turn
                 Invoke("ProcessingState", 1.2f); // DEBUG DELAY - TODO change
@@ -156,17 +152,6 @@ public class ServerController : BaseController
     }
 
     //////// On GUI methods
-    void GUIWaitingPlayersState(){
-        // DEBUG positioning
-        GUILayout.BeginArea(new Rect(100, 100, 175, 175));
-        // DEBUG positioning
-
-        GUILayout.TextArea("Waiting player to make their move");
-        
-        // DEBUG positioning
-        GUILayout.EndArea();
-        // DEBUG positioning
-    }
     void GUIProcessingState(){
         // DEBUG positioning
         GUILayout.BeginArea(new Rect(100, 100, 175, 175));
@@ -194,13 +179,6 @@ public class ServerController : BaseController
     //////// Update logic methods
     public void CreateBoardManager(){
         InstantiateBoardManager(this);
-    }
-    void WaitingPlayersState(){
-        if (AllPlayersPlayed()){
-            Debug.Log("SERVER - all players played");
-            BoardManagerRef.CleanLastSoundEffects();
-            nextState = ServerController.ServerState.Processing;
-        }
     }
     void ProcessingState(){
         ProcessResults();
