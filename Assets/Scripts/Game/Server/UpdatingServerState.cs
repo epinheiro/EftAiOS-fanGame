@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UpdatingState : IStateController
+public class UpdatingServerState : IStateController
 {
     ServerController serverController;
     ServerCommunication serverCommunication;
 
-    public UpdatingState(ServerController serverController, ServerCommunication serverCommunication){
+    public UpdatingServerState(ServerController serverController, ServerCommunication serverCommunication){
         this.serverController = serverController;
         this.serverCommunication = serverCommunication;
 

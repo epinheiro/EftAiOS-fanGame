@@ -48,9 +48,9 @@ public class ServerController : BaseController
 
         states = new Dictionary<ServerState, IStateController>();
         states.Add(ServerState.SetUp, new SetUpState(this, serverCommunication));
-        states.Add(ServerState.WaitingPlayers, new WaitingPlayersState(this, serverCommunication));
+        states.Add(ServerState.WaitingPlayers, new WaitingPlayersServerState(this, serverCommunication));
         states.Add(ServerState.Processing, new ProcessingState(this, serverCommunication));
-        states.Add(ServerState.Updating, new UpdatingState(this, serverCommunication));
+        states.Add(ServerState.Updating, new UpdatingServerState(this, serverCommunication));
 
     }
 

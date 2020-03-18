@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaitingPlayersState : IStateController
+public class WaitingPlayersServerState : IStateController
 {
     ServerController serverController;
     ServerCommunication serverCommunication;
 
-    public WaitingPlayersState(ServerController serverController, ServerCommunication serverCommunication){
+    public WaitingPlayersServerState(ServerController serverController, ServerCommunication serverCommunication){
         this.serverController = serverController;
         this.serverCommunication = serverCommunication;
     }
