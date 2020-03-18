@@ -25,12 +25,14 @@ public class BaseController : MonoBehaviour
 
     public delegate void BaseAction();
 
-    public void DelayedCall(BaseAction function, float delay){
-        StartCoroutine(DelayedCallCoroutine(function, delay));
+    public void DelayedCall(BaseAction function, float delay, bool repeat = false){
+        StartCoroutine(DelayedCallCoroutine(function, delay, repeat));
     }
 
-    IEnumerator DelayedCallCoroutine(BaseAction function, float delay){
-        yield return new WaitForSeconds(delay);
-        function();
+    IEnumerator DelayedCallCoroutine(BaseAction function, float delay, bool repeat){
+        do{
+            yield return new WaitForSeconds(delay);
+            function();
+        }while(repeat);
     }
 }
