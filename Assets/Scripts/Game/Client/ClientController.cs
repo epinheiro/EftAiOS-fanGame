@@ -99,6 +99,7 @@ public class ClientController : BaseController
 
         states.Add(ClientState.WaitingPlayers, new WaitingPlayersClientState(this));
         states.Add(ClientState.WaitingServer, new WaitingServerState(this));
+        states.Add(ClientState.Updating, new UpdatingClientState(this));
 
         DelayedCall(UpdateStati, 1f, true);
     }
@@ -112,9 +113,6 @@ public class ClientController : BaseController
             case ClientState.Playing:
                 GUIPlayingTurnState();
             break;
-            case ClientState.Updating:
-                GUIUpdatingState();
-            break;
         }
         
     }
@@ -124,14 +122,6 @@ public class ClientController : BaseController
         IStateController state;
         states.TryGetValue(currentState, out state);
         if(state!=null) state.ExecuteLogic(); // TODO - if statement used during refactor
-
-        switch(currentState){
-            case ClientState.Updating:
-                // Update player position and its possible moves
-                UpdatingState();
-            break;
-        }
-        
     }
 
     //////// On GUI methods
@@ -196,39 +186,6 @@ public class ClientController : BaseController
                 _playerNextSound = null;
                 _playerWillAttack = null;
                 break;
-        }
-    }
-
-    void GUIUpdatingState(){
-        switch(NextPlayerState){
-            case PlayerState.Died:
-                CreateMidScreenText("You died!");
-            break;
-            case PlayerState.Escaped:
-                CreateMidScreenText("You won!");
-            break;
-
-            default:
-                CreateMidScreenText("Updating ship");
-            break;
-        }
-    }
-
-
-    //////// Update logic methods
-    void UpdatingState(){
-        switch(NextPlayerState){
-            case PlayerState.Unassigned:
-                clientCommunication.ScheduleGetResultsRequest();
-            break;
-
-            case PlayerState.Alien:
-            case PlayerState.Human:
-                currentPlayerState = NextPlayerState;
-                NextPlayerState = PlayerState.Unassigned;
-                
-                currentState = ClientState.BeginTurn;
-            break;
         }
     }
 
