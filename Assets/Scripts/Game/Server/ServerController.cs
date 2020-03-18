@@ -50,6 +50,7 @@ public class ServerController : BaseController
         states.Add(ServerState.SetUp, new SetUpState(this, serverCommunication));
         states.Add(ServerState.WaitingPlayers, new WaitingPlayersState(this, serverCommunication));
         states.Add(ServerState.Processing, new ProcessingState(this, serverCommunication));
+        states.Add(ServerState.Updating, new UpdatingState(this, serverCommunication));
 
     }
 
@@ -57,12 +58,6 @@ public class ServerController : BaseController
         IStateController state;
         states.TryGetValue(_currentState, out state);
         if(state != null) state.ShowGUI(); // TODO - if statement only during refactor
-
-        switch(_currentState){
-            case ServerState.Updating:
-                GUIUpdatingState();
-            break;
-        }
     }
 
     // Update is called once per frame
@@ -74,15 +69,6 @@ public class ServerController : BaseController
         IStateController state;
         states.TryGetValue(_currentState, out state);
         if(state != null) state.ExecuteLogic(); // TODO - if statement only during refactor
-
-        switch(_currentState){
-            case ServerState.Updating:
-                // Update the board
-                Invoke("UpdatingState", 1.2f); // DEBUG DELAY - TODO change
-                // UpdatingState();
-            break;
-            
-        }
     }
 
     public void InsertNewPlayTurnData(int playerId, Vector2Int movementTo, Vector2Int soundIn, bool attacked){
@@ -98,20 +84,6 @@ public class ServerController : BaseController
             turnData.InputNewPutPlay(putPlayData);
         }else{
             throw new System.Exception(string.Format("SERVER - client {0} should have a play entry already", putPlayData.playerId));
-        }
-    }
-
-    public void ResetPlayerTurnControl(){
-        List<int> keys = new List<int>();
-
-        foreach(int key in playerTurnDict.Keys){
-            keys.Add(key);
-        }
-
-        foreach(int key in keys){
-            PlayerTurnData data;
-            playerTurnDict.TryGetValue(key, out data);
-            data.playedThisTurn = false;
         }
     }
 
@@ -142,28 +114,9 @@ public class ServerController : BaseController
         position = finalPosition;
         state = finalState;
     }
-
-    //////// On GUI methods
-    void GUIUpdatingState(){
-        // DEBUG positioning
-        GUILayout.BeginArea(new Rect(100, 100, 175, 175));
-        // DEBUG positioning
-
-        GUILayout.TextArea("Board Updating");
-        
-        // DEBUG positioning
-        GUILayout.EndArea();
-        // DEBUG positioning
-    }
-    
-    //////// Update logic methods
+   
     public void CreateBoardManager(){
         InstantiateBoardManager(this);
-    }
-    void UpdatingState(){
-        SpawnLastNoises();
-        ResetPlayerTurnControl();
-        nextState = ServerController.ServerState.WaitingPlayers;
     }
 
     bool AllPlayersPlayed(){
@@ -177,22 +130,5 @@ public class ServerController : BaseController
             }
         }
         return true;
-    }
-
-    void SpawnLastNoises(){
-        List<string> noises = new List<string>();
-        foreach(int key in playerTurnDict.Keys){
-            PlayerTurnData data;
-            playerTurnDict.TryGetValue(key, out data);
-
-            if(data.playedThisTurn==false) return; // TODO - this function has been called several times this is a :poop: way to correct it poorly
-
-            Vector2Int sound = data.lastPlay.sound;
-            if(sound.x != -1){
-                noises.Add(BoardManager.TranslateTileNumbersToCode(sound.x, sound.y));
-            }
-        }
-
-        BoardManagerRef.LastSoundEffects(noises);
     }
 }
