@@ -60,6 +60,10 @@ public class ClientController : BaseController
     Nullable<bool> _playerWillAttack;
 
     ClientState currentState = ClientState.ToConnect;
+    public ClientState CurrentState{
+        get { return currentState; }
+        set { currentState = value; }
+    }
 
     ServerController.ServerState _serverState;
     public ServerController.ServerState ServerState{
@@ -68,10 +72,15 @@ public class ClientController : BaseController
     }
 
     ClientCommunication clientCommunication;
+    public ClientCommunication ClientCommunication{
+        get { return clientCommunication; }
+        set { clientCommunication = value; }
+    }
 
     int _clientId;
     public int ClientId{
         get => _clientId;
+        set { _clientId = value; }
     }
 
     delegate void ClientControllerDelegateAction(ClientController client);
@@ -83,14 +92,18 @@ public class ClientController : BaseController
 
     // Start is called before the first frame update
     void Start(){
+        states = new Dictionary<ClientState, IStateController>();
+        states.Add(ClientState.ToConnect, new ToConnectState(this));
+
         DelayedCall(UpdateStati, 1f, true);
     }
 
     void OnGUI(){
+        IStateController state;
+        states.TryGetValue(currentState, out state);
+        if(state!=null) state.ShowGUI(); // TODO - if statement used during refactor
+
         switch(currentState){
-            case ClientState.ToConnect:
-                GUIToConnectState();
-            break;
             case ClientState.WaitingGame:
                 GUIWaitingGameState();
             break;
@@ -112,6 +125,10 @@ public class ClientController : BaseController
 
     // Update is called once per second
     void UpdateStati(){
+        IStateController state;
+        states.TryGetValue(currentState, out state);
+        if(state!=null) state.ExecuteLogic(); // TODO - if statement used during refactor
+
         switch(currentState){
             case ClientState.WaitingGame:
                 WaitingGameState();                
@@ -141,13 +158,6 @@ public class ClientController : BaseController
         GUILayout.BeginArea(new Rect(100, 10, 100, 100));
         GUILayout.TextArea(text);
         GUILayout.EndArea();
-    }
-    void GUIToConnectState(){
-        if (GUILayout.Button("JOIN GAME")){
-            SetClientIdentity();
-            clientCommunication = gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
-            currentState = ClientState.WaitingGame;
-        }
     }
 
     void GUIWaitingGameState(){
@@ -303,10 +313,5 @@ public class ClientController : BaseController
             currentState = nextClientState;
             delegation(this);
         }
-    }
-
-
-    public void SetClientIdentity(){
-        _clientId = Mathf.Abs(this.GetInstanceID() + System.DateTime.Now.Second);
     }
 }
