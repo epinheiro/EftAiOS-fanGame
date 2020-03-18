@@ -90,16 +90,14 @@ public class ClientController : BaseController
     public delegate void ClientControllerDelegateAction(ClientController client);
     public ClientControllerDelegateAction delegateBoardInstantiation = InstantiateBoardManager;
 
-    static protected void InvokeCleanHighlights(BaseController controller){
-        controller.BoardManagerRef.CleanGlowTiles();
-    }
-
     // Start is called before the first frame update
     void Start(){
         states = new Dictionary<ClientState, IStateController>();
         states.Add(ClientState.ToConnect, new ToConnectState(this));
         states.Add(ClientState.WaitingGame, new WaitingGameState(this));
         states.Add(ClientState.BeginTurn, new BeginTurnState(this));
+
+        states.Add(ClientState.WaitingPlayers, new WaitingPlayersClientState(this));
 
         DelayedCall(UpdateStati, 1f, true);
     }
@@ -112,9 +110,6 @@ public class ClientController : BaseController
         switch(currentState){
             case ClientState.Playing:
                 GUIPlayingTurnState();
-            break;
-            case ClientState.WaitingPlayers:
-                GUIWaitingPlayersState();
             break;
             case ClientState.WaitingServer:
                 GUIWaitingServerState();
@@ -133,10 +128,6 @@ public class ClientController : BaseController
         if(state!=null) state.ExecuteLogic(); // TODO - if statement used during refactor
 
         switch(currentState){
-            case ClientState.WaitingPlayers:
-                // Screen of "Waiting Players"
-                WaitingPlayersState();
-            break;
             case ClientState.WaitingServer:
                 // Screen of "What happened"
                 WaitingServerState();
@@ -150,10 +141,6 @@ public class ClientController : BaseController
     }
 
     //////// On GUI methods
-    void GUIWaitingPlayersState(){
-        CreateMidScreenText("Waiting players turn");
-    }
-
     void GUIPlayingTurnState(){
         switch(currentTurnStep){
             case TurnSteps.Movement:
@@ -239,9 +226,6 @@ public class ClientController : BaseController
 
 
     //////// Update logic methods
-    void WaitingPlayersState(){
-        ChangeClientStateBaseOnServer(ServerController.ServerState.Processing, ClientState.WaitingServer, InvokeCleanHighlights);
-    }
     void WaitingServerState(){
         ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientState.Updating);
     }
