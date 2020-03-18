@@ -32,6 +32,10 @@ public class ClientController : BaseController
     public enum PlayerState {Unassigned, Alien, Human, Died, Escaped};
 
     PlayerState currentPlayerState = PlayerState.Unassigned;
+    public PlayerState CurrentPlayerState{
+        get { return currentPlayerState; }
+        set { currentPlayerState = value;}
+    }
     PlayerState _nextPlayerState = PlayerState.Unassigned;
     public PlayerState NextPlayerState{
         get { return _nextPlayerState; }
@@ -95,6 +99,7 @@ public class ClientController : BaseController
         states = new Dictionary<ClientState, IStateController>();
         states.Add(ClientState.ToConnect, new ToConnectState(this));
         states.Add(ClientState.WaitingGame, new WaitingGameState(this));
+        states.Add(ClientState.BeginTurn, new BeginTurnState(this));
 
         DelayedCall(UpdateStati, 1f, true);
     }
@@ -128,10 +133,6 @@ public class ClientController : BaseController
         if(state!=null) state.ExecuteLogic(); // TODO - if statement used during refactor
 
         switch(currentState){
-            case ClientState.BeginTurn:
-                // Make play possible
-                BeginTurnState();
-            break;
             case ClientState.WaitingPlayers:
                 // Screen of "Waiting Players"
                 WaitingPlayersState();
@@ -240,20 +241,6 @@ public class ClientController : BaseController
     //////// Update logic methods
     void WaitingPlayersState(){
         ChangeClientStateBaseOnServer(ServerController.ServerState.Processing, ClientState.WaitingServer, InvokeCleanHighlights);
-    }
-    void BeginTurnState(){
-        string currentTileCode = BoardManager.TranslateTileNumbersToCode(playerCurrentPosition.x, playerCurrentPosition.y);
-        int movement = 0;
-        switch(currentPlayerState){
-            case PlayerState.Alien:
-                movement = 2;
-                break;
-            case PlayerState.Human:
-                movement = 1;
-                break;
-        }
-        BoardManagerRef.GlowPossibleMovements(currentTileCode, movement);
-        currentState = ClientState.Playing;
     }
     void WaitingServerState(){
         ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientState.Updating);
