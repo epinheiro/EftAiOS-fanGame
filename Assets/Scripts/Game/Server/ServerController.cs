@@ -1,7 +1,4 @@
-using UnityEngine;
-using System.Net;
-using System.Net.Sockets;
-using System.Text.RegularExpressions;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 public class ServerController : BaseController
@@ -15,12 +12,18 @@ public class ServerController : BaseController
         Updating
     }
 
+    Dictionary<ServerState, IStateController> states;
+
     ServerState _currentState = ServerState.SetUp;
     public ServerState CurrentState{
         get { return _currentState; }
     }
 
     ServerState nextState = ServerState.SetUp;
+    public ServerState NextState{
+        get { return nextState; }
+        set { nextState = value; }
+    }
 
     ServerCommunication serverCommunication;
     string serverIp;
@@ -28,21 +31,29 @@ public class ServerController : BaseController
     Dictionary<int, PlayerTurnData> playerTurnDict;
 
     ExtendedList<ClientController.PlayerState> playerRolesToGive;
+    public ExtendedList<ClientController.PlayerState> PlayerRolesToGive{
+        get { return playerRolesToGive; }
+    }
 
     void Start(){
+
         playerRolesToGive = new ExtendedList<ClientController.PlayerState>();
         playerTurnDict = new Dictionary<int, PlayerTurnData>();
 
         serverCommunication = gameObject.AddComponent(typeof(ServerCommunication)) as ServerCommunication;
         serverIp = ServerCommunication.GetLocalIPAddress();
+
+        states = new Dictionary<ServerState, IStateController>();
+        states.Add(ServerState.SetUp, new SetUpState(this, serverCommunication));
+
     }
 
     void OnGUI(){
-        switch(_currentState){
-            case ServerState.SetUp:
-                GUISetUpState();
-            break;
+        IStateController state;
+        states.TryGetValue(_currentState, out state);
+        if(state != null) state.ShowGUI(); // TODO - if statement only during refactor
 
+        switch(_currentState){
             case ServerState.WaitingPlayers:
                 GUIWaitingPlayersState();
             break;
@@ -62,6 +73,10 @@ public class ServerController : BaseController
         if (_currentState != nextState){
             _currentState = nextState;
         }
+
+        IStateController state;
+        states.TryGetValue(_currentState, out state);
+        if(state != null) state.ExecuteLogic(); // TODO - if statement only during refactor
 
         switch(_currentState){
             case ServerState.WaitingPlayers:
@@ -141,25 +156,6 @@ public class ServerController : BaseController
     }
 
     //////// On GUI methods
-    void GUISetUpState(){
-        // DEBUG positioning
-        GUILayout.BeginArea(new Rect(100, 100, 175, 175));
-        // DEBUG positioning
-
-        GUILayout.TextArea(string.Format("Connect to IP: {0}", serverIp));
-        if(IsPossibleToBeginMatch()){
-            if (GUILayout.Button("Start game")){
-                SetUpStateEnd();
-            }
-        }
-
-        // DEBUG positioning
-        GUILayout.EndArea();
-        // DEBUG positioning
-    }
-    bool IsPossibleToBeginMatch(){
-        return serverCommunication.ConnectionQuantity > 0; // TODO  -DEBUG value - Correct value is 1 
-    }
     void GUIWaitingPlayersState(){
         // DEBUG positioning
         GUILayout.BeginArea(new Rect(100, 100, 175, 175));
@@ -196,20 +192,8 @@ public class ServerController : BaseController
     }
     
     //////// Update logic methods
-    void SetUpStateEnd(){
-        PreparePossibleRoles();
+    public void CreateBoardManager(){
         InstantiateBoardManager(this);
-        nextState = ServerState.WaitingPlayers;
-    }
-    void PreparePossibleRoles(){
-        int playersNumber = serverCommunication.ConnectionQuantity;
-        int numberHalf = playersNumber/2;
-        int alienModifier = playersNumber%2==0 ? 0 : 1; // There is always an even number of aliens - or 1 more
-
-        playerRolesToGive.AddRedundant(ClientController.PlayerState.Alien, numberHalf + alienModifier);
-        playerRolesToGive.AddRedundant(ClientController.PlayerState.Human, numberHalf);
-
-        playerRolesToGive.Shuffle();
     }
     void WaitingPlayersState(){
         if (AllPlayersPlayed()){
