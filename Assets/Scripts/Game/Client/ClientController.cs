@@ -98,6 +98,7 @@ public class ClientController : BaseController
         states.Add(ClientState.BeginTurn, new BeginTurnState(this));
 
         states.Add(ClientState.WaitingPlayers, new WaitingPlayersClientState(this));
+        states.Add(ClientState.WaitingServer, new WaitingServerState(this));
 
         DelayedCall(UpdateStati, 1f, true);
     }
@@ -110,9 +111,6 @@ public class ClientController : BaseController
         switch(currentState){
             case ClientState.Playing:
                 GUIPlayingTurnState();
-            break;
-            case ClientState.WaitingServer:
-                GUIWaitingServerState();
             break;
             case ClientState.Updating:
                 GUIUpdatingState();
@@ -128,10 +126,6 @@ public class ClientController : BaseController
         if(state!=null) state.ExecuteLogic(); // TODO - if statement used during refactor
 
         switch(currentState){
-            case ClientState.WaitingServer:
-                // Screen of "What happened"
-                WaitingServerState();
-            break;
             case ClientState.Updating:
                 // Update player position and its possible moves
                 UpdatingState();
@@ -205,10 +199,6 @@ public class ClientController : BaseController
         }
     }
 
-    void GUIWaitingServerState(){
-        CreateMidScreenText("What happened:");
-    }
-
     void GUIUpdatingState(){
         switch(NextPlayerState){
             case PlayerState.Died:
@@ -226,9 +216,6 @@ public class ClientController : BaseController
 
 
     //////// Update logic methods
-    void WaitingServerState(){
-        ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientState.Updating);
-    }
     void UpdatingState(){
         switch(NextPlayerState){
             case PlayerState.Unassigned:
