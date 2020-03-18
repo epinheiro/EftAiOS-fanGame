@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class BeginTurnState : IStateController
+﻿public class BeginTurnState : IStateController
 {
     ClientController clientController; 
 

@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class UpdatingClientState : IStateController
+﻿public class UpdatingClientState : IStateController
 {
     ClientController clientController; 
 

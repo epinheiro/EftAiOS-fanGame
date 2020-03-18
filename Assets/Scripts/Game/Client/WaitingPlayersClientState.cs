@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class WaitingPlayersClientState : IStateController
+﻿public class WaitingPlayersClientState : IStateController
 {
     ClientController clientController; 
 
