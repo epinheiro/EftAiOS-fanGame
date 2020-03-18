@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
@@ -219,6 +219,7 @@ public class ServerController : BaseController
         }
     }
     void ProcessingState(){
+        ProcessResults();
         nextState = ServerController.ServerState.Updating;
     }
     void UpdatingState(){
@@ -238,6 +239,85 @@ public class ServerController : BaseController
             }
         }
         return true;
+    }
+
+    void ProcessResults(){
+        // Human escaped
+        List<int> escapees = ProcessHumanEscapees();
+        // Player kills another
+        List<int> attacked = ProcessAttacks();
+        // Update players stati
+        UpdatePlayersStati(escapees, attacked);
+        // Aliens delayed humans for 39 turns
+        /// TODO turn countdown
+    }
+
+    void UpdatePlayersStati(List<int> escapess, List<int> attacked){
+        foreach(int code in escapess){
+            PlayerTurnData data;
+            playerTurnDict.TryGetValue(code, out data);
+            data.role = ClientController.PlayerState.Escaped;
+        }
+
+        foreach(int code in attacked){
+            PlayerTurnData data;
+            playerTurnDict.TryGetValue(code, out data);
+            data.role = ClientController.PlayerState.Died;
+        }
+    }
+
+    List<int> ProcessHumanEscapees(){
+        List<string> escapePodCodes = BoardManagerRef.EscapePods;
+
+        List<int> playersEscapees = new List<int>();
+        foreach(int key in playerTurnDict.Keys){
+            PlayerTurnData data;
+            playerTurnDict.TryGetValue(key, out data);
+            PutPlayRequest lastPlay = data.lastPlay;
+
+            foreach(string code in escapePodCodes){
+                Vector2Int escapePodePosition = BoardManager.TileCodeToVector2Int(code);
+
+                if(data.role == ClientController.PlayerState.Human && lastPlay.movementTo == escapePodePosition){
+                    playersEscapees.Add(lastPlay.playerId);
+                    Debug.Log(string.Format("SERVER - player {0} escaped!", lastPlay.playerId));
+                    break;
+                }
+            }
+        }
+
+        return playersEscapees;
+    }
+
+    List<int> ProcessAttacks(){
+        // Get attacks positions
+        List<Vector2Int> attackList = new List<Vector2Int>();
+        foreach(int key in playerTurnDict.Keys){
+            PlayerTurnData data;
+            playerTurnDict.TryGetValue(key, out data);
+            PutPlayRequest lastPlay = data.lastPlay;
+            if(lastPlay.PlayerAttacked){
+                attackList.Add(lastPlay.movementTo);
+            }
+        }
+
+        // Check if players was in attack positions
+        List<int> playersAttacked = new List<int>();
+        foreach(int key in playerTurnDict.Keys){
+            PlayerTurnData data;
+            playerTurnDict.TryGetValue(key, out data);
+            PutPlayRequest lastPlay = data.lastPlay;
+
+            foreach(Vector2Int attackPosition in attackList){
+                if(!lastPlay.PlayerAttacked && lastPlay.movementTo == attackPosition){
+                    playersAttacked.Add(lastPlay.playerId);
+                    Debug.Log(string.Format("SERVER - player {0} attacked!", lastPlay.playerId));
+                    break;
+                }
+            }
+        }
+
+        return playersAttacked;
     }
 
     void SpawnLastNoises(){
