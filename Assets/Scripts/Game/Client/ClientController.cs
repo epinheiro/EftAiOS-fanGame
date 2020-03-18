@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 using System.Collections.Generic;
 using System;
@@ -83,8 +83,8 @@ public class ClientController : BaseController
         set { _clientId = value; }
     }
 
-    delegate void ClientControllerDelegateAction(ClientController client);
-    ClientControllerDelegateAction delegateBoardInstantiation = InstantiateBoardManager;
+    public delegate void ClientControllerDelegateAction(ClientController client);
+    public ClientControllerDelegateAction delegateBoardInstantiation = InstantiateBoardManager;
 
     static protected void InvokeCleanHighlights(BaseController controller){
         controller.BoardManagerRef.CleanGlowTiles();
@@ -292,7 +292,7 @@ public class ClientController : BaseController
     /// <summary>
     /// Check if the server is on a specific state, when it gets there the client moves to another state
     /// </summary> 
-    void ChangeClientStateBaseOnServer(ServerController.ServerState expectedServerState, ClientController.ClientState nextClientState){
+    public void ChangeClientStateBaseOnServer(ServerController.ServerState expectedServerState, ClientController.ClientState nextClientState){
         if(_serverState != expectedServerState){
             clientCommunication.ScheduleGetStateRequest();
         }else{
@@ -300,7 +300,7 @@ public class ClientController : BaseController
         }
     }
 
-    void ChangeClientStateBaseOnServer(ServerController.ServerState expectedServerState, ClientController.ClientState nextClientState, ClientControllerDelegateAction delegation){
+    public void ChangeClientStateBaseOnServer(ServerController.ServerState expectedServerState, ClientController.ClientState nextClientState, ClientControllerDelegateAction delegation){
         if(_serverState != expectedServerState){
             clientCommunication.ScheduleGetStateRequest();
         }else{
