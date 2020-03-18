@@ -1,4 +1,4 @@
-
+﻿
 using UnityEngine;
 using System.Collections.Generic;
 using System;
@@ -94,6 +94,7 @@ public class ClientController : BaseController
     void Start(){
         states = new Dictionary<ClientState, IStateController>();
         states.Add(ClientState.ToConnect, new ToConnectState(this));
+        states.Add(ClientState.WaitingGame, new WaitingGameState(this));
 
         DelayedCall(UpdateStati, 1f, true);
     }
@@ -104,9 +105,6 @@ public class ClientController : BaseController
         if(state!=null) state.ShowGUI(); // TODO - if statement used during refactor
 
         switch(currentState){
-            case ClientState.WaitingGame:
-                GUIWaitingGameState();
-            break;
             case ClientState.Playing:
                 GUIPlayingTurnState();
             break;
@@ -130,9 +128,6 @@ public class ClientController : BaseController
         if(state!=null) state.ExecuteLogic(); // TODO - if statement used during refactor
 
         switch(currentState){
-            case ClientState.WaitingGame:
-                WaitingGameState();                
-            break;
             case ClientState.BeginTurn:
                 // Make play possible
                 BeginTurnState();
@@ -154,10 +149,6 @@ public class ClientController : BaseController
     }
 
     //////// On GUI methods
-    void GUIWaitingGameState(){
-        CreateMidScreenText("Waiting players to enter");
-    }
-
     void GUIWaitingPlayersState(){
         CreateMidScreenText("Waiting players turn");
     }
@@ -247,12 +238,6 @@ public class ClientController : BaseController
 
 
     //////// Update logic methods
-    void ToConnectState(){
-
-    }
-    void WaitingGameState(){
-        ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientState.Updating, delegateBoardInstantiation);
-    }
     void WaitingPlayersState(){
         ChangeClientStateBaseOnServer(ServerController.ServerState.Processing, ClientState.WaitingServer, InvokeCleanHighlights);
     }
