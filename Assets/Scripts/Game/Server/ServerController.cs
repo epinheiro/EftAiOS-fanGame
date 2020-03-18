@@ -49,6 +49,7 @@ public class ServerController : BaseController
         states = new Dictionary<ServerState, IStateController>();
         states.Add(ServerState.SetUp, new SetUpState(this, serverCommunication));
         states.Add(ServerState.WaitingPlayers, new WaitingPlayersState(this, serverCommunication));
+        states.Add(ServerState.Processing, new ProcessingState(this, serverCommunication));
 
     }
 
@@ -58,10 +59,6 @@ public class ServerController : BaseController
         if(state != null) state.ShowGUI(); // TODO - if statement only during refactor
 
         switch(_currentState){
-            case ServerState.Processing:
-                GUIProcessingState();
-            break;
-
             case ServerState.Updating:
                 GUIUpdatingState();
             break;
@@ -79,11 +76,6 @@ public class ServerController : BaseController
         if(state != null) state.ExecuteLogic(); // TODO - if statement only during refactor
 
         switch(_currentState){
-            case ServerState.Processing:
-                // Show "animation" of the turn
-                Invoke("ProcessingState", 1.2f); // DEBUG DELAY - TODO change
-                // ProcessingState();
-            break;
             case ServerState.Updating:
                 // Update the board
                 Invoke("UpdatingState", 1.2f); // DEBUG DELAY - TODO change
@@ -152,18 +144,6 @@ public class ServerController : BaseController
     }
 
     //////// On GUI methods
-    void GUIProcessingState(){
-        // DEBUG positioning
-        GUILayout.BeginArea(new Rect(100, 100, 175, 175));
-        // DEBUG positioning
-
-        GUILayout.TextArea("Server processing");
-        
-        // DEBUG positioning
-        GUILayout.EndArea();
-        // DEBUG positioning
-    }
-
     void GUIUpdatingState(){
         // DEBUG positioning
         GUILayout.BeginArea(new Rect(100, 100, 175, 175));
@@ -179,10 +159,6 @@ public class ServerController : BaseController
     //////// Update logic methods
     public void CreateBoardManager(){
         InstantiateBoardManager(this);
-    }
-    void ProcessingState(){
-        ProcessResults();
-        nextState = ServerController.ServerState.Updating;
     }
     void UpdatingState(){
         SpawnLastNoises();
@@ -201,85 +177,6 @@ public class ServerController : BaseController
             }
         }
         return true;
-    }
-
-    void ProcessResults(){
-        // Human escaped
-        List<int> escapees = ProcessHumanEscapees();
-        // Player kills another
-        List<int> attacked = ProcessAttacks();
-        // Update players stati
-        UpdatePlayersStati(escapees, attacked);
-        // Aliens delayed humans for 39 turns
-        /// TODO turn countdown
-    }
-
-    void UpdatePlayersStati(List<int> escapess, List<int> attacked){
-        foreach(int code in escapess){
-            PlayerTurnData data;
-            playerTurnDict.TryGetValue(code, out data);
-            data.role = ClientController.PlayerState.Escaped;
-        }
-
-        foreach(int code in attacked){
-            PlayerTurnData data;
-            playerTurnDict.TryGetValue(code, out data);
-            data.role = ClientController.PlayerState.Died;
-        }
-    }
-
-    List<int> ProcessHumanEscapees(){
-        List<string> escapePodCodes = BoardManagerRef.EscapePods;
-
-        List<int> playersEscapees = new List<int>();
-        foreach(int key in playerTurnDict.Keys){
-            PlayerTurnData data;
-            playerTurnDict.TryGetValue(key, out data);
-            PutPlayRequest lastPlay = data.lastPlay;
-
-            foreach(string code in escapePodCodes){
-                Vector2Int escapePodePosition = BoardManager.TileCodeToVector2Int(code);
-
-                if(data.role == ClientController.PlayerState.Human && lastPlay.movementTo == escapePodePosition){
-                    playersEscapees.Add(lastPlay.playerId);
-                    Debug.Log(string.Format("SERVER - player {0} escaped!", lastPlay.playerId));
-                    break;
-                }
-            }
-        }
-
-        return playersEscapees;
-    }
-
-    List<int> ProcessAttacks(){
-        // Get attacks positions
-        List<Vector2Int> attackList = new List<Vector2Int>();
-        foreach(int key in playerTurnDict.Keys){
-            PlayerTurnData data;
-            playerTurnDict.TryGetValue(key, out data);
-            PutPlayRequest lastPlay = data.lastPlay;
-            if(lastPlay.PlayerAttacked){
-                attackList.Add(lastPlay.movementTo);
-            }
-        }
-
-        // Check if players was in attack positions
-        List<int> playersAttacked = new List<int>();
-        foreach(int key in playerTurnDict.Keys){
-            PlayerTurnData data;
-            playerTurnDict.TryGetValue(key, out data);
-            PutPlayRequest lastPlay = data.lastPlay;
-
-            foreach(Vector2Int attackPosition in attackList){
-                if(!lastPlay.PlayerAttacked && lastPlay.movementTo == attackPosition){
-                    playersAttacked.Add(lastPlay.playerId);
-                    Debug.Log(string.Format("SERVER - player {0} attacked!", lastPlay.playerId));
-                    break;
-                }
-            }
-        }
-
-        return playersAttacked;
     }
 
     void SpawnLastNoises(){
