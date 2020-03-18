@@ -17,16 +17,6 @@ public class ClientController : BaseController
         Updating
     }
 
-    public enum TurnSteps {
-        Movement,
-        PlayerWillAttack,
-        Card,
-        Noise,
-        SendData
-    }
-
-    TurnSteps currentTurnStep = TurnSteps.Movement;
-
     Dictionary<ClientState, IStateController> states;
 
     public enum PlayerState {Unassigned, Alien, Human, Died, Escaped};
@@ -41,6 +31,10 @@ public class ClientController : BaseController
         get { return _nextPlayerState; }
         set { _nextPlayerState = value;}
     }
+
+    /////////////////////////////////////////////
+    ///// Player's turn data
+    // Position
     public Vector2Int playerCurrentPosition;
     Nullable<Vector2Int> _playerNextPosition;
     public string PlayerNextPosition{
@@ -50,7 +44,12 @@ public class ClientController : BaseController
         }
         set{ _playerNextPosition = BoardManager.TileCodeToVector2Int(value);}
     }
+    public Nullable<Vector2Int> PlayerNullableNextPosition{
+        get{ return _playerNextPosition; }
+        set{ _playerNextPosition = value; }
+    }
 
+    // Sound
     public Vector2Int playerCurrentSound;
     Nullable<Vector2Int> _playerNextSound;
     public string PlayerNextSound{
@@ -60,8 +59,19 @@ public class ClientController : BaseController
         }
         set{ _playerNextSound = BoardManager.TileCodeToVector2Int(value);}
     }
+    public Nullable<Vector2Int> PlayerNullableNexSound{
+        get{ return _playerNextSound; }
+        set{ _playerNextSound = value; }
+    }
 
+    // Attack
     Nullable<bool> _playerWillAttack;
+    public Nullable<bool> PlayerNullableWillAttack{
+        get{ return _playerWillAttack; }
+        set{ _playerWillAttack = value; }
+    }
+    /////////////////////////////////////////////
+    /////////////////////////////////////////////
 
     ClientState currentState = ClientState.ToConnect;
     public ClientState CurrentState{
@@ -96,7 +106,7 @@ public class ClientController : BaseController
         states.Add(ClientState.ToConnect, new ToConnectState(this));
         states.Add(ClientState.WaitingGame, new WaitingGameState(this));
         states.Add(ClientState.BeginTurn, new BeginTurnState(this));
-
+        states.Add(ClientState.Playing, new PlayingState(this));
         states.Add(ClientState.WaitingPlayers, new WaitingPlayersClientState(this));
         states.Add(ClientState.WaitingServer, new WaitingServerState(this));
         states.Add(ClientState.Updating, new UpdatingClientState(this));
@@ -107,86 +117,14 @@ public class ClientController : BaseController
     void OnGUI(){
         IStateController state;
         states.TryGetValue(currentState, out state);
-        if(state!=null) state.ShowGUI(); // TODO - if statement used during refactor
-
-        switch(currentState){
-            case ClientState.Playing:
-                GUIPlayingTurnState();
-            break;
-        }
-        
+        state.ShowGUI();
     }
 
     // Update is called once per second
     void UpdateStati(){
         IStateController state;
         states.TryGetValue(currentState, out state);
-        if(state!=null) state.ExecuteLogic(); // TODO - if statement used during refactor
-    }
-
-    //////// On GUI methods
-    void GUIPlayingTurnState(){
-        switch(currentTurnStep){
-            case TurnSteps.Movement:
-                if(_playerNextPosition.HasValue){
-                    currentTurnStep = TurnSteps.PlayerWillAttack;
-                }
-
-                break;
-
-            case TurnSteps.PlayerWillAttack:
-                if(currentPlayerState == PlayerState.Alien){
-                    if(!_playerWillAttack.HasValue){
-                        GUILayout.BeginArea(new Rect(0, 0, 175, 175));
-                        if(GUILayout.Button("Attack")){
-                            _playerWillAttack = true;
-                        }
-                        if(GUILayout.Button("Quiet")){
-                            _playerWillAttack = false;
-                        }
-                        GUILayout.EndArea();
-                    }else{
-                        if(_playerWillAttack.Value){
-                            _playerNextSound = _playerNextPosition;
-                            currentTurnStep = TurnSteps.SendData;
-                        }else{
-                            currentTurnStep = TurnSteps.Card;
-                        }
-                    }
-                }else{
-                    currentTurnStep = TurnSteps.Card;
-                }
-                break;
-
-            case TurnSteps.Card:
-                if(true){ // TODO - sort card!
-                    BoardManagerRef.GlowPossibleNoises();
-                    currentTurnStep = TurnSteps.Noise;
-                }else{
-                    currentTurnStep = TurnSteps.SendData;
-                }
-                break;
-
-            case TurnSteps.Noise:
-                if(_playerNextSound.HasValue){
-                    currentTurnStep = TurnSteps.SendData;
-                }
-                break;
-
-            case TurnSteps.SendData:
-                clientCommunication.SchedulePutPlayRequest(
-                    _clientId, 
-                    (Vector2Int) _playerNextPosition,
-                    _playerNextSound.HasValue ? (Vector2Int) _playerNextSound : new Vector2Int(-1,-1), // TODO - check if is there better solutions than V(-1,-1)
-                    _playerWillAttack.HasValue ? (bool) _playerWillAttack : false
-                );
-                currentState = ClientState.WaitingPlayers;
-                currentTurnStep = TurnSteps.Movement;
-                _playerNextPosition = null;
-                _playerNextSound = null;
-                _playerWillAttack = null;
-                break;
-        }
+        state.ExecuteLogic();
     }
 
     /// <summary>
