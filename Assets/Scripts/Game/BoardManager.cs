@@ -42,6 +42,10 @@ public class BoardManager : MonoBehaviour
     public string AlienNestCode {
         get { return alienNestCode; }
     }
+    List<string> escapePods;
+    public List<string> EscapePods {
+        get { return escapePods; }
+    }
 
     public BaseController controller;
 
@@ -55,6 +59,7 @@ public class BoardManager : MonoBehaviour
         glowSoundTilesAggregator.transform.parent = this.transform;
         soundEffectsAggregator.transform.parent = this.transform;
 
+        escapePods = new List<string>();
         mapTiles = new Dictionary<string, TileData>();
         CreateMap("Galilei");
     }
@@ -267,6 +272,10 @@ public class BoardManager : MonoBehaviour
             
             case PossibleTypes.HumanDorm:
                 humanDormCode = tileId;
+            break;
+
+            case PossibleTypes.EscapePod:
+                escapePods.Add(tileId);
             break;
         }
 
