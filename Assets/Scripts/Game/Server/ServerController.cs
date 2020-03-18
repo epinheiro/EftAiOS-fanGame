@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
@@ -158,7 +158,7 @@ public class ServerController : BaseController
         // DEBUG positioning
     }
     bool IsPossibleToBeginMatch(){
-        return serverCommunication.ConnectionQuantity > 0; // DEBUG value - Correct value is 1 
+        return serverCommunication.ConnectionQuantity > 0; // TODO  -DEBUG value - Correct value is 1 
     }
     void GUIWaitingPlayersState(){
         // DEBUG positioning
