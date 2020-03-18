@@ -22,4 +22,15 @@ public class BaseController : MonoBehaviour
         controller.BoardManagerRef = go.GetComponent<BoardManager>();
         go.name = "BoardManager";
     }
+
+    public delegate void BaseAction();
+
+    public void DelayedCall(BaseAction function, float delay){
+        StartCoroutine(DelayedCallCoroutine(function, delay));
+    }
+
+    IEnumerator DelayedCallCoroutine(BaseAction function, float delay){
+        yield return new WaitForSeconds(delay);
+        function();
+    }
 }
