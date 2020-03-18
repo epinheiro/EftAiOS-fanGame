@@ -57,7 +57,7 @@ public class ServerController : BaseController
     void OnGUI(){
         IStateController state;
         states.TryGetValue(_currentState, out state);
-        if(state != null) state.ShowGUI(); // TODO - if statement only during refactor
+        state.ShowGUI();
     }
 
     // Update is called once per frame
@@ -68,7 +68,7 @@ public class ServerController : BaseController
 
         IStateController state;
         states.TryGetValue(_currentState, out state);
-        if(state != null) state.ExecuteLogic(); // TODO - if statement only during refactor
+        state.ExecuteLogic();
     }
 
     public void InsertNewPlayTurnData(int playerId, Vector2Int movementTo, Vector2Int soundIn, bool attacked){
@@ -117,18 +117,5 @@ public class ServerController : BaseController
    
     public void CreateBoardManager(){
         InstantiateBoardManager(this);
-    }
-
-    bool AllPlayersPlayed(){
-        if (serverCommunication.ConnectionQuantity != playerTurnDict.Count){
-            return false; // The lists are inserted in the first PutPlay
-        }
-
-        foreach(KeyValuePair<int, PlayerTurnData> entry in playerTurnDict){
-            if (!entry.Value.playedThisTurn){
-                return false;
-            }
-        }
-        return true;
     }
 }
