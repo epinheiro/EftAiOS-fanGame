@@ -27,6 +27,8 @@ public class ClientController : BaseController
 
     TurnSteps currentTurnStep = TurnSteps.Movement;
 
+    Dictionary<ClientState, IStateController> states;
+
     public enum PlayerState {Unassigned, Alien, Human, Died, Escaped};
 
     PlayerState currentPlayerState = PlayerState.Unassigned;
@@ -81,7 +83,7 @@ public class ClientController : BaseController
 
     // Start is called before the first frame update
     void Start(){
-        InvokeRepeating("UpdateStati", 1f, 1f);
+        DelayedCall(UpdateStati, 1f, true);
     }
 
     void OnGUI(){
