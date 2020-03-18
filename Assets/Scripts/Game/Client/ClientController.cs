@@ -154,18 +154,12 @@ public class ClientController : BaseController
     }
 
     //////// On GUI methods
-    void createMidScreenText(string text){
-        GUILayout.BeginArea(new Rect(100, 10, 100, 100));
-        GUILayout.TextArea(text);
-        GUILayout.EndArea();
-    }
-
     void GUIWaitingGameState(){
-        createMidScreenText("Waiting players to enter");
+        CreateMidScreenText("Waiting players to enter");
     }
 
     void GUIWaitingPlayersState(){
-        createMidScreenText("Waiting players turn");
+        CreateMidScreenText("Waiting players turn");
     }
 
     void GUIPlayingTurnState(){
@@ -233,20 +227,20 @@ public class ClientController : BaseController
     }
 
     void GUIWaitingServerState(){
-        createMidScreenText("What happened:");
+        CreateMidScreenText("What happened:");
     }
 
     void GUIUpdatingState(){
         switch(NextPlayerState){
             case PlayerState.Died:
-                createMidScreenText("You died!");
+                CreateMidScreenText("You died!");
             break;
             case PlayerState.Escaped:
-                createMidScreenText("You won!");
+                CreateMidScreenText("You won!");
             break;
 
             default:
-                createMidScreenText("Updating ship");
+                CreateMidScreenText("Updating ship");
             break;
         }
     }

@@ -35,4 +35,10 @@ public class BaseController : MonoBehaviour
             function();
         }while(repeat);
     }
+
+    public void CreateMidScreenText(string text){
+        GUILayout.BeginArea(new Rect(100, 10, 100, 100));
+        GUILayout.TextArea(text);
+        GUILayout.EndArea();
+    }
 }
