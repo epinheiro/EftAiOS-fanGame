@@ -72,6 +72,11 @@ public class ClientController : BaseController
     }
     /////////////////////////////////////////////
     /////////////////////////////////////////////
+    EventDeck deck;
+    public EventDeck Deck{
+        get { return deck; }
+    }
+    /////////////////////////////////////////////
 
     ClientState currentState = ClientState.ToConnect;
     public ClientState CurrentState{
@@ -110,6 +115,8 @@ public class ClientController : BaseController
         states.Add(ClientState.WaitingPlayers, new WaitingPlayersClientState(this));
         states.Add(ClientState.WaitingServer, new WaitingServerState(this));
         states.Add(ClientState.Updating, new UpdatingClientState(this));
+
+        deck = new EventDeck();
 
         DelayedCall(UpdateStati, 1f, true);
     }

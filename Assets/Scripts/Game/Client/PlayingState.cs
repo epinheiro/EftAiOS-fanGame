@@ -80,9 +80,31 @@ public class PlayingState : IStateController
                 break;
 
             case TurnSteps.Card:
-                if(true){ // TODO - sort card!
-                    clientController.BoardManagerRef.GlowPossibleNoises();
-                    currentTurnStep = TurnSteps.Noise;
+                string tileCode = BoardManager.TranslateTilePositionToCode(clientController.PlayerNullableNextPosition.Value);
+                BoardManager.PossibleTypes tileType = clientController.BoardManagerRef.GetTileType(tileCode);
+
+                if(tileType == BoardManager.PossibleTypes.EventTile){
+                    EventDeck.CardTypes cardType = clientController.Deck.DrawCard();
+
+                    switch(cardType){
+                        case EventDeck.CardTypes.AnySectorSound:
+                            Debug.Log(string.Format("CLIENT {0} can choose a sector to make a noise", clientController.ClientId));
+                            clientController.BoardManagerRef.GlowPossibleNoises();
+                            currentTurnStep = TurnSteps.Noise;
+                            break;
+
+                        case EventDeck.CardTypes.CurrentSectorSound:
+                            Debug.Log(string.Format("CLIENT {0} make a noise in his sector", clientController.ClientId));
+                            clientController.PlayerNextSound = clientController.PlayerNextPosition;
+                            currentTurnStep = TurnSteps.Noise;
+                            break;
+
+                        case EventDeck.CardTypes.NoSound:
+                            Debug.Log(string.Format("CLIENT {0} is silent", clientController.ClientId));
+                            currentTurnStep = TurnSteps.SendData;
+                            break;
+                    }
+                    
                 }else{
                     currentTurnStep = TurnSteps.SendData;
                 }
