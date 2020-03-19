@@ -18,8 +18,6 @@ public class PlayingState : IStateController
     }
 
     public void ExecuteLogic(){
-    }
-    public void ShowGUI(){
         switch(currentTurnStep){
             case TurnSteps.Movement:
                 if(clientController.PlayerNullableNextPosition.HasValue){
@@ -27,6 +25,35 @@ public class PlayingState : IStateController
                 }
 
                 break;
+
+            // PlayerWillAttack
+
+            // Card
+
+            case TurnSteps.Noise:
+                if(clientController.PlayerNullableNexSound.HasValue){
+                    currentTurnStep = TurnSteps.SendData;
+                }
+                break;
+
+            case TurnSteps.SendData:
+                clientController.ClientCommunication.SchedulePutPlayRequest(
+                    clientController.ClientId, 
+                    (Vector2Int) clientController.PlayerNullableNextPosition,
+                    clientController.PlayerNullableNexSound.HasValue ? (Vector2Int) clientController.PlayerNullableNexSound : new Vector2Int(-1,-1), // TODO - check if is there better solutions than V(-1,-1)
+                    clientController.PlayerNullableWillAttack.HasValue ? (bool) clientController.PlayerNullableWillAttack : false
+                );
+                clientController.CurrentState = ClientController.ClientState.WaitingPlayers;
+                currentTurnStep = TurnSteps.Movement;
+                clientController.PlayerNullableNextPosition = null;
+                clientController.PlayerNullableNexSound = null;
+                clientController.PlayerNullableWillAttack = null;
+                break;
+        }
+    }
+    public void ShowGUI(){
+        switch(currentTurnStep){
+            // Movement
 
             case TurnSteps.PlayerWillAttack:
                 if(clientController.CurrentPlayerState == ClientController.PlayerState.Alien){
@@ -61,25 +88,9 @@ public class PlayingState : IStateController
                 }
                 break;
 
-            case TurnSteps.Noise:
-                if(clientController.PlayerNullableNexSound.HasValue){
-                    currentTurnStep = TurnSteps.SendData;
-                }
-                break;
+            // Noise
 
-            case TurnSteps.SendData:
-                clientController.ClientCommunication.SchedulePutPlayRequest(
-                    clientController.ClientId, 
-                    (Vector2Int) clientController.PlayerNullableNextPosition,
-                    clientController.PlayerNullableNexSound.HasValue ? (Vector2Int) clientController.PlayerNullableNexSound : new Vector2Int(-1,-1), // TODO - check if is there better solutions than V(-1,-1)
-                    clientController.PlayerNullableWillAttack.HasValue ? (bool) clientController.PlayerNullableWillAttack : false
-                );
-                clientController.CurrentState = ClientController.ClientState.WaitingPlayers;
-                currentTurnStep = TurnSteps.Movement;
-                clientController.PlayerNullableNextPosition = null;
-                clientController.PlayerNullableNexSound = null;
-                clientController.PlayerNullableWillAttack = null;
-                break;
+            // SendData
         }
     }
 }
