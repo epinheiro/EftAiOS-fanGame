@@ -1,5 +1,4 @@
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
 
@@ -109,6 +108,10 @@ public class ClientController : BaseController
 
     // Start is called before the first frame update
     void Start(){
+        SetUpClient();
+    }
+
+    public void SetUpClient(){
         states = new Dictionary<ClientState, IStateController>();
         states.Add(ClientState.ToConnect, new ToConnectState(this));
         states.Add(ClientState.WaitingGame, new WaitingGameState(this));
@@ -121,6 +124,21 @@ public class ClientController : BaseController
         deck = new EventDeck();
 
         update = DelayedCall(UpdateStati, 1f, true);
+    }
+
+    public void ResetClient(){
+        Destroy(this.GetComponent<ClientCommunication>());
+
+        currentState = ClientController.ClientState.ToConnect;
+
+        this.states = null;
+        this.deck = null;
+        StopCoroutine(update);
+        this.update = null;
+
+        Destroy(GameObject.Find("BoardManager"));
+
+        SetUpClient();
     }
 
     void OnGUI(){

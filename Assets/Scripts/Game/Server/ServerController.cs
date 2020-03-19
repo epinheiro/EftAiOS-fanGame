@@ -91,13 +91,8 @@ public class ServerController : BaseController
         Vector2Int finalPosition;
         ClientController.PlayerState finalState;
 
-        if(playerTurnDict.ContainsKey(playerId)){
-            PlayerTurnData data;
-            playerTurnDict.TryGetValue(playerId, out data);
-
-            finalPosition = data.lastPlay.movementTo;
-            finalState = data.role;
-        }else{ // Setup
+        if(playerRolesToGive.Count > 0){
+            // Setup
             finalState = playerRolesToGive.PopValue();
             finalPosition = _boardManager.GetSpawnPointTileData(finalState).tilePosition;
 
@@ -108,8 +103,20 @@ public class ServerController : BaseController
                     finalState
                 )                
             );
-        }
+        }else{
+            PlayerTurnData data;
+            playerTurnDict.TryGetValue(playerId, out data);
 
+            finalPosition = data.lastPlay.movementTo;
+            finalState = data.role;
+
+            switch(finalState){
+                case ClientController.PlayerState.Died:
+                case ClientController.PlayerState.Escaped:
+                    playerTurnDict.Remove(playerId);
+                    break;
+            }
+        }
         // Method outputs
         position = finalPosition;
         state = finalState;

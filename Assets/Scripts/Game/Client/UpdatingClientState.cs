@@ -1,4 +1,6 @@
-﻿public class UpdatingClientState : IStateController
+﻿using UnityEngine;
+
+public class UpdatingClientState : IStateController
 {
     ClientController clientController; 
 
@@ -25,10 +27,13 @@
         switch(clientController.NextPlayerState){
             case ClientController.PlayerState.Died:
                 clientController.CreateMidScreenText("You died!");
-            break;
+                clientController.ResetClient();
+                break;
+
             case ClientController.PlayerState.Escaped:
                 clientController.CreateMidScreenText("You won!");
-            break;
+                clientController.ResetClient();
+                break;
 
             default:
                 clientController.CreateMidScreenText("Updating ship");
