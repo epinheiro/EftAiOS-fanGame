@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 using System.Collections.Generic;
 using System;
@@ -105,6 +105,8 @@ public class ClientController : BaseController
     public delegate void ClientControllerDelegateAction(ClientController client);
     public ClientControllerDelegateAction delegateBoardInstantiation = InstantiateBoardManager;
 
+    Coroutine update;
+
     // Start is called before the first frame update
     void Start(){
         states = new Dictionary<ClientState, IStateController>();
@@ -118,7 +120,7 @@ public class ClientController : BaseController
 
         deck = new EventDeck();
 
-        DelayedCall(UpdateStati, 1f, true);
+        update = DelayedCall(UpdateStati, 1f, true);
     }
 
     void OnGUI(){

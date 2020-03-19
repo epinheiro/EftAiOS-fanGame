@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,8 +25,8 @@ public class BaseController : MonoBehaviour
 
     public delegate void BaseAction();
 
-    public void DelayedCall(BaseAction function, float delay, bool repeat = false){
-        StartCoroutine(DelayedCallCoroutine(function, delay, repeat));
+    public Coroutine DelayedCall(BaseAction function, float delay, bool repeat = false){
+        return StartCoroutine(DelayedCallCoroutine(function, delay, repeat));
     }
 
     IEnumerator DelayedCallCoroutine(BaseAction function, float delay, bool repeat){
