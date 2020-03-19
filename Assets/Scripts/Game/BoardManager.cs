@@ -70,6 +70,15 @@ public class BoardManager : MonoBehaviour
         
     }
 
+    public BoardManager.PossibleTypes GetTileType(string tileCode){
+        TileData data;
+        if(!mapTiles.TryGetValue(tileCode, out data)){
+            throw new System.Exception(string.Format("Try to get a invalid tile code {0}", tileCode));
+        }
+
+        return data.type;
+    }
+
     public TileData GetSpawnPointTileData(ClientController.PlayerState state){
         TileData data;
 
