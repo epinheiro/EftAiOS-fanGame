@@ -108,8 +108,8 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void GlowPossibleMovements(string tileCode, int movement){
-        List<TileData> movementsList = PossibleMovements(tileCode, movement);
+    public void GlowPossibleMovements(string tileCode, int movement, ClientController.PlayerState role){
+        List<TileData> movementsList = PossibleMovements(tileCode, movement, role);
 
         foreach(TileData data in movementsList){
             GlowTile(data.tileCode, glowMovementPrefab, glowMovementTilesAggregator);
@@ -129,51 +129,73 @@ public class BoardManager : MonoBehaviour
         go.transform.position = new Vector2(worldPosition.x, worldPosition.y);
     }
 
-    List<TileData> PossibleMovements(string startingTile, int movement){
+    List<TileData> PossibleMovements(string startingTile, int movement, ClientController.PlayerState role){
         List<TileData> movementsList = new List<TileData>();
 
-        PropagateMovement(movementsList, startingTile, startingTile, movement); 
+        List<string> invalidTileList = CreateInvalidTileList(startingTile, role);
+
+        PropagateMovement(movementsList, startingTile, startingTile, movement, invalidTileList);
 
         return movementsList;
     }
 
-    void PropagateMovement(List<TileData> list, string startingTileCode, string tileCode, int movementsLeft){
+    void PropagateMovement(List<TileData> list, string startingTileCode, string tileCode, int movementsLeft, List<string> invalidTileList){
         if(movementsLeft==0) return;
 
         string[] parseResult = ParseTileCode(tileCode);
         int columnNumber = TranslateColumnIdToNumber(parseResult[0]);
         int rowNumber = TranslateRowIdToNumber(parseResult[1]);
 
-        CheckTileCodeAndInsert(list, startingTileCode, columnNumber, rowNumber-1, movementsLeft);
-        CheckTileCodeAndInsert(list, startingTileCode, columnNumber, rowNumber+1, movementsLeft);
+        CheckTileCodeAndInsert(list, startingTileCode, columnNumber, rowNumber-1, movementsLeft, invalidTileList);
+        CheckTileCodeAndInsert(list, startingTileCode, columnNumber, rowNumber+1, movementsLeft, invalidTileList);
         // Neighbor column
         if (columnNumber % 2 == 0){
-            CheckTileCodeAndInsert(list, startingTileCode, columnNumber-1, rowNumber  , movementsLeft);
-            CheckTileCodeAndInsert(list, startingTileCode, columnNumber-1, rowNumber+1, movementsLeft);
-            CheckTileCodeAndInsert(list, startingTileCode, columnNumber+1, rowNumber  , movementsLeft);
-            CheckTileCodeAndInsert(list, startingTileCode, columnNumber+1, rowNumber+1, movementsLeft);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber-1, rowNumber  , movementsLeft, invalidTileList);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber-1, rowNumber+1, movementsLeft, invalidTileList);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber+1, rowNumber  , movementsLeft, invalidTileList);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber+1, rowNumber+1, movementsLeft, invalidTileList);
         }else{
-            CheckTileCodeAndInsert(list, startingTileCode, columnNumber-1, rowNumber-1, movementsLeft);
-            CheckTileCodeAndInsert(list, startingTileCode, columnNumber-1, rowNumber  , movementsLeft);
-            CheckTileCodeAndInsert(list, startingTileCode, columnNumber+1, rowNumber-1, movementsLeft);
-            CheckTileCodeAndInsert(list, startingTileCode, columnNumber+1, rowNumber  , movementsLeft);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber-1, rowNumber-1, movementsLeft, invalidTileList);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber-1, rowNumber  , movementsLeft, invalidTileList);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber+1, rowNumber-1, movementsLeft, invalidTileList);
+            CheckTileCodeAndInsert(list, startingTileCode, columnNumber+1, rowNumber  , movementsLeft, invalidTileList);
         }
     }
 
-    void CheckTileCodeAndInsert(List<TileData> list, string startingTileCode, int columnNumber, int rowNumber, int movementsLeft){
+    void CheckTileCodeAndInsert(List<TileData> list, string startingTileCode, int columnNumber, int rowNumber, int movementsLeft, List<string> invalidTileList){
         string tileCode = TranslateTileNumbersToCode(columnNumber, rowNumber);
 
-        if(string.Equals(startingTileCode, tileCode)) return;
-        
-
-        if (TileExistsInMap(tileCode)) {
+        if (TileExistsInMap(tileCode) && IsTileValid(startingTileCode, tileCode, invalidTileList)) {
             if(!TileExistsInList(list, tileCode)){
                 TileData data;
                 mapTiles.TryGetValue(tileCode, out data);
                 list.Add(data);
             }
-            PropagateMovement(list, startingTileCode, tileCode, movementsLeft-1);
+            PropagateMovement(list, startingTileCode, tileCode, movementsLeft-1, invalidTileList);
         }
+    }
+
+    bool IsTileValid(string startingTileCode, string tileCode, List<string> invalidTileList){
+        foreach(string code in invalidTileList){
+            if(string.Equals(code, tileCode)) return false;
+        }
+        return true;
+    }
+
+    List<string> CreateInvalidTileList(string startingTileCode = "", ClientController.PlayerState specificRole = ClientController.PlayerState.Unassigned){
+        List<string> list = new List<string>();
+
+        if(!string.IsNullOrEmpty(startingTileCode)) list.Add(startingTileCode);
+        list.Add(alienNestCode);
+        list.Add(humanDormCode);
+
+        if(specificRole != ClientController.PlayerState.Human){
+            foreach(string code in escapePods){
+                list.Add(code);
+            }
+        }
+
+        return list;
     }
 
     bool TileExistsInList(List<TileData> list, string tileCode){

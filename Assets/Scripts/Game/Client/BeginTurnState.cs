@@ -17,7 +17,7 @@
                 movement = 1;
                 break;
         }
-        clientController.BoardManagerRef.GlowPossibleMovements(currentTileCode, movement);
+        clientController.BoardManagerRef.GlowPossibleMovements(currentTileCode, movement, clientController.CurrentPlayerState);
         clientController.CurrentState = ClientController.ClientState.Playing;
     }
     public void ShowGUI(){
