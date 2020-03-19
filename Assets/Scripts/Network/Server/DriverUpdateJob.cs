@@ -32,9 +32,6 @@ struct DriverUpdateJob : IJob{
                 // "Nothing more to accept" is signaled by returning an invalid connection from accept
                 if (con.IsCreated){
                     connections.Add(con);
-                    // DEBUG //////////////////////////////////////////////////
-                    Debug.Log("Server connections: " + connections.Length); 
-                    // DEBUG //////////////////////////////////////////////////
                 }else{
                     break;
                 }

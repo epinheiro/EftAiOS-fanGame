@@ -14,7 +14,6 @@ struct ConnectionUpdateJob : IJob{
     {
         // If the client ui indicates we should be sending pings but we do not have an active connection we create one
         if (serverEP.IsValid && !connection[0].IsCreated){
-            Debug.Log("Client reconnection");
             connection[0] = driver.Connect(serverEP);
         }
             

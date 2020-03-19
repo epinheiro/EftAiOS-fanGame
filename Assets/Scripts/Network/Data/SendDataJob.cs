@@ -17,8 +17,8 @@ struct SendDataJob : IJob {
 
         DataStreamWriter dataPack = new DataStreamWriter(dataPackSize, Allocator.Temp);
 
-        foreach(int arg in varargs){
-            dataPack.Write(arg);
+        for(int i=0 ; i<varargs.Length ; i++){
+            dataPack.Write(varargs[i]);
         }
 
         connection.Send(driver, dataPack);
