@@ -7,10 +7,8 @@ using UnityEditor;
 public class FileAsset
 {
     // Highlevel class based configuration
-    static public readonly string dataPath = "Assets/Data/";
-    static public readonly string mapsDataPath = "Assets/Data/Maps/";
-    static protected readonly string fileFormat = "json";
-
+    static public readonly string dataPath = "Data/";
+    static public readonly string mapsDataPath = "Data/Maps/";
 
     //////////// File functions ////////////
     /// <summary>
@@ -20,7 +18,7 @@ public class FileAsset
     /// <returns></returns>
     static protected string GetMapFile(string fileName) {
         try{
-            return GetTextFile(string.Format("{0}{1}.{2}", mapsDataPath, fileName, fileFormat));
+            return GetTextFile(string.Format("{0}{1}", mapsDataPath, fileName));
         }catch(Exception e){
             throw e;
         }
@@ -33,8 +31,9 @@ public class FileAsset
     /// <returns></returns>
     static protected string GetTextFile(string path) {
         // https://docs.unity3d.com/ScriptReference/AssetDatabase.LoadAssetAtPath.html
+        // https://docs.unity3d.com/ScriptReference/Resources.Load.html
         try {
-            TextAsset textFile = (TextAsset) AssetDatabase.LoadAssetAtPath(path, typeof(TextAsset));
+            TextAsset textFile = (TextAsset) Resources.Load<TextAsset>(path);
             return textFile.ToString();
         } catch {
             throw new System.IO.FileNotFoundException(string.Format("File not found in {0}", path));
