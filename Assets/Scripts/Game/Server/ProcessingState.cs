@@ -61,22 +61,16 @@ public class ProcessingState : IStateController
     }
 
     List<int> ProcessHumanEscapees(){
-        List<string> escapePodCodes = serverController.BoardManagerRef.EscapePods;
-
         List<int> playersEscapees = new List<int>();
         foreach(int key in serverController.PlayerTurnDict.Keys){
             PlayerTurnData data;
             serverController.PlayerTurnDict.TryGetValue(key, out data);
             PutPlayRequest lastPlay = data.lastPlay;
 
-            foreach(string code in escapePodCodes){
-                Vector2Int escapePodePosition = BoardManager.TileCodeToVector2Int(code);
-
-                if(data.role == ClientController.PlayerState.Human && lastPlay.movementTo == escapePodePosition){
-                    playersEscapees.Add(lastPlay.playerId);
-                    Debug.Log(string.Format("SERVER - player {0} escaped!", lastPlay.playerId));
-                    break;
-                }
+            if(data.role == ClientController.PlayerState.Human && serverController.BoardManagerRef.GetTileType(BoardManager.TranslateTilePositionToCode(lastPlay.movementTo)) == BoardManager.PossibleTypes.EscapePod){
+                playersEscapees.Add(lastPlay.playerId);
+                Debug.Log(string.Format("SERVER - player {0} escaped!", lastPlay.playerId));
+                break;
             }
         }
 
