@@ -113,7 +113,9 @@ public class BoardManager : MonoBehaviour
 
     public void GlowPossibleNoises(){
         foreach(string key in mapTiles.Keys){
-            GlowTile(key, glowSoundPrefab, glowSoundTilesAggregator);
+            if(GetTileType(key) == PossibleTypes.EventTile){
+                GlowTile(key, glowSoundPrefab, glowSoundTilesAggregator);
+            }
         }
     }
 
