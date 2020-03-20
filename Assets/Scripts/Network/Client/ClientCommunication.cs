@@ -51,12 +51,12 @@ public class ClientCommunication : MonoBehaviour
     void Awake(){
         clientController = this.GetComponent<ClientController>();
         jobHandler = new CommunicationJobHandler();
-        SetClientIdentity();
 
         AllocateServerAttributes();
     }
 
     void Start(){
+        SetClientIdentity();
     }
 
     void OnDestroy(){

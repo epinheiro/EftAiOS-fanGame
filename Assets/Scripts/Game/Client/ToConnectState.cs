@@ -12,7 +12,7 @@ public class ToConnectState : IStateController
 
     public ToConnectState(ClientController clientController){
         this.clientController = clientController;
-
+        SetClientIdentity();
         clientController.ClientCommunication = clientController.gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
     }
 
@@ -47,7 +47,6 @@ public class ToConnectState : IStateController
 
             case Connection.Connected:
                 Debug.Log(string.Format("CLIENT - connected to {0}", _customIp));
-                SetClientIdentity();
                 clientController.CurrentState = ClientController.ClientState.WaitingGame;
                 break;
         }
