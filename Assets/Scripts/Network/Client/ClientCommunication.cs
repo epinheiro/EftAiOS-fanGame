@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Networking.Transport;
 using Unity.Collections;
 using Unity.Jobs;
+using System.Text.RegularExpressions;
 
 public class ClientCommunication : MonoBehaviour
 {
@@ -19,6 +20,12 @@ public class ClientCommunication : MonoBehaviour
 
     public ClientController clientController;
 
+    public string _customIp = "";
+    public string IP {
+        get { return _customIp; }
+        set { _customIp = value; }
+    }
+
     void Awake(){
         clientController = this.GetComponent<ClientController>();
         jobHandler = new CommunicationJobHandler();
@@ -26,7 +33,6 @@ public class ClientCommunication : MonoBehaviour
     }
 
     void Start(){        
-        ConnectToServer();
     }
 
     void OnDestroy(){
@@ -86,7 +92,7 @@ public class ClientCommunication : MonoBehaviour
 
     //////////////////////////////////
     /////// Client functions /////////
-    void ConnectToServer(string ip = "", ushort port = 0){
+    public void ConnectToServer(string ip = "", ushort port = 0){
         AllocateServerAttributes();
 
         if(string.IsNullOrEmpty(ip)){

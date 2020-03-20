@@ -2,15 +2,12 @@
 
 public class SetUpState : IStateController
 {
-    string serverIp;
     ServerController serverController;
     ServerCommunication serverCommunication;
 
     public SetUpState(ServerController serverController, ServerCommunication serverCommunication){
         this.serverController = serverController;
         this.serverCommunication = serverCommunication;
-
-        serverIp = ServerCommunication.GetLocalIPAddress();
     }
 
     public void ExecuteLogic(){
@@ -22,7 +19,8 @@ public class SetUpState : IStateController
         GUILayout.BeginArea(new Rect(100, 100, 175, 175));
         // DEBUG positioning
 
-        GUILayout.TextArea(string.Format("Connect to IP: {0}", serverIp));
+        GUILayout.TextArea(string.Format("Connect to LAN: {0}", ServerCommunication.GetLocalIPAddress()));
+        GUILayout.TextArea(string.Format("Connect to IP:  {0}", ServerCommunication.GetExternalIPAddress()));
         if(IsPossibleToBeginMatch()){
             if (GUILayout.Button("Start game")){
                 SetUpStateEnd();

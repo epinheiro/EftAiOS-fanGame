@@ -26,7 +26,6 @@ public class ServerController : BaseController
     }
 
     ServerCommunication serverCommunication;
-    string serverIp;
 
     Dictionary<int, PlayerTurnData> playerTurnDict;
     public Dictionary<int, PlayerTurnData> PlayerTurnDict{
@@ -44,7 +43,6 @@ public class ServerController : BaseController
         playerTurnDict = new Dictionary<int, PlayerTurnData>();
 
         serverCommunication = gameObject.AddComponent(typeof(ServerCommunication)) as ServerCommunication;
-        serverIp = ServerCommunication.GetLocalIPAddress();
 
         states = new Dictionary<ServerState, IStateController>();
         states.Add(ServerState.SetUp, new SetUpState(this, serverCommunication));
