@@ -23,13 +23,21 @@ public class ToConnectState : IStateController
         if(state == Connection.Disconnected){
             if(NodeCommunication.IsIPValid(_customIp)){
                 if(GUILayout.Button("JOIN GAME")){
-                    clientController.ClientCommunication.IP = _customIp;
-                    if(clientController.ClientCommunication.ConnectToServer(_customIp)){
-                        ProcessConnectionState();
-                    }
+                    TryToConnect();
+                }
+            }else{
+                if(GUILayout.Button("JOIN GAME (standard local ip)")){
+                    TryToConnect();
                 }
             }
         }else{
+            ProcessConnectionState();
+        }
+    }
+
+    void TryToConnect(string ip = ""){
+        clientController.ClientCommunication.IP = ip;
+        if(clientController.ClientCommunication.ConnectToServer(ip)){
             ProcessConnectionState();
         }
     }
