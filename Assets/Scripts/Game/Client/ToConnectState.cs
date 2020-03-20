@@ -7,6 +7,8 @@ public class ToConnectState : IStateController
 
     public ToConnectState(ClientController clientController){
         this.clientController = clientController;
+
+        clientController.ClientCommunication = clientController.gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
     }
 
     public void ExecuteLogic(){}
@@ -15,10 +17,10 @@ public class ToConnectState : IStateController
 
         if (GUILayout.Button("JOIN GAME") && ClientCommunication.IsIPValid(_customIp)){
             SetClientIdentity();
-            clientController.ClientCommunication = clientController.gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
             clientController.ClientCommunication.IP = _customIp;
-            clientController.ClientCommunication.ConnectToServer(_customIp);
-            clientController.CurrentState = ClientController.ClientState.WaitingGame;
+            if(clientController.ClientCommunication.ConnectToServer(_customIp)){
+                clientController.CurrentState = ClientController.ClientState.WaitingGame;
+            }
         }
     }
 

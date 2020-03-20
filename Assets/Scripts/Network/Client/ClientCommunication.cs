@@ -30,9 +30,11 @@ public class ClientCommunication : MonoBehaviour
         clientController = this.GetComponent<ClientController>();
         jobHandler = new CommunicationJobHandler();
         SetClientIdentity();
+
+        AllocateServerAttributes();
     }
 
-    void Start(){        
+    void Start(){
     }
 
     void OnDestroy(){
@@ -92,17 +94,21 @@ public class ClientCommunication : MonoBehaviour
 
     //////////////////////////////////
     /////// Client functions /////////
-    public void ConnectToServer(string ip = "", ushort port = 0){
-        AllocateServerAttributes();
-
-        if(string.IsNullOrEmpty(ip)){
-            m_clientToServerConnection[0] = m_ClientDriver.Connect(GenerateNetworkEndPoint());
-        }else{
-            if (port == 0){
-                m_clientToServerConnection[0] = m_ClientDriver.Connect(GenerateNetworkEndPoint(ip));
+    public bool ConnectToServer(string ip = "", ushort port = 0){
+        try{
+            if(string.IsNullOrEmpty(ip)){
+                m_clientToServerConnection[0] = m_ClientDriver.Connect(GenerateNetworkEndPoint());
             }else{
-                m_clientToServerConnection[0] = m_ClientDriver.Connect(GenerateNetworkEndPoint(ip, port));
+                if (port == 0){
+                    m_clientToServerConnection[0] = m_ClientDriver.Connect(GenerateNetworkEndPoint(ip));
+                }else{
+                    m_clientToServerConnection[0] = m_ClientDriver.Connect(GenerateNetworkEndPoint(ip, port));
+                }
             }
+            return true;
+        }catch (System.Exception e){
+            Debug.Log(string.Format("CLIENT connection failure {0}", e.ToString()));
+            return false;
         }
     }
 
