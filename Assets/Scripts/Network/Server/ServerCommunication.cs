@@ -1,11 +1,8 @@
 using Unity.Collections;
 using UnityEngine;
 using Unity.Networking.Transport;
-using System.Net;
-using System.Net.Sockets;
-using System.Text.RegularExpressions;
 
-public class ServerCommunication : MonoBehaviour
+public class ServerCommunication : NodeCommunication
 {
 
     public enum ServerCommand {PutPlay, GetState, GetResults}
@@ -81,40 +78,5 @@ public class ServerCommunication : MonoBehaviour
             m_ServerDriver.Listen();
 
         m_connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
-    }
-
-    // Based on the Stackoverflow answer https://stackoverflow.com/a/6803109
-    public static string GetLocalIPAddress()
-    {
-        // https://docs.microsoft.com/pt-br/dotnet/api/system.text.regularexpressions.regex?view=netframework-4.8
-        string pattern = @"^192\.168\.0\.\d+";
-        Regex rgx = new Regex(pattern);
-
-        IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-        foreach (IPAddress ip in host.AddressList)
-        {
-            if (ip.AddressFamily == AddressFamily.InterNetwork)
-            {
-                string testedIp = ip.ToString();
-                if(rgx.IsMatch(testedIp)){
-                    return ip.ToString(); 
-                }                
-            }
-        }
-        throw new System.Exception("No network adapters with an IPv4 address in the system!");
-    }
-
-    // Based on the Stackoverflow answer https://stackoverflow.com/a/6803109
-    public static string GetExternalIPAddress()
-    {
-        IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-        foreach (IPAddress ip in host.AddressList)
-        {
-            if (ip.AddressFamily == AddressFamily.InterNetwork)
-            {
-                return ip.ToString();
-            }
-        }
-        throw new System.Exception("No network adapters with an IPv4 address in the system!");
     }
 }

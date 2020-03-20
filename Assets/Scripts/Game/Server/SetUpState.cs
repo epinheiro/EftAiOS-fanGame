@@ -19,8 +19,8 @@ public class SetUpState : IStateController
         GUILayout.BeginArea(new Rect(100, 100, 175, 175));
         // DEBUG positioning
 
-        GUILayout.TextArea(string.Format("Connect to LAN: {0}", ServerCommunication.GetLocalIPAddress()));
-        GUILayout.TextArea(string.Format("Connect to IP:  {0}", ServerCommunication.GetExternalIPAddress()));
+        GUILayout.TextArea(string.Format("Connect to LAN: {0}", NodeCommunication.GetLocalIPAddress()));
+        GUILayout.TextArea(string.Format("Connect to IP:  {0}", NodeCommunication.GetExternalIPAddress()));
         if(IsPossibleToBeginMatch()){
             if (GUILayout.Button("Start game")){
                 SetUpStateEnd();

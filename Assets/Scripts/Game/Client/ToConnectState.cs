@@ -21,7 +21,7 @@ public class ToConnectState : IStateController
         _customIp = GUILayout.TextField(_customIp, GUILayout.Width(100));
 
         if(state == Connection.Disconnected){
-            if(ClientCommunication.IsIPValid(_customIp)){
+            if(NodeCommunication.IsIPValid(_customIp)){
                 if(GUILayout.Button("JOIN GAME")){
                     clientController.ClientCommunication.IP = _customIp;
                     if(clientController.ClientCommunication.ConnectToServer(_customIp)){
