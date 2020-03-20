@@ -127,4 +127,14 @@ public class ClientCommunication : MonoBehaviour
     public void SetClientIdentity(){
         _clientId = this.GetComponent<ClientController>().ClientId;
     }
+
+    public static bool IsIPValid(string testIP)
+    {
+        // https://docs.microsoft.com/pt-br/dotnet/api/system.text.regularexpressions.regex?view=netframework-4.8
+        // https://www.regular-expressions.info/numericranges.html
+        string pattern = @"\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b";
+        Regex rgx = new Regex(pattern);
+
+        return rgx.IsMatch(testIP);
+    }
 }
