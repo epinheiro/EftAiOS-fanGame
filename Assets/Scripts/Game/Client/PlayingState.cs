@@ -20,6 +20,7 @@ public class PlayingState : IStateController
     public void ExecuteLogic(){
         switch(currentTurnStep){
             case TurnSteps.Movement:
+                ClientPing();
                 if(clientController.PlayerNullableNextPosition.HasValue){
                     currentTurnStep = TurnSteps.PlayerWillAttack;
                 }
@@ -31,6 +32,7 @@ public class PlayingState : IStateController
             // Card
 
             case TurnSteps.Noise:
+                ClientPing();
                 if(clientController.PlayerNullableNexSound.HasValue){
                     currentTurnStep = TurnSteps.SendData;
                 }
@@ -58,6 +60,7 @@ public class PlayingState : IStateController
             case TurnSteps.PlayerWillAttack:
                 if(clientController.CurrentPlayerState == ClientController.PlayerState.Alien){
                     if(!clientController.PlayerNullableWillAttack.HasValue){
+                        ClientPing();
                         GUILayout.BeginArea(new Rect(0, 0, 175, 175));
                         if(GUILayout.Button("Attack")){
                             clientController.PlayerNullableWillAttack = true;
@@ -114,5 +117,9 @@ public class PlayingState : IStateController
 
             // SendData
         }
+    }
+
+    void ClientPing(){
+        clientController.ScheduleGetStateRequest();
     }
 }

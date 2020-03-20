@@ -173,4 +173,8 @@ public class ClientController : BaseController
             delegation(this);
         }
     }
+
+    public void ScheduleGetStateRequest(){
+        clientCommunication.ScheduleGetStateRequest();
+    }
 }
