@@ -26,6 +26,28 @@ public class ClientCommunication : MonoBehaviour
         set { _customIp = value; }
     }
 
+    public bool IsConnecting{
+        get { return IsCertainConnectionState(NetworkConnection.State.Connected); }
+    }
+    public bool IsConnected{
+        get { return IsCertainConnectionState(NetworkConnection.State.Connected); }
+    }
+    bool IsCertainConnectionState(NetworkConnection.State checkState){
+        if(m_clientToServerConnection != null){
+            try{
+                NetworkConnection.State connState = m_clientToServerConnection[0].GetState(m_ClientDriver);
+                if(connState == checkState){
+                    return true;
+                }
+            }catch{}
+        }
+        return false;
+    }
+    public void Disconnect(){
+        m_clientToServerConnection[0].Disconnect(m_ClientDriver);
+        m_clientToServerConnection[0].Close(m_ClientDriver);
+    }
+
     void Awake(){
         clientController = this.GetComponent<ClientController>();
         jobHandler = new CommunicationJobHandler();
@@ -70,8 +92,10 @@ public class ClientCommunication : MonoBehaviour
 
         jobHandler.Complete();
 
-        ProcessClientCommandCoroutine pcc = new ProcessClientCommandCoroutine(this, m_ClientDriver, jobHandler, m_clientToServerConnection[0]);
-        m_clientToServerConnection[0] = pcc.connection;
+        if(IsConnected){
+            ProcessClientCommandCoroutine pcc = new ProcessClientCommandCoroutine(this, m_ClientDriver, jobHandler, m_clientToServerConnection[0]);
+            m_clientToServerConnection[0] = pcc.connection;
+        }
     }
 
     public void SchedulePutPlayRequest(int clientId, Vector2Int movementTo, Vector2Int sound, bool attacked){
