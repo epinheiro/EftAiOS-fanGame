@@ -4,6 +4,26 @@ using UnityEngine;
 
 public class BaseController : MonoBehaviour
 {
+    /// UI canvas related fields
+    public GameObject uiCanvasPrefab;
+    protected UIController _uiController;
+    public UIController UIController{
+        get { return _uiController; }
+        set { 
+            if(_uiController==null){
+                _uiController = value;
+            }else{
+                throw new System.Exception(string.Format("UIController already exists on node {0}", this.name));
+            }
+        }
+    }
+
+    public void InstantiateCanvas(){
+        GameObject go = Instantiate(uiCanvasPrefab, new Vector2(0, 0), Quaternion.identity);
+        UIController = go.GetComponent<UIController>();
+        go.name = "UICanvas";
+    }
+
     /// BoardManager related fields
     public GameObject boardManagerPrefab;
     protected BoardManager _boardManager;

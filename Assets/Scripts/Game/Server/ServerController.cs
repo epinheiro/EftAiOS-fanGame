@@ -38,6 +38,7 @@ public class ServerController : BaseController
     }
 
     void Start(){
+        InstantiateCanvas();
 
         playerRolesToGive = new ExtendedList<ClientController.PlayerState>();
         playerTurnDict = new Dictionary<int, PlayerTurnData>();
