@@ -5,7 +5,7 @@ public class InputFieldHelper : UIHelper
 {
     readonly Text placeholderTextComponent;
 
-    public string placeholderText{
+    public string PlaceholderText{
         get { return placeholderTextComponent.text; }
         set { placeholderTextComponent.text = value; }
     }
