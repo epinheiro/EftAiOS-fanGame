@@ -3,7 +3,7 @@ using System;
 
 public class UIController : MonoBehaviour
 {
-    public enum Layout {Default, TwoButtons, InsertText, OnlyText}
+    public enum Layout {Default, TwoButtons, InsertText, OnlyText, ConditionalButton}
 
     ButtonHelper button1;
     InputFieldHelper textInput;
@@ -41,6 +41,9 @@ public class UIController : MonoBehaviour
             case Layout.OnlyText:
                 SetUpUIElements(false, false, true, null, null);
                 break;
+            case Layout.ConditionalButton:
+                SetUpUIElements(true, false, true, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack);
+                break;
         }
     }
 
@@ -62,6 +65,13 @@ public class UIController : MonoBehaviour
         SetGenericLayout(Layout.InsertText);
         this.infoText.Text = infoText;
         textInput.PlaceholderText = placeholderText;
+        button2.Text = buttonText;
+        button2.InsertCallback(buttonCallback);
+    }
+
+    public void SetConditionalButtonLayout(string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
+        SetGenericLayout(Layout.ConditionalButton);
+        this.infoText.Text = infoText;
         button2.Text = buttonText;
         button2.InsertCallback(buttonCallback);
     }
