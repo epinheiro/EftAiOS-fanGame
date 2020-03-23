@@ -36,7 +36,7 @@ public class UIController : MonoBehaviour
                 SetUpUIElements(true, false, false, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
                 break;
             case Layout.InsertText:
-                SetUpUIElements(true, true, true, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
+                SetUpUIElements(true, true, false, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
                 break;
             case Layout.OnlyText:
                 SetUpUIElements(false, false, true, null, null);
