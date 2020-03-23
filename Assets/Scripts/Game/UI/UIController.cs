@@ -58,8 +58,9 @@ public class UIController : MonoBehaviour
         button2.InsertCallback(rightButtonCallback);
     }
 
-    public void SetInsertTextLayout(string placeholderText, string buttonText, UIHelper.BaseAction buttonCallback){
+    public void SetInsertTextLayout(string placeholderText, string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
         SetGenericLayout(Layout.InsertText);
+        this.infoText.Text = infoText;
         textInput.PlaceholderText = placeholderText;
         button2.Text = buttonText;
         button2.InsertCallback(buttonCallback);
