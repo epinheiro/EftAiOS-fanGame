@@ -44,6 +44,27 @@ public class UIController : MonoBehaviour
         }
     }
 
+    public void SetOnlyTextLayout(string text, Nullable<Color> color = null){
+        SetGenericLayout(Layout.OnlyText);
+        infoText.Text = text;
+        if(color.HasValue) infoText.ChangeTextColor(color.Value);
+    }
+
+    public void SetTwoButtonsLayout(string leftButtonText, UIHelper.BaseAction leftButtonCallback, string rightButtonText, UIHelper.BaseAction rightButtonCallback){
+        SetGenericLayout(Layout.TwoButtons);
+        button1.Text = leftButtonText;
+        button1.InsertCallback(leftButtonCallback);
+        button2.Text = rightButtonText;
+        button2.InsertCallback(rightButtonCallback);
+    }
+
+    public void SetInsertTextLayout(string placeholderText, string buttonText, UIHelper.BaseAction buttonCallback){
+        SetGenericLayout(Layout.InsertText);
+        textInput.PlaceholderText = placeholderText;
+        button2.Text = buttonText;
+        button2.InsertCallback(buttonCallback);
+    }
+
     void SetUpUIElements(bool resetHorizontalGroup, bool resetInputField, bool resetText, Nullable<ButtonHelper.ButtonType> resetButton1To = null, Nullable<ButtonHelper.ButtonType> resetButton2To = null){
         if(resetHorizontalGroup != horizontalGroup.gameObject.activeSelf){
             horizontalGroup.gameObject.SetActive(resetHorizontalGroup);
