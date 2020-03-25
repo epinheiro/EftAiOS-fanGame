@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseController : MonoBehaviour
@@ -37,9 +36,9 @@ public class BaseController : MonoBehaviour
             }
         }
     }
-    static protected void InstantiateBoardManager(BaseController controller){
-        GameObject go = Instantiate(controller.boardManagerPrefab, new Vector2(0, 0), Quaternion.identity);
-        controller.BoardManagerRef = go.GetComponent<BoardManager>();
+    public void InstantiateBoardManager(){
+        GameObject go = Instantiate(this.boardManagerPrefab, new Vector2(0, 0), Quaternion.identity);
+        this.BoardManagerRef = go.GetComponent<BoardManager>();
         go.name = "BoardManager";
     }
 

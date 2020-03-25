@@ -101,9 +101,6 @@ public class ClientController : BaseController
         set { _clientId = value; }
     }
 
-    public delegate void ClientControllerDelegateAction(ClientController client);
-    public ClientControllerDelegateAction delegateBoardInstantiation = InstantiateBoardManager;
-
     Coroutine update;
 
     // Start is called before the first frame update
@@ -161,12 +158,12 @@ public class ClientController : BaseController
         }
     }
 
-    public void ChangeClientStateBaseOnServer(ServerController.ServerState expectedServerState, ClientController.ClientState nextClientState, ClientControllerDelegateAction delegation){
+    public void ChangeClientStateBaseOnServer(ServerController.ServerState expectedServerState, ClientController.ClientState nextClientState, BaseAction delegation){
         if(_serverState != expectedServerState){
             clientCommunication.ScheduleGetStateRequest();
         }else{
             currentState = nextClientState;
-            delegation(this);
+            delegation();
         }
     }
 

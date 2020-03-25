@@ -116,6 +116,6 @@ public class ServerController : BaseController
     }
    
     public void CreateBoardManager(){
-        InstantiateBoardManager(this);
+        InstantiateBoardManager();
     }
 }
