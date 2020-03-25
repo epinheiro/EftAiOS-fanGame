@@ -1,10 +1,13 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 
 public class ToConnectState : IStateController
 {
     ClientController clientController; 
+    UIController uiController;
     string _customIp = "192.168.0.";
+
+    string _insertedString = "";
 
     enum Connection {Disconnected, Connecting, Connected}
     Connection state = Connection.Disconnected;
@@ -15,25 +18,35 @@ public class ToConnectState : IStateController
         this.clientController = clientController;
         SetClientIdentity();
         clientController.ClientCommunication = clientController.gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
+        this.uiController = clientController.UIController;
     }
 
-    public void ExecuteLogic(){}
-    public void ShowGUI(){
-        _customIp = GUILayout.TextField(_customIp, GUILayout.Width(100));
-
-        if(state == Connection.Disconnected){
-            if(NodeCommunication.IsIPValid(_customIp)){
-                if(GUILayout.Button("JOIN GAME")){
-                    TryToConnect();
-                }
+    protected override void ExecuteLogic(){
+        _insertedString = uiController.GetInsertedText();
+         if(state == Connection.Disconnected){
+            if(string.IsNullOrEmpty(_insertedString)){
+                uiController.SetInsertTextButtonVisibility(true);
+                uiController.SetInsertTextButtonAttributes("JOIN GAME (std IP)");
             }else{
-                if(GUILayout.Button("JOIN GAME (standard local ip)")){
-                    TryToConnect();
+                if(NodeCommunication.IsIPValid(_insertedString)){
+                    uiController.SetInsertTextButtonVisibility(true);
+                    uiController.SetInsertTextButtonAttributes("JOIN GAME");
+                }else{
+                    uiController.SetInsertTextButtonVisibility(false);
                 }
             }
         }else{
+            uiController.SetInsertTextButtonVisibility(false);
             ProcessConnectionState();
         }
+    }
+
+    protected override void GUISetter(){
+        this.uiController.SetInsertTextLayout(_customIp, "", "", delegate(){ Callback(); });
+    }
+
+    public void Callback(){
+        TryToConnect(_insertedString);
     }
 
     void TryToConnect(string ip = ""){
@@ -44,21 +57,29 @@ public class ToConnectState : IStateController
     }
 
     void ProcessConnectionState(){
+        string logMessage = _insertedString;
+        if(string.IsNullOrEmpty(logMessage)) logMessage = "localhost";
+
         switch(state){
             case Connection.Disconnected:
                 state = Connection.Connecting;
                 break;
 
             case Connection.Connecting:
-                Debug.Log(string.Format("CLIENT - connecting to {0}", _customIp));
+                Debug.Log(string.Format("CLIENT - connecting to {0}", logMessage));
                 ControlTimeOut();
                 break;
 
             case Connection.Connected:
-                Debug.Log(string.Format("CLIENT - connected to {0}", _customIp));
-                clientController.CurrentState = ClientController.ClientState.WaitingGame;
+                Debug.Log(string.Format("CLIENT - connected to {0}", logMessage));
+                StateEnd();
                 break;
         }
+    }
+
+    void StateEnd(){
+        ResetStateController();
+        clientController.CurrentState = ClientController.ClientState.WaitingGame;
     }
 
     void ControlTimeOut(){

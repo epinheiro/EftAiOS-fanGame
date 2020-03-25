@@ -74,6 +74,19 @@ public class UIController : MonoBehaviour
         button2.InsertCallback(buttonCallback);
     }
 
+    public void SetInsertTextButtonAttributes(string buttonText, Color? buttonColor = null){
+        if(buttonText != null) button2.Text = buttonText;
+        if(buttonColor.HasValue) button2.ChangeButtonColor(buttonColor.Value);
+    }
+
+    public void SetInsertTextButtonVisibility(bool isVisible){
+        button2.IsVisible = isVisible;
+    }
+
+    public string GetInsertedText(){
+        return textInput.Text;
+    }
+
     public void SetConditionalButtonLayout(string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
         SetGenericLayout(Layout.ConditionalButton);
         this.infoText.Text = infoText;
