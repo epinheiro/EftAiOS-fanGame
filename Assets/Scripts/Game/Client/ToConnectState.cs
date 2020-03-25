@@ -43,6 +43,7 @@ public class ToConnectState : IStateController
 
     protected override void GUISetter(){
         this.uiController.SetInsertTextLayout(_customIp, "", "", delegate(){ Callback(); });
+        this.uiController.SetInsertTextButtonVisibility(false);
     }
 
     public void Callback(){
