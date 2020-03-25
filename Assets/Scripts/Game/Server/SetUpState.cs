@@ -4,41 +4,38 @@ public class SetUpState : IStateController
 {
     ServerController serverController;
     ServerCommunication serverCommunication;
+    UIController uiController;
 
     public SetUpState(ServerController serverController, ServerCommunication serverCommunication){
         this.serverController = serverController;
         this.serverCommunication = serverCommunication;
+        this.uiController = serverController.UIController;
     }
 
-    public void ExecuteLogic(){
-
+    protected override void ExecuteLogic(){
+        uiController.SetConditionalButtonVisibility(IsPossibleToBeginMatch());
     }
 
-    public void ShowGUI(){
-        // DEBUG positioning
-        GUILayout.BeginArea(new Rect(100, 100, 175, 175));
-        // DEBUG positioning
+    protected override void GUISetter(){
+        this.uiController.SetConditionalButtonLayout("Begin match", IPStrings(), delegate(){ Callback(); });
+    }
 
-        GUILayout.TextArea(string.Format("Connect to LAN: {0}", NodeCommunication.GetLocalIPAddress()));
-        GUILayout.TextArea(string.Format("Connect to IP:  {0}", NodeCommunication.GetExternalIPAddress()));
-        if(IsPossibleToBeginMatch()){
-            if (GUILayout.Button("Start game")){
-                SetUpStateEnd();
-            }
-        }
+    public string IPStrings(){
+        return string.Format("Connect to {0} or {1}", NodeCommunication.GetLocalIPAddress(), NodeCommunication.GetExternalIPAddress());
+    }
 
-        // DEBUG positioning
-        GUILayout.EndArea();
-        // DEBUG positioning
+    public void Callback(){
+        StateEnd();
     }
 
     bool IsPossibleToBeginMatch(){
         return serverCommunication.ConnectionQuantity > 0; // TODO  -DEBUG value - Correct value is 1 
     }
 
-    void SetUpStateEnd(){
+    void StateEnd(){
         PreparePossibleRoles();
         serverController.CreateBoardManager();
+        ResetStateController();
         serverController.NextState = ServerController.ServerState.WaitingPlayers;
     }
 

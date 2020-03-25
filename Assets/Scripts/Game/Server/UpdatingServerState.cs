@@ -5,32 +5,30 @@ public class UpdatingServerState : IStateController
 {
     ServerController serverController;
     ServerCommunication serverCommunication;
+    UIController uiController;
 
     public UpdatingServerState(ServerController serverController, ServerCommunication serverCommunication){
         this.serverController = serverController;
         this.serverCommunication = serverCommunication;
-
+        this.uiController = serverController.UIController;
     }
 
-    public void ExecuteLogic(){
+    protected override void ExecuteLogic(){
         serverController.DelayedCall(UpdatingStateLogic, 1.2f); // DEBUG DELAY - TODO change
     }
 
-    public void ShowGUI(){
-        // DEBUG positioning
-        GUILayout.BeginArea(new Rect(100, 100, 175, 175));
-        // DEBUG positioning
-
-        GUILayout.TextArea("Board Updating");
-        
-        // DEBUG positioning
-        GUILayout.EndArea();
-        // DEBUG positioning
+    protected override void GUISetter(){
+        this.uiController.SetOnlyTextLayout("Board Updating");
     }
 
     void UpdatingStateLogic(){
+        StateEnd();
+    }
+
+    void StateEnd(){
         SpawnLastNoises();
         ResetPlayerTurnControl();
+        ResetStateController();
         serverController.NextState = ServerController.ServerState.WaitingPlayers;
     }
 

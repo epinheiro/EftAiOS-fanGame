@@ -5,33 +5,31 @@ public class ProcessingState : IStateController
 {
     ServerController serverController;
     ServerCommunication serverCommunication;
+    UIController uiController;
 
     public ProcessingState(ServerController serverController, ServerCommunication serverCommunication){
         this.serverController = serverController;
         this.serverCommunication = serverCommunication;
-
+        this.uiController = serverController.UIController;
     }
 
-    public void ExecuteLogic(){
+    protected override void ExecuteLogic(){
         // Show "animation" of the turn
         serverController.DelayedCall(ProcessingStateLogic, 1.2f); // DEBUG DELAY - TODO change
         // ProcessingState();
     }
 
-    public void ShowGUI(){
-        // DEBUG positioning
-        GUILayout.BeginArea(new Rect(100, 100, 175, 175));
-        // DEBUG positioning
-
-        GUILayout.TextArea("Server processing");
-        
-        // DEBUG positioning
-        GUILayout.EndArea();
-        // DEBUG positioning
+    protected override void GUISetter(){
+        this.uiController.SetOnlyTextLayout("Server processing");
     }
 
     public void ProcessingStateLogic(){
         ProcessResults();
+        StateEnd();
+    }
+
+    void StateEnd(){
+        ResetStateController();
         serverController.NextState = ServerController.ServerState.Updating;
     }
 
