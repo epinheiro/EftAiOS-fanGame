@@ -167,6 +167,23 @@ public class ClientController : BaseController
         }
     }
 
+    public void ChangeClientStateBaseOnServer(ServerController.ServerState[] expectedServerStates, ClientController.ClientState nextClientState, BaseAction delegation){
+        bool expectedServerStatesMatch = false;
+        foreach(ServerController.ServerState state in expectedServerStates){
+            if(_serverState == state){
+                expectedServerStatesMatch = true;
+                break;
+            }
+        }
+
+        if(!expectedServerStatesMatch){
+            clientCommunication.ScheduleGetStateRequest();
+        }else{
+            currentState = nextClientState;
+            delegation();
+        }
+    }
+
     public void ScheduleGetStateRequest(){
         clientCommunication.ScheduleGetStateRequest();
     }
