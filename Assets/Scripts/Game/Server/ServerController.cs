@@ -53,12 +53,6 @@ public class ServerController : BaseController
 
     }
 
-    void OnGUI(){
-        IStateController state;
-        states.TryGetValue(_currentState, out state);
-        state.ShowGUI();
-    }
-
     // Update is called once per frame
     void Update(){
         if (_currentState != nextState){
@@ -67,7 +61,7 @@ public class ServerController : BaseController
 
         IStateController state;
         states.TryGetValue(_currentState, out state);
-        state.ExecuteLogic();
+        state.Execute();
     }
 
     public void InsertNewPlayTurnData(int playerId, Vector2Int movementTo, Vector2Int soundIn, bool attacked){

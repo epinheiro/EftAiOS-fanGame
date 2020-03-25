@@ -1,6 +1,25 @@
-﻿public interface IStateController
+﻿public abstract class IStateController
 {
-    void ExecuteLogic();
+    bool isRunning = false;
 
-    void ShowGUI();
+    public void Execute(){
+        if(!isRunning){
+            isRunning = true;
+            GUISetter();
+        }else{
+            ExecuteLogic();
+        }
+    }
+
+    protected virtual void ExecuteLogic(){
+        throw new System.Exception("IStateController child must implements own Execute");
+    }
+
+    protected virtual void GUISetter(){
+        throw new System.Exception("IStateController child must implements own GUISetter");
+    }
+
+    protected void ResetStateController(){
+        isRunning = false;
+    }
 }

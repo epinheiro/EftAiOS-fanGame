@@ -143,17 +143,11 @@ public class ClientController : BaseController
         SetUpClient();
     }
 
-    void OnGUI(){
-        IStateController state;
-        states.TryGetValue(currentState, out state);
-        state.ShowGUI();
-    }
-
     // Update is called once per second
     void UpdateStati(){
         IStateController state;
         states.TryGetValue(currentState, out state);
-        state.ExecuteLogic();
+        state.Execute();
     }
 
     /// <summary>
