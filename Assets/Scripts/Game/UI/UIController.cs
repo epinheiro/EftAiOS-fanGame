@@ -58,12 +58,21 @@ public class UIController : MonoBehaviour
         if(color.HasValue) infoText.ChangeTextColor(color.Value);
     }
 
+    public void SetOnlyTextInfoText(string newString = ""){
+        infoText.Text = newString;
+    }
+
     public void SetTwoButtonsLayout(string leftButtonText, UIHelper.BaseAction leftButtonCallback, string rightButtonText, UIHelper.BaseAction rightButtonCallback){
         SetGenericLayout(Layout.TwoButtons);
         button1.Text = leftButtonText;
         button1.InsertCallback(leftButtonCallback);
         button2.Text = rightButtonText;
         button2.InsertCallback(rightButtonCallback);
+    }
+
+    public void SetTwoButtonsVisibility(bool isVisible){
+        button1.IsVisible = isVisible;
+        button2.IsVisible = isVisible;
     }
 
     public void SetInsertTextLayout(string placeholderText, string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
