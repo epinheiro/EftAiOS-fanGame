@@ -27,7 +27,6 @@ public class UIHelper
     }
 
     protected void SetElementVisibility(bool IsActive){
-        Debug.Log("Hide elements");
         foreach(GameObject child in childObjects){
             child.SetActive(IsActive);
         }
