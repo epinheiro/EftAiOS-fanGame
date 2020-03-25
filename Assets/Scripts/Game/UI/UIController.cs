@@ -75,6 +75,9 @@ public class UIController : MonoBehaviour
         button2.Text = buttonText;
         button2.InsertCallback(buttonCallback);
     }
+    public void SetConditionalButtonVisibility(bool isHiding){
+        button2.IsVisible = isHiding;
+    }
 
     void SetUpUIElements(bool resetHorizontalGroup, bool resetInputField, bool resetText, Nullable<ButtonHelper.ButtonType> resetButton1To = null, Nullable<ButtonHelper.ButtonType> resetButton2To = null){
         if(resetHorizontalGroup != horizontalGroup.gameObject.activeSelf){

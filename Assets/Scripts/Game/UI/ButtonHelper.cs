@@ -34,6 +34,7 @@ public class ButtonHelper : UIHelper
     }
     public void ResetUIComponent(ButtonType type){
         IsActive = true;
+        IsVisible = true;
         CleanCallbacks();
         SetButtonToPreMade(type);
     }

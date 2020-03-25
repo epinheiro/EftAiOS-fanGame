@@ -24,5 +24,6 @@ public class InputFieldHelper : UIHelper
 
     public override void ResetUIComponent(){
         IsActive = true;
+        IsVisible = true;
     }
 }

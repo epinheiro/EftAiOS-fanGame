@@ -23,6 +23,7 @@ public class SimpleTextHelper : UIHelper
     
     public override void ResetUIComponent(){
         IsActive = true;
+        IsVisible = true;
         ChangeTextColor(Color.white);
     }
 }
