@@ -5,30 +5,29 @@ public class WaitingPlayersServerState : IStateController
 {
     ServerController serverController;
     ServerCommunication serverCommunication;
+    UIController uiController;
 
     public WaitingPlayersServerState(ServerController serverController, ServerCommunication serverCommunication){
         this.serverController = serverController;
         this.serverCommunication = serverCommunication;
+        this.uiController = serverController.UIController;
     }
 
-    public void ExecuteLogic(){
+    protected override void ExecuteLogic(){
         if (AllPlayersPlayed()){
             Debug.Log("SERVER - all players played");
-            serverController.BoardManagerRef.CleanLastSoundEffects();
-            serverController.NextState = ServerController.ServerState.Processing;
+            StateEnd();
         }
     }
 
-    public void ShowGUI(){
-        // DEBUG positioning
-        GUILayout.BeginArea(new Rect(100, 100, 175, 175));
-        // DEBUG positioning
+    protected override void GUISetter(){
+        this.uiController.SetOnlyTextLayout("Waiting player to make their move");
+    }
 
-        GUILayout.TextArea("Waiting player to make their move");
-        
-        // DEBUG positioning
-        GUILayout.EndArea();
-        // DEBUG positioning
+    void StateEnd(){
+        serverController.BoardManagerRef.CleanLastSoundEffects();
+        ResetStateController();
+        serverController.NextState = ServerController.ServerState.Processing;
     }
 
     bool AllPlayersPlayed(){
