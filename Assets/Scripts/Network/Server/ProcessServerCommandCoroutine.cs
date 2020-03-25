@@ -40,9 +40,12 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
 
     void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         GetStateRequest requestReceived = new GetStateRequest(strm);
-        Debug.Log("SERVER receive request - GetState");
 
-        GetStateResponse response = new GetStateResponse(((ServerCommunication)owner).serverController.CurrentState);
+        ServerController.ServerState currentServerState = ((ServerCommunication)owner).serverController.CurrentState;
+
+        Debug.Log(string.Format("SERVER receive request - GetState ({0})", currentServerState));
+
+        GetStateResponse response = new GetStateResponse(currentServerState);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
         jobHandler.QueueJob(job);
     }
