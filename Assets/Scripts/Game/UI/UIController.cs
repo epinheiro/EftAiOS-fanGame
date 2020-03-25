@@ -3,7 +3,7 @@ using System;
 
 public class UIController : MonoBehaviour
 {
-    public enum Layout {Default, TwoButtons, InsertText, OnlyText, ConditionalButton}
+    public enum Layout {Default, TwoButtons, InsertText, OnlyText, ConditionalButton, AllInactive}
 
     ButtonHelper button1;
     InputFieldHelper textInput;
@@ -43,6 +43,9 @@ public class UIController : MonoBehaviour
                 break;
             case Layout.ConditionalButton:
                 SetUpUIElements(true, false, true, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack);
+                break;
+            case Layout.AllInactive:
+                SetUpUIElements(false, false, false, null, null);
                 break;
         }
     }
