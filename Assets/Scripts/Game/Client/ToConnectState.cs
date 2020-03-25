@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using UnityEngine;
+using System;
 
 public class ToConnectState : IStateController
 {
@@ -8,7 +9,7 @@ public class ToConnectState : IStateController
     enum Connection {Disconnected, Connecting, Connected}
     Connection state = Connection.Disconnected;
     const float connTimeOut = 5f;
-    float currentTimeOut = 0f;
+    Nullable<DateTime> timeoutEnd;
 
     public ToConnectState(ClientController clientController){
         this.clientController = clientController;
@@ -61,16 +62,19 @@ public class ToConnectState : IStateController
     }
 
     void ControlTimeOut(){
-        if(clientController.ClientCommunication.IsConnected){
-            state = Connection.Connected;
-        }else{
-            currentTimeOut += Time.deltaTime;
-
-            if(currentTimeOut > connTimeOut){
-                state = Connection.Disconnected;
-                clientController.ClientCommunication.Disconnect();
-                Debug.Log(string.Format("CLIENT - connection timeout - check IP {0} and try again", _customIp));
+        if(!clientController.ClientCommunication.IsConnected){
+            if(!timeoutEnd.HasValue){
+                timeoutEnd = DateTime.Now.AddSeconds(connTimeOut);
+            }else{
+                if(DateTime.Now > timeoutEnd){
+                    state = Connection.Disconnected;
+                    clientController.ClientCommunication.Disconnect();
+                    Debug.Log(string.Format("CLIENT - connection timeout - check IP {0} and try again", _insertedString));
+                }
             }
+        }else{
+            state = Connection.Connected;
+            timeoutEnd = null;
         }
     }
 
