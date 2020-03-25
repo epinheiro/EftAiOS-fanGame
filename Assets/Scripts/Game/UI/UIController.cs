@@ -19,6 +19,8 @@ public class UIController : MonoBehaviour
         textInput = new InputFieldHelper(horizontalGroup.transform.Find("InputField").gameObject);
         infoText = new SimpleTextHelper(VerticalGroup.transform.Find("InfoText").gameObject);
         button2 = new ButtonHelper(horizontalGroup.transform.Find("Button2").gameObject);
+
+        SetGenericLayout(Layout.AllInactive);
     }
 
     // Start is called before the first frame update
