@@ -1,12 +1,14 @@
 ﻿public class BeginTurnState : IStateController
 {
-    ClientController clientController; 
+    ClientController clientController;
+    UIController uiController;
 
     public BeginTurnState(ClientController clientController){
         this.clientController = clientController;
+        this.uiController = clientController.UIController;
     }
 
-    public void ExecuteLogic(){
+    protected override void ExecuteLogic(){
         string currentTileCode = BoardManager.TranslateTileNumbersToCode(clientController.playerCurrentPosition.x, clientController.playerCurrentPosition.y);
         int movement = 0;
         switch(clientController.CurrentPlayerState){
@@ -18,8 +20,14 @@
                 break;
         }
         clientController.BoardManagerRef.GlowPossibleMovements(currentTileCode, movement, clientController.CurrentPlayerState);
-        clientController.CurrentState = ClientController.ClientState.Playing;
+        StateEnd();
     }
-    public void ShowGUI(){
+    protected override void GUISetter(){
+        uiController.SetGenericLayout(UIController.Layout.AllInactive);
+    }
+
+    void StateEnd(){
+        ResetStateController();
+        clientController.CurrentState = ClientController.ClientState.Playing;
     }
 }

@@ -3,6 +3,7 @@
 public class PlayingState : IStateController
 {
     ClientController clientController;
+    UIController uiController;
 
     public enum TurnSteps {
         Movement,
@@ -15,9 +16,10 @@ public class PlayingState : IStateController
 
     public PlayingState(ClientController clientController){
         this.clientController = clientController;
+        this.uiController = clientController.UIController;
     }
 
-    public void ExecuteLogic(){
+    protected override void ExecuteLogic(){
         switch(currentTurnStep){
             case TurnSteps.Movement:
                 ClientPing();
@@ -27,49 +29,13 @@ public class PlayingState : IStateController
 
                 break;
 
-            // PlayerWillAttack
-
-            // Card
-
-            case TurnSteps.Noise:
-                ClientPing();
-                if(clientController.PlayerNullableNexSound.HasValue){
-                    currentTurnStep = TurnSteps.SendData;
-                }
-                break;
-
-            case TurnSteps.SendData:
-                clientController.ClientCommunication.SchedulePutPlayRequest(
-                    clientController.ClientId, 
-                    (Vector2Int) clientController.PlayerNullableNextPosition,
-                    clientController.PlayerNullableNexSound.HasValue ? (Vector2Int) clientController.PlayerNullableNexSound : new Vector2Int(-1,-1), // TODO - check if is there better solutions than V(-1,-1)
-                    clientController.PlayerNullableWillAttack.HasValue ? (bool) clientController.PlayerNullableWillAttack : false
-                );
-                clientController.CurrentState = ClientController.ClientState.WaitingPlayers;
-                currentTurnStep = TurnSteps.Movement;
-                clientController.PlayerNullableNextPosition = null;
-                clientController.PlayerNullableNexSound = null;
-                clientController.PlayerNullableWillAttack = null;
-                break;
-        }
-    }
-    public void ShowGUI(){
-        switch(currentTurnStep){
-            // Movement
-
             case TurnSteps.PlayerWillAttack:
                 if(clientController.CurrentPlayerState == ClientController.PlayerState.Alien){
                     if(!clientController.PlayerNullableWillAttack.HasValue){
+                        this.uiController.SetTwoButtonsVisibility(true);
                         ClientPing();
-                        GUILayout.BeginArea(new Rect(0, 0, 175, 175));
-                        if(GUILayout.Button("Attack")){
-                            clientController.PlayerNullableWillAttack = true;
-                        }
-                        if(GUILayout.Button("Quiet")){
-                            clientController.PlayerNullableWillAttack = false;
-                        }
-                        GUILayout.EndArea();
                     }else{
+                        this.uiController.SetTwoButtonsVisibility(false);
                         if(clientController.PlayerNullableWillAttack.Value){
                             clientController.PlayerNullableNexSound = clientController.PlayerNullableNextPosition;
                             currentTurnStep = TurnSteps.SendData;
@@ -113,13 +79,48 @@ public class PlayingState : IStateController
                 }
                 break;
 
-            // Noise
+            case TurnSteps.Noise:
+                ClientPing();
+                if(clientController.PlayerNullableNexSound.HasValue){
+                    currentTurnStep = TurnSteps.SendData;
+                }
+                break;
 
-            // SendData
+            case TurnSteps.SendData:
+                clientController.ClientCommunication.SchedulePutPlayRequest(
+                    clientController.ClientId, 
+                    (Vector2Int) clientController.PlayerNullableNextPosition,
+                    clientController.PlayerNullableNexSound.HasValue ? (Vector2Int) clientController.PlayerNullableNexSound : new Vector2Int(-1,-1), // TODO - check if is there better solutions than V(-1,-1)
+                    clientController.PlayerNullableWillAttack.HasValue ? (bool) clientController.PlayerNullableWillAttack : false
+                );
+                StateEnd();
+                break;
         }
+    }
+    protected override void GUISetter(){
+        this.uiController.SetTwoButtonsLayout("Attack", AttackCallback, "Don't Attack", DontAttackCallback);
+        this.uiController.SetTwoButtonsVisibility(false);
+    }
+
+    void AttackCallback(){
+        clientController.PlayerNullableWillAttack = true;
+    }
+
+    void DontAttackCallback(){
+        clientController.PlayerNullableWillAttack = false;
     }
 
     void ClientPing(){
         clientController.ScheduleGetStateRequest();
+    }
+
+    void StateEnd(){
+        ResetStateController();
+
+        clientController.CurrentState = ClientController.ClientState.WaitingPlayers;
+        currentTurnStep = TurnSteps.Movement;
+        clientController.PlayerNullableNextPosition = null;
+        clientController.PlayerNullableNexSound = null;
+        clientController.PlayerNullableWillAttack = null;
     }
 }

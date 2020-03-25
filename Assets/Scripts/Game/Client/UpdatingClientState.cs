@@ -2,42 +2,47 @@
 
 public class UpdatingClientState : IStateController
 {
-    ClientController clientController; 
+    ClientController clientController;
+    UIController uiController;
 
     public UpdatingClientState(ClientController clientController){
         this.clientController = clientController;
+        this.uiController = clientController.UIController;
     }
 
-    public void ExecuteLogic(){
+    protected override void ExecuteLogic(){
+        Debug.Log("UpdatingClientState");
         switch(clientController.NextPlayerState){
             case ClientController.PlayerState.Unassigned:
                 clientController.ClientCommunication.ScheduleGetResultsRequest();
-            break;
+                break;
 
             case ClientController.PlayerState.Alien:
             case ClientController.PlayerState.Human:
-                clientController.CurrentPlayerState = clientController.NextPlayerState;
-                clientController.NextPlayerState = ClientController.PlayerState.Unassigned;
-                
-                clientController.CurrentState = ClientController.ClientState.BeginTurn;
-            break;
-        }
-    }
-    public void ShowGUI(){
-        switch(clientController.NextPlayerState){
+                StateEnd();
+                break;
+
             case ClientController.PlayerState.Died:
-                clientController.CreateMidScreenText("You died!");
+                this.uiController.SetOnlyTextInfoText("You died!");
                 clientController.ResetClient();
                 break;
 
             case ClientController.PlayerState.Escaped:
-                clientController.CreateMidScreenText("You won!");
+                this.uiController.SetOnlyTextInfoText("You won!");
                 clientController.ResetClient();
                 break;
-
-            default:
-                clientController.CreateMidScreenText("Updating ship");
-            break;
         }
+    }
+    protected override void GUISetter(){
+        this.uiController.SetOnlyTextLayout("Updating ship");
+    }
+
+    void StateEnd(){
+        clientController.CurrentPlayerState = clientController.NextPlayerState;
+        clientController.NextPlayerState = ClientController.PlayerState.Unassigned;
+        
+        clientController.CurrentState = ClientController.ClientState.BeginTurn;
+
+        ResetStateController();
     }
 }

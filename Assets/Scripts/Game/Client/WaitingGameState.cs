@@ -1,15 +1,23 @@
 ﻿public class WaitingGameState : IStateController
 {
-    ClientController clientController; 
+    ClientController clientController;
+
+    UIController uiController;
 
     public WaitingGameState(ClientController clientController){
         this.clientController = clientController;
+        this.uiController = clientController.UIController;
     }
 
-    public void ExecuteLogic(){
-        clientController.ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientController.ClientState.Updating, clientController.delegateBoardInstantiation);
+    protected override void ExecuteLogic(){
+        clientController.ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientController.ClientState.Updating, delegate(){ StateEnd(); });
     }
-    public void ShowGUI(){
-        clientController.CreateMidScreenText("Waiting players to enter");
+    protected override void GUISetter(){
+        this.uiController.SetOnlyTextLayout("Waiting players to enter");
+    }
+
+    void StateEnd(){
+        clientController.InstantiateBoardManager();
+        ResetStateController();
     }
 }

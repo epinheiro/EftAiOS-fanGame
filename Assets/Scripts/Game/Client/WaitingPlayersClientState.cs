@@ -1,19 +1,26 @@
 ﻿public class WaitingPlayersClientState : IStateController
 {
-    ClientController clientController; 
+    ClientController clientController;
+    UIController uiController;
 
     public WaitingPlayersClientState(ClientController clientController){
         this.clientController = clientController;
+        this.uiController = clientController.UIController;
     }
 
-    public void ExecuteLogic(){
-        clientController.ChangeClientStateBaseOnServer(ServerController.ServerState.Processing, ClientController.ClientState.WaitingServer, InvokeCleanHighlights);
+    protected override void ExecuteLogic(){
+        clientController.ChangeClientStateBaseOnServer(
+            new ServerController.ServerState[]{ServerController.ServerState.Processing, ServerController.ServerState.Updating}, 
+            ClientController.ClientState.WaitingServer, 
+            delegate(){ StateEnd(); }
+        );
     }
-    public void ShowGUI(){
-        clientController.CreateMidScreenText("Waiting players turn");
+    protected override void GUISetter(){
+        this.uiController.SetOnlyTextLayout("Waiting players turn");
     }
 
-    static protected void InvokeCleanHighlights(BaseController controller){
-        controller.BoardManagerRef.CleanGlowTiles();
+    void StateEnd(){
+        ResetStateController();
+        clientController.BoardManagerRef.CleanGlowTiles();
     }
 }
