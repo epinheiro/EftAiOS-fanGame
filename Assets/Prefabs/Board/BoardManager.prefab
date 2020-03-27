@@ -58,4 +58,6 @@ MonoBehaviour:
     type: 3}
   soundEffectPrefab: {fileID: 7922099236930612670, guid: 409aa04f5cc3de34b910bc4b5743a9ac,
     type: 3}
+  attackEffectPrefab: {fileID: 6607437516753735529, guid: e8f7e9f0d8248d44da1776b2bdea172c,
+    type: 3}
   controller: {fileID: 0}

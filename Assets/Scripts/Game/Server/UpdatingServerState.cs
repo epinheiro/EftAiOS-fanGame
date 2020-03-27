@@ -33,7 +33,7 @@ public class UpdatingServerState : IStateController
     }
 
     void SpawnLastNoises(){
-        List<string> noises = new List<string>();
+        List<NoiseInfo> noises = new List<NoiseInfo>();
         foreach(int key in serverController.PlayerTurnDict.Keys){
             PlayerTurnData data;
             serverController.PlayerTurnDict.TryGetValue(key, out data);
@@ -42,7 +42,8 @@ public class UpdatingServerState : IStateController
 
             Vector2Int sound = data.lastPlay.sound;
             if(sound.x != -1){
-                noises.Add(BoardManager.TranslateTileNumbersToCode(sound.x, sound.y));
+                string tileCode = BoardManager.TranslateTileNumbersToCode(sound.x, sound.y);
+                noises.Add(new NoiseInfo(tileCode, data.lastPlay.PlayerAttacked));
             }
         }
 

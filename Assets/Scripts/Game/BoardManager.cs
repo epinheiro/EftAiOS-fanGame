@@ -29,6 +29,7 @@ public class BoardManager : MonoBehaviour
     public GameObject glowMovementPrefab;
     public GameObject glowSoundPrefab;
     public GameObject soundEffectPrefab;
+    public GameObject attackEffectPrefab;
 
     Dictionary<string, TileData> mapTiles;
     GameObject glowMovementTilesAggregator;
@@ -91,9 +92,13 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void LastSoundEffects(List<string> soundTileCodes){
-        foreach(string code in soundTileCodes){
-            GlowTile(code, soundEffectPrefab, soundEffectsAggregator);
+    public void LastSoundEffects(List<NoiseInfo> soundTileCodes){
+        foreach(NoiseInfo info in soundTileCodes){
+            if(info.isAttack){
+                GlowTile(info.tileCode, attackEffectPrefab, soundEffectsAggregator);
+            }else{
+                GlowTile(info.tileCode, soundEffectPrefab, soundEffectsAggregator);
+            }
         }
     }
 
