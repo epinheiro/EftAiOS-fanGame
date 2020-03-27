@@ -16,7 +16,7 @@
         this.uiController.SetOnlyTextLayout("Waiting players to enter");
     }
 
-    void StateEnd(){
+    protected override void StateEnd(){
         clientController.InstantiateBoardManager();
         ResetStateController();
     }

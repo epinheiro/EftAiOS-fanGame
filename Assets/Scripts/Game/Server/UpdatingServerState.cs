@@ -25,7 +25,7 @@ public class UpdatingServerState : IStateController
         StateEnd();
     }
 
-    void StateEnd(){
+    protected override void StateEnd(){
         SpawnLastNoises();
         ResetPlayerTurnControl();
         ResetStateController();

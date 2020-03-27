@@ -37,7 +37,7 @@ public class UpdatingClientState : IStateController
         this.uiController.SetOnlyTextLayout("Updating ship");
     }
 
-    void StateEnd(){
+    protected override void StateEnd(){
         clientController.CurrentPlayerState = clientController.NextPlayerState;
         clientController.NextPlayerState = ClientController.PlayerState.Unassigned;
         

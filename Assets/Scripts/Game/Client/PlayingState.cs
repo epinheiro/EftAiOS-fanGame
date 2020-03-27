@@ -114,7 +114,7 @@ public class PlayingState : IStateController
         clientController.ScheduleGetStateRequest();
     }
 
-    void StateEnd(){
+    protected override void StateEnd(){
         ResetStateController();
 
         clientController.CurrentState = ClientController.ClientState.WaitingPlayers;

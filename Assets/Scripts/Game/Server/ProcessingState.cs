@@ -28,7 +28,7 @@ public class ProcessingState : IStateController
         StateEnd();
     }
 
-    void StateEnd(){
+    protected override void StateEnd(){
         ResetStateController();
         serverController.NextState = ServerController.ServerState.Updating;
     }

@@ -78,7 +78,7 @@ public class ToConnectState : IStateController
         }
     }
 
-    void StateEnd(){
+    protected override void StateEnd(){
         ResetStateController();
         clientController.CurrentState = ClientController.ClientState.WaitingGame;
     }

@@ -19,7 +19,7 @@
         this.uiController.SetOnlyTextLayout("Waiting players turn");
     }
 
-    void StateEnd(){
+    protected override void StateEnd(){
         ResetStateController();
         clientController.BoardManagerRef.CleanGlowTiles();
     }

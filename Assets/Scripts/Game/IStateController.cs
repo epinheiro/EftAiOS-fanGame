@@ -19,6 +19,10 @@
         throw new System.Exception("IStateController child must implements own GUISetter");
     }
 
+    protected virtual void StateEnd(){
+        throw new System.Exception("IStateController child must implements own StateEnd and calls it when control passes to next state");
+    }
+
     protected void ResetStateController(){
         isRunning = false;
     }

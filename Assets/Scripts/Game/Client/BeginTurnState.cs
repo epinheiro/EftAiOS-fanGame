@@ -26,7 +26,7 @@
         uiController.SetGenericLayout(UIController.Layout.AllInactive);
     }
 
-    void StateEnd(){
+    protected override void StateEnd(){
         ResetStateController();
         clientController.CurrentState = ClientController.ClientState.Playing;
     }

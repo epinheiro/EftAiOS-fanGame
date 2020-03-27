@@ -24,7 +24,7 @@ public class WaitingPlayersServerState : IStateController
         this.uiController.SetOnlyTextLayout("Waiting player to make their move");
     }
 
-    void StateEnd(){
+    protected override void StateEnd(){
         serverController.BoardManagerRef.CleanLastSoundEffects();
         ResetStateController();
         serverController.NextState = ServerController.ServerState.Processing;

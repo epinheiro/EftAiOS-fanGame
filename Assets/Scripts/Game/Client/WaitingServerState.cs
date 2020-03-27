@@ -16,7 +16,7 @@
         this.uiController.SetOnlyTextLayout("What happened:");
     }
 
-    void StateEnd(){
+    protected override void StateEnd(){
         ResetStateController();
     }
 }

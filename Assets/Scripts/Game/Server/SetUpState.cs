@@ -32,7 +32,7 @@ public class SetUpState : IStateController
         return serverCommunication.ConnectionQuantity > 0; // TODO  -DEBUG value - Correct value is 1 
     }
 
-    void StateEnd(){
+    protected override void StateEnd(){
         PreparePossibleRoles();
         serverController.CreateBoardManager();
         ResetStateController();
