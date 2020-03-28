@@ -1,7 +1,12 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayingState : IStateController
 {
+    enum EffectFeedback {Silent, ChooseSector, SectorSound}
+    Dictionary<EffectFeedback, Color> effects;
+    EffectFeedback lastEffect = EffectFeedback.Silent;
+
     ClientController clientController;
     UIController uiController;
 
@@ -17,6 +22,13 @@ public class PlayingState : IStateController
     public PlayingState(ClientController clientController){
         this.clientController = clientController;
         this.uiController = clientController.UIController;
+
+        effects = new Dictionary<EffectFeedback, Color>();
+        effects.Add(EffectFeedback.Silent, new Color(0.086f,0.094f,0.101f));
+        effects.Add(EffectFeedback.ChooseSector, new Color(0.035f,0.282f,0.113f));
+        effects.Add(EffectFeedback.SectorSound, new Color(0.301f,0.058f,0.031f));
+
+        ActivateEffectFeedback(EffectFeedback.Silent);
     }
 
     protected override void ExecuteLogic(){
@@ -38,6 +50,7 @@ public class PlayingState : IStateController
                         this.uiController.SetTwoButtonsVisibility(false);
                         if(clientController.PlayerNullableWillAttack.Value){
                             clientController.PlayerNullableNexSound = clientController.PlayerNullableNextPosition;
+                            ActivateEffectFeedback(EffectFeedback.SectorSound);
                             currentTurnStep = TurnSteps.SendData;
                         }else{
                             currentTurnStep = TurnSteps.Card;
@@ -58,23 +71,27 @@ public class PlayingState : IStateController
                     switch(cardType){
                         case EventDeck.CardTypes.AnySectorSound:
                             Debug.Log(string.Format("CLIENT {0} can choose a sector to make a noise", clientController.ClientId));
+                            ActivateEffectFeedback(EffectFeedback.ChooseSector);
                             clientController.BoardManagerRef.GlowPossibleNoises();
                             currentTurnStep = TurnSteps.Noise;
                             break;
 
                         case EventDeck.CardTypes.CurrentSectorSound:
                             Debug.Log(string.Format("CLIENT {0} make a noise in his sector", clientController.ClientId));
+                            ActivateEffectFeedback(EffectFeedback.SectorSound);
                             clientController.PlayerNextSound = clientController.PlayerNextPosition;
                             currentTurnStep = TurnSteps.Noise;
                             break;
 
                         case EventDeck.CardTypes.NoSound:
                             Debug.Log(string.Format("CLIENT {0} is silent", clientController.ClientId));
+                            ActivateEffectFeedback(EffectFeedback.Silent);
                             currentTurnStep = TurnSteps.SendData;
                             break;
                     }
                     
                 }else{
+                    ActivateEffectFeedback(EffectFeedback.Silent);
                     currentTurnStep = TurnSteps.SendData;
                 }
                 break;
@@ -100,6 +117,18 @@ public class PlayingState : IStateController
     protected override void GUISetter(){
         this.uiController.SetTwoButtonsLayout("Attack", AttackCallback, "Don't Attack", DontAttackCallback);
         this.uiController.SetTwoButtonsVisibility(false);
+    }
+
+    void ActivateEffectFeedback(EffectFeedback effect){
+        Color currentColor;
+        effects.TryGetValue(lastEffect, out currentColor);
+
+        Color newColor;
+        effects.TryGetValue(effect, out newColor);
+
+        clientController.StartCoroutine(CameraController.BackgroundChangeCoroutine(currentColor, newColor));
+
+        lastEffect = effect;
     }
 
     void AttackCallback(){
