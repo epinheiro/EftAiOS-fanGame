@@ -102,6 +102,9 @@ public class UIController : MonoBehaviour
         button2.Text = buttonText;
         button2.InsertCallback(buttonCallback);
     }
+    public void SetConditionalButtonText(string text){
+        button2.Text = text;
+    }
     public void SetConditionalButtonVisibility(bool isHiding){
         button2.IsVisible = isHiding;
     }

@@ -6,6 +6,8 @@ public class SetUpState : IStateController
     ServerCommunication serverCommunication;
     UIController uiController;
 
+    readonly string buttonText = "Begin match with {0} players";
+
     public SetUpState(ServerController serverController, ServerCommunication serverCommunication){
         this.serverController = serverController;
         this.serverCommunication = serverCommunication;
@@ -13,11 +15,21 @@ public class SetUpState : IStateController
     }
 
     protected override void ExecuteLogic(){
-        uiController.SetConditionalButtonVisibility(IsPossibleToBeginMatch());
+        if(IsPossibleToBeginMatch()){
+            uiController.SetConditionalButtonVisibility(true);
+            this.uiController.SetConditionalButtonText(ButtonText(serverCommunication.ConnectionQuantity));
+        }else{
+            uiController.SetConditionalButtonVisibility(false);
+            this.uiController.SetConditionalButtonText(ButtonText(serverCommunication.ConnectionQuantity));
+        }
+    }
+
+    string ButtonText(int numberOfPlayers){
+        return string.Format(buttonText, numberOfPlayers);
     }
 
     protected override void GUISetter(){
-        this.uiController.SetConditionalButtonLayout("Begin match", IPStrings(), delegate(){ Callback(); });
+        this.uiController.SetConditionalButtonLayout(ButtonText(serverCommunication.ConnectionQuantity), IPStrings(), delegate(){ Callback(); });
     }
 
     public string IPStrings(){
