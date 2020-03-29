@@ -130,6 +130,16 @@ public class ClientController : BaseController
 
         currentState = ClientController.ClientState.ToConnect;
 
+        // Erasing client GAME data
+        currentPlayerState = PlayerState.Unassigned;
+        _nextPlayerState = PlayerState.Unassigned;
+        _clientId = -1;
+        playerCurrentPosition = new Vector2Int(-1,-1);
+        _playerNextPosition = null;
+        playerCurrentSound = new Vector2Int(-1,-1);
+        _playerNextSound = null;
+        _playerWillAttack = null;
+
         this.states = null;
         this.deck = null;
         StopCoroutine(update);
