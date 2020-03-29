@@ -16,7 +16,10 @@ public class WaitingPlayersServerState : IStateController
     protected override void ExecuteLogic(){
         if (AllPlayersPlayed()){
             Debug.Log("SERVER - all players played");
+            this.uiController.SetOnlyTextInfoText("All players played");
             StateEnd();
+        }else{
+            this.uiController.SetOnlyTextInfoText(string.Format("{0} of {1} players waiting", WaitingPlayersNumber(), PlayingPlayersNumber()));
         }
     }
 
@@ -28,6 +31,20 @@ public class WaitingPlayersServerState : IStateController
         serverController.BoardManagerRef.CleanLastSoundEffects();
         ResetStateController();
         serverController.NextState = ServerController.ServerState.Processing;
+    }
+
+    int PlayingPlayersNumber(){
+        return serverCommunication.ConnectionQuantity;
+    }
+
+    int WaitingPlayersNumber(){
+        int count = 0;
+        foreach(int key in serverController.PlayerTurnDict.Keys){
+            PlayerTurnData data;
+            serverController.PlayerTurnDict.TryGetValue(key, out data);
+            if(data.playedThisTurn) count++;
+        }
+        return count;
     }
 
     bool AllPlayersPlayed(){
