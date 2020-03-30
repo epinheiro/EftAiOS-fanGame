@@ -8,7 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/ServerClientTests.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 0
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 2fef3931258734e4eb9170823b2d6882
+  - enabled: 1
     path: Assets/Scenes/OnlyServer.unity
     guid: 5eee0c07cd7413a4abb0451e680ddc88
   - enabled: 1
