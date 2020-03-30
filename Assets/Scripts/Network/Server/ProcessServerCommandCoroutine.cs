@@ -28,7 +28,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
 
     void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         PutPlayRequest requestReceived = new PutPlayRequest(strm);
-        Debug.Log(string.Format("SERVER receive request - PutPlay ({0}) ({1},{2}) ({3},{4}) ({5})", 
+        Debug.Log(string.Format("SERVER - {0} request - PutPlay (({1},{2}) ({3},{4}) ({5}))", 
         requestReceived.playerId, requestReceived.movementTo.x, requestReceived.movementTo.y, requestReceived.sound.x, requestReceived.sound.y, requestReceived.PlayerAttacked));
 
         ((ServerCommunication)owner).serverController.InsertNewPlayTurnData(requestReceived);
@@ -40,25 +40,28 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
 
     void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         GetStateRequest requestReceived = new GetStateRequest(strm);
+        int clientId = requestReceived.playerId;
 
         ServerController.ServerState currentServerState = ((ServerCommunication)owner).serverController.CurrentState;
 
-        Debug.Log(string.Format("SERVER receive request - GetState ({0})", currentServerState));
+        Debug.Log(string.Format("SERVER - {0} request - GetState ({1})", clientId, currentServerState));
 
-        GetStateResponse response = new GetStateResponse(requestReceived.playerId, currentServerState);
+        GetStateResponse response = new GetStateResponse(clientId, currentServerState);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
         jobHandler.QueueJob(job);
     }
 
     void GetResults(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         GetResultsRequest requestReceived = new GetResultsRequest(strm);
-        Debug.Log(string.Format("SERVER receive request - GetResults ({0})", requestReceived.playerId));
+        int clientId = requestReceived.playerId;
 
         Vector2Int position;
         ClientController.PlayerState state;
-        ((ServerCommunication)owner).serverController.GetPlayerData(requestReceived.playerId, out position, out state);
+        ((ServerCommunication)owner).serverController.GetPlayerData(clientId, out position, out state);
 
-        GetResultsResponse response = new GetResultsResponse(requestReceived.playerId, state, position);
+        Debug.Log(string.Format("SERVER - {0} request - GetResults ({1})", clientId, state));
+
+        GetResultsResponse response = new GetResultsResponse(clientId, state, position);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
         jobHandler.QueueJob(job);
     }
