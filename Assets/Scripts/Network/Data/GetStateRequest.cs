@@ -3,15 +3,17 @@
 public class GetStateRequest: INetworkData
 {
     static public readonly int commandCode = (int) ServerCommunication.ServerCommand.GetState;
+    public readonly int playerId;
 
     public int[] DataToArray(){
-        return new int[]{commandCode};
+        return new int[]{commandCode, playerId};
     }
 
     /// <summary>
     /// This constructor is for WRAPPING the data to make a request
     /// </summary> 
-    public GetStateRequest(){
+    public GetStateRequest(int playerId){
+        this.playerId = playerId;
     }
 
     /// <summary>
@@ -22,7 +24,9 @@ public class GetStateRequest: INetworkData
 
         int commandCheck = reader.ReadInt(ref readerCtx);
 
-        if (commandCheck != commandCode){
+        if (commandCheck == commandCode){
+            this.playerId = reader.ReadInt(ref readerCtx);
+        }else{
             readerCtx = default(DataStreamReader.Context);
             throw new System.Exception(string.Format("Command {0} received is not compatible with this class command {1}", commandCheck, commandCode));
         }

@@ -33,7 +33,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
 
         ((ServerCommunication)owner).serverController.InsertNewPlayTurnData(requestReceived);
 
-        PutPlayResponse response = new PutPlayResponse();
+        PutPlayResponse response = new PutPlayResponse(requestReceived.playerId);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
         jobHandler.QueueJob(job);
     }
@@ -45,7 +45,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
 
         Debug.Log(string.Format("SERVER receive request - GetState ({0})", currentServerState));
 
-        GetStateResponse response = new GetStateResponse(currentServerState);
+        GetStateResponse response = new GetStateResponse(requestReceived.playerId, currentServerState);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
         jobHandler.QueueJob(job);
     }
@@ -58,7 +58,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
         ClientController.PlayerState state;
         ((ServerCommunication)owner).serverController.GetPlayerData(requestReceived.playerId, out position, out state);
 
-        GetResultsResponse response = new GetResultsResponse(state, position);
+        GetResultsResponse response = new GetResultsResponse(requestReceived.playerId, state, position);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
         jobHandler.QueueJob(job);
     }

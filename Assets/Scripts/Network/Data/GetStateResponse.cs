@@ -3,6 +3,8 @@
 public class GetStateResponse : INetworkData
 {
     static public readonly int commandCode = (int) ServerCommunication.ServerCommand.GetState;
+    public readonly int playerId;
+
     int _serverState;
     public ServerController.ServerState ServerState{
         get { return (ServerController.ServerState) _serverState; }
@@ -10,13 +12,14 @@ public class GetStateResponse : INetworkData
     }
 
     public int[] DataToArray(){
-        return new int[]{commandCode, _serverState};
+        return new int[]{commandCode, playerId, _serverState};
     }
 
     /// <summary>
     /// This constructor is for WRAPPING the data to make a request
     /// </summary> 
-    public GetStateResponse(ServerController.ServerState serverState){
+    public GetStateResponse(int playerId, ServerController.ServerState serverState){
+        this.playerId = playerId;
         this._serverState = (int) serverState;
     }
 
@@ -29,6 +32,7 @@ public class GetStateResponse : INetworkData
         int commandCheck = reader.ReadInt(ref readerCtx);
 
         if (commandCheck == commandCode){
+            this.playerId = reader.ReadInt(ref readerCtx);
             this._serverState = reader.ReadInt(ref readerCtx);
         }else{
             readerCtx = default(DataStreamReader.Context);

@@ -104,7 +104,7 @@ public class ClientCommunication : NodeCommunication
     }
 
     public void ScheduleGetStateRequest(){
-        GetStateRequest request = new GetStateRequest();
+        GetStateRequest request = new GetStateRequest(ClientId);
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
         jobHandler.QueueJob(job);
     }
