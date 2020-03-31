@@ -97,20 +97,37 @@ public class ClientCommunication : NodeCommunication
         }
     }
 
-    public void SchedulePutPlayRequest(int clientId, Vector2Int movementTo, Vector2Int sound, bool attacked){
-        PutPlayRequest request = new PutPlayRequest(clientId, movementTo.x,movementTo.y, sound.x,sound.y, attacked);
+    public void SchedulePutPlayRequest(Vector2Int movementTo, Vector2Int sound, bool attacked){
+        int id = ClientId;
+        int movX = movementTo.x;
+        int movY = movementTo.y;
+        int sndX = sound.x;
+        int sndY = sound.y;
+        bool atk = attacked;
+
+        PutPlayRequest request = new PutPlayRequest(id, movX, movY, sndX, sndY, atk);
+        TimeLogger.Log("CLIENT {0} - request - PutPlay (({1:00},{2:00}) ({3:00},{4:00}) ({5}))", id, movX, movY, sndX, sndY, atk);
+
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
         jobHandler.QueueJob(job);
     }
 
     public void ScheduleGetStateRequest(){
+        int id = ClientId;
+
         GetStateRequest request = new GetStateRequest(ClientId);
+        TimeLogger.Log("CLIENT {0} - request - GetState", id);
+
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
         jobHandler.QueueJob(job);
     }
 
     public void ScheduleGetResultsRequest(){
-        GetResultsRequest request = new GetResultsRequest(_clientId);
+        int id = ClientId;
+
+        GetResultsRequest request = new GetResultsRequest(id);
+        TimeLogger.Log("CLIENT {0} - request - GetResults", id);
+
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
         jobHandler.QueueJob(job);
     }

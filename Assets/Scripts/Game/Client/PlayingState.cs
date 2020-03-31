@@ -105,7 +105,6 @@ public class PlayingState : IStateController
 
             case TurnSteps.SendData:
                 clientController.ClientCommunication.SchedulePutPlayRequest(
-                    clientController.ClientId, 
                     (Vector2Int) clientController.PlayerNullableNextPosition,
                     clientController.PlayerNullableNexSound.HasValue ? (Vector2Int) clientController.PlayerNullableNexSound : new Vector2Int(-1,-1), // TODO - check if is there better solutions than V(-1,-1)
                     clientController.PlayerNullableWillAttack.HasValue ? (bool) clientController.PlayerNullableWillAttack : false
