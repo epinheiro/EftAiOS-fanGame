@@ -70,21 +70,21 @@ public class PlayingState : IStateController
 
                     switch(cardType){
                         case EventDeck.CardTypes.AnySectorSound:
-                            Debug.Log(string.Format("CLIENT {0} can choose a sector to make a noise", clientController.ClientId));
+                            TimeLogger.Log("CLIENT {0} can choose a sector to make a noise", clientController.ClientId);
                             ActivateEffectFeedback(EffectFeedback.ChooseSector);
                             clientController.BoardManagerRef.GlowPossibleNoises();
                             currentTurnStep = TurnSteps.Noise;
                             break;
 
                         case EventDeck.CardTypes.CurrentSectorSound:
-                            Debug.Log(string.Format("CLIENT {0} make a noise in his sector", clientController.ClientId));
+                            TimeLogger.Log("CLIENT {0} make a noise in his sector", clientController.ClientId);
                             ActivateEffectFeedback(EffectFeedback.SectorSound);
                             clientController.PlayerNextSound = clientController.PlayerNextPosition;
                             currentTurnStep = TurnSteps.Noise;
                             break;
 
                         case EventDeck.CardTypes.NoSound:
-                            Debug.Log(string.Format("CLIENT {0} is silent", clientController.ClientId));
+                            TimeLogger.Log("CLIENT {0} is silent", clientController.ClientId);
                             ActivateEffectFeedback(EffectFeedback.Silent);
                             currentTurnStep = TurnSteps.SendData;
                             break;

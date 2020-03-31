@@ -130,7 +130,7 @@ public class ClientCommunication : NodeCommunication
             }
             return true;
         }catch (System.Exception e){
-            Debug.Log(string.Format("CLIENT connection failure {0}", e.ToString()));
+            TimeLogger.Log("CLIENT connection failure {0}", e.ToString());
             return false;
         }
     }

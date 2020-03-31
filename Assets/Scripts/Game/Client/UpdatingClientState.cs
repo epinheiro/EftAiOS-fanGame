@@ -11,7 +11,6 @@ public class UpdatingClientState : IStateController
     }
 
     protected override void ExecuteLogic(){
-        Debug.Log("UpdatingClientState");
         switch(clientController.NextPlayerState){
             case ClientController.PlayerState.Unassigned:
                 clientController.ClientCommunication.ScheduleGetResultsRequest();

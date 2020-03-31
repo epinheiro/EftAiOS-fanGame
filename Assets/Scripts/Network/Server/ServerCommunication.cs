@@ -73,7 +73,7 @@ public class ServerCommunication : NodeCommunication
         NetworkEndPoint addr = NetworkEndPoint.AnyIpv4;
         addr.Port = serverPort;
         if (m_ServerDriver.Bind(addr) != 0)
-            Debug.Log($"Failed to bind to port {serverPort}");
+            TimeLogger.Log($"Failed to bind to port {serverPort}");
         else
             m_ServerDriver.Listen();
 

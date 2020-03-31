@@ -29,13 +29,13 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
     void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         PutPlayResponse responseReceived = new PutPlayResponse(strm);
 
-        Debug.Log(string.Format("CLIENT {0} - response - PutPlay success", ((ClientCommunication)owner).ClientId));
+        TimeLogger.Log("CLIENT {0} - response - PutPlay success", ((ClientCommunication)owner).ClientId);
     }
 
     void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         GetStateResponse responseReceived = new GetStateResponse(strm);
 
-        Debug.Log(string.Format("CLIENT {0} - response - GetState ({1})", ((ClientCommunication)owner).ClientId, responseReceived.ServerState));
+        TimeLogger.Log("CLIENT {0} - response - GetState ({1})", ((ClientCommunication)owner).ClientId, responseReceived.ServerState);
         ((ClientCommunication)owner).clientController.ServerState = responseReceived.ServerState;
     }
 
@@ -43,8 +43,8 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
         GetResultsResponse responseReceived = new GetResultsResponse(strm);
 
         ClientController.PlayerState playerState = (ClientController.PlayerState) responseReceived.playerState;
-        Debug.Log(string.Format("CLIENT {0} - response - GetResults ({1} at {2})", 
-            ((ClientCommunication)owner).ClientId, playerState, responseReceived.playerPosition));
+        TimeLogger.Log("CLIENT {0} - response - GetResults ({1} at {2})",
+            ((ClientCommunication)owner).ClientId, playerState, responseReceived.playerPosition);
         
         ((ClientCommunication)owner).clientController.NextPlayerState = playerState;
         ((ClientCommunication)owner).clientController.playerCurrentPosition = responseReceived.playerPosition;

@@ -15,7 +15,7 @@ public class WaitingPlayersServerState : IStateController
 
     protected override void ExecuteLogic(){
         if (AllPlayersPlayed()){
-            Debug.Log("SERVER - all players played");
+            TimeLogger.Log("SERVER - all players played");
             this.uiController.SetOnlyTextInfoText("All players played");
             StateEnd();
         }else{

@@ -67,7 +67,7 @@ public class ProcessingState : IStateController
 
             if(data.role == ClientController.PlayerState.Human && serverController.BoardManagerRef.GetTileType(BoardManager.TranslateTilePositionToCode(lastPlay.movementTo)) == BoardManager.PossibleTypes.EscapePod){
                 playersEscapees.Add(lastPlay.playerId);
-                Debug.Log(string.Format("SERVER - player {0} escaped!", lastPlay.playerId));
+                TimeLogger.Log("SERVER - player {0} escaped!", lastPlay.playerId);
                 break;
             }
         }
@@ -97,7 +97,7 @@ public class ProcessingState : IStateController
             foreach(Vector2Int attackPosition in attackList){
                 if(!lastPlay.PlayerAttacked && lastPlay.movementTo == attackPosition){
                     playersAttacked.Add(lastPlay.playerId);
-                    Debug.Log(string.Format("SERVER - player {0} attacked!", lastPlay.playerId));
+                    TimeLogger.Log("SERVER - player {0} attacked!", lastPlay.playerId);
                     break;
                 }
             }

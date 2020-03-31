@@ -68,13 +68,13 @@ public class ToConnectState : IStateController
 
             case Connection.Connecting:
                 if(!timeoutEnd.HasValue){
-                    Debug.Log(string.Format("CLIENT - connecting to {0}", logMessage));
+                    TimeLogger.Log("CLIENT - connecting to {0}", logMessage);
                 }
                 ControlTimeOut();
                 break;
 
             case Connection.Connected:
-                Debug.Log(string.Format("CLIENT - connected to {0}", logMessage));
+                TimeLogger.Log("CLIENT - connected to {0}", logMessage);
                 StateEnd();
                 break;
         }
@@ -93,7 +93,7 @@ public class ToConnectState : IStateController
                 if(DateTime.Now > timeoutEnd){
                     state = Connection.Disconnected;
                     clientController.ClientCommunication.Disconnect();
-                    Debug.Log(string.Format("CLIENT - connection timeout - check IP {0} and try again", _insertedString));
+                    TimeLogger.Log("CLIENT - connection timeout - check IP {0} and try again", _insertedString);
                     ResetControlTimeVariables();
                 }
             }
