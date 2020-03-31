@@ -18,6 +18,10 @@ public class ServerCommunication : NodeCommunication
 
     public ServerController serverController;
 
+    public void ClientDisconnection(int clientId){
+        serverController.PlayerDisconnection(clientId);
+    }
+
     void Awake(){
         serverController = this.GetComponent<ServerController>();
         jobHandler = new CommunicationJobHandler();

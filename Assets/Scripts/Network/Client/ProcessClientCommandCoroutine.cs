@@ -48,11 +48,11 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
         ((ClientCommunication)owner).clientController.playerCurrentPosition = responseReceived.playerPosition;
     }
 
-    protected  override void ConnectProcedure(){
+    protected  override void ConnectProcedure(NetworkConnection connection){
         TimeLogger.Log("CLIENT {0} - connected", owner.ClientId);
     }
 
-    protected  override void DisconnectProcedure(){
+    protected  override void DisconnectProcedure(NetworkConnection connection){
         TimeLogger.Log("CLIENT {0} - disconnected", owner.ClientId);
     }
 }

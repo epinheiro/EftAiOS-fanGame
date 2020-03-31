@@ -65,4 +65,10 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
         jobHandler.QueueJob(job);
     }
+
+    protected  override void DisconnectProcedure(NetworkConnection connection){
+        int internalId = connection.InternalId;
+        int clientId = GetClientIdByInternalId(internalId);
+        owner.ClientDisconnection(clientId);
+    }
 }

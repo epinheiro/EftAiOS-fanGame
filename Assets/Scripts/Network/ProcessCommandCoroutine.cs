@@ -12,6 +12,13 @@ public class ProcessCommandCoroutine<T> where T : MonoBehaviour
 
     BidirecionalIndex<int, int> connectionIndex;
 
+    public int GetClientIdByInternalId(int internalId){
+        return connectionIndex.GetByKey(internalId);
+    }
+    public int GetInteralIdByClientId(int clientId){
+        return connectionIndex.GetByValue(clientId);
+    }
+
     protected T owner;
 
     public ProcessCommandCoroutine(T owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler){
@@ -36,7 +43,7 @@ public class ProcessCommandCoroutine<T> where T : MonoBehaviour
         {
             if (cmd == NetworkEvent.Type.Connect)
             {
-                ConnectProcedure();
+                ConnectProcedure(connection);
             }
             else if (cmd == NetworkEvent.Type.Data)
             {                
@@ -44,7 +51,7 @@ public class ProcessCommandCoroutine<T> where T : MonoBehaviour
                 ////////////////////////// RECEIVE DATA FROM CLIENT /////////////////////
                 PackageMetadata metadata = ReadPackageMetadata(strm);
                 ProcessId(connection.InternalId, metadata.id);
-                DataReceivedProcedure();
+                DataReceivedProcedure(connection);
                 ProcessCommandReceived(metadata.command, driver, connection, strm);
                 ////////////////////////// SENT DATA BACK TO CLIENT /////////////////////
                 /////////////////////////////////////////////////////////////////////////
@@ -53,8 +60,8 @@ public class ProcessCommandCoroutine<T> where T : MonoBehaviour
             {
                 // When disconnected we make sure the connection return false to IsCreated so the next frames
                 // DriverUpdateJob will remove it
+                DisconnectProcedure(connection);
                 NodeDisconnection();
-                DisconnectProcedure();
                 connection.Disconnect(driver);
                 connection.Close(driver);
                 connection = default(NetworkConnection);
@@ -111,15 +118,15 @@ public class ProcessCommandCoroutine<T> where T : MonoBehaviour
         throw new System.Exception("ProcessCommandCoroutine child must implements own ProcessCommandReceived");
     }
 
-    protected virtual void ConnectProcedure(){
+    protected virtual void ConnectProcedure(NetworkConnection connection){
         // throw new System.Exception("ProcessCommandCoroutine child must implements own ConnectProcedure");
     }
 
-    protected virtual void DataReceivedProcedure(){
+    protected virtual void DataReceivedProcedure(NetworkConnection connection){
         // throw new System.Exception("ProcessCommandCoroutine child must implements own DataProcedure");
     }
 
-    protected virtual void DisconnectProcedure(){
+    protected virtual void DisconnectProcedure(NetworkConnection connection){
         // throw new System.Exception("ProcessCommandCoroutine child must implements own DisconnectProcedure");
     }
 

@@ -31,6 +31,9 @@ public class ServerController : BaseController
     public Dictionary<int, PlayerTurnData> PlayerTurnDict{
         get{ return playerTurnDict; }
     }
+    public void PlayerDisconnection(int playerId){
+        playerTurnDict.Remove(playerId);
+    }
 
     ExtendedList<ClientController.PlayerState> playerRolesToGive;
     public ExtendedList<ClientController.PlayerState> PlayerRolesToGive{
