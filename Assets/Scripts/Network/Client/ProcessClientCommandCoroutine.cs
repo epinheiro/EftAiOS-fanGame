@@ -1,11 +1,9 @@
 ﻿using Unity.Networking.Transport;
-using System.Collections;
-using UnityEngine;
 
 public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommunication>
 {
-    public ProcessClientCommandCoroutine(ClientCommunication owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler, NetworkConnection connection) : 
-        base(owner, driver, jobHandler, connection){
+    public ProcessClientCommandCoroutine(ClientCommunication owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler) :
+        base(owner, driver, jobHandler){
     }
 
     protected override void ProcessCommandReceived(int enumCommandNumber, UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
@@ -48,5 +46,13 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
         
         ((ClientCommunication)owner).clientController.NextPlayerState = playerState;
         ((ClientCommunication)owner).clientController.playerCurrentPosition = responseReceived.playerPosition;
+    }
+
+    protected  override void ConnectProcedure(){
+        TimeLogger.Log("CLIENT {0} - connected", owner.ClientId);
+    }
+
+    protected  override void DisconnectProcedure(){
+        TimeLogger.Log("CLIENT {0} - disconnected", owner.ClientId);
     }
 }

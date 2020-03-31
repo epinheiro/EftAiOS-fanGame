@@ -1,6 +1,7 @@
-using Unity.Networking.Transport;
+﻿using Unity.Networking.Transport;
 using System.Collections;
 using UnityEngine;
+using System;
 
 public class ProcessCommandCoroutine<T> where T : MonoBehaviour
 {
@@ -9,16 +10,22 @@ public class ProcessCommandCoroutine<T> where T : MonoBehaviour
 
     protected CommunicationJobHandler jobHandler;
 
+    BidirecionalIndex<int, int> connectionIndex;
+
     protected T owner;
 
-    public ProcessCommandCoroutine(T owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler, NetworkConnection connection){
+    public ProcessCommandCoroutine(T owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler){
         this.driver = driver;
-        this.connection = connection;
         this.jobHandler = jobHandler;
         this.owner = owner;
 
+        connectionIndex = new BidirecionalIndex<int, int>();
+    }
+
+    public void StartProcessCoroutine(NetworkConnection connection){
+        this.connection = connection;
         owner.StartCoroutine(ProcessSingleConnection());
-    } 
+    }
 
     public IEnumerator ProcessSingleConnection(){
         DataStreamReader strm;
@@ -35,9 +42,10 @@ public class ProcessCommandCoroutine<T> where T : MonoBehaviour
             {                
                 /////////////////////////////////////////////////////////////////////////
                 ////////////////////////// RECEIVE DATA FROM CLIENT /////////////////////
-                int command = ReadCommandReceived(strm);
+                PackageMetadata metadata = ReadPackageMetadata(strm);
+                ProcessId(connection.InternalId, metadata.id);
                 DataReceivedProcedure();
-                ProcessCommandReceived(command, driver, connection, strm);
+                ProcessCommandReceived(metadata.command, driver, connection, strm);
                 ////////////////////////// SENT DATA BACK TO CLIENT /////////////////////
                 /////////////////////////////////////////////////////////////////////////
             }
@@ -45,6 +53,7 @@ public class ProcessCommandCoroutine<T> where T : MonoBehaviour
             {
                 // When disconnected we make sure the connection return false to IsCreated so the next frames
                 // DriverUpdateJob will remove it
+                NodeDisconnection();
                 DisconnectProcedure();
                 connection.Disconnect(driver);
                 connection.Close(driver);
@@ -55,14 +64,46 @@ public class ProcessCommandCoroutine<T> where T : MonoBehaviour
         yield return null;
     }
 
-    int ReadCommandReceived(DataStreamReader reader){
+    void NodeDisconnection(){
+        try{
+            NodeLog(string.Format("{0}[{1}] disconnected", connectionIndex.GetByKey(connection.InternalId), connection.InternalId));
+            connectionIndex.RemoveKey(connection.InternalId);
+        }catch{
+            NodeLog(string.Format("[{0}] disconnected", connection.InternalId));
+        }
+    }
+
+    void NodeLog(string message){
+        Type thisType = this.GetType();
+
+        if(thisType == typeof(ProcessClientCommandCoroutine)){
+            ClientLog(message);
+        }else if(thisType == typeof(ProcessServerCommandCoroutine)){
+           ServerLog(message);
+        }else{
+            throw new Exception(string.Format("Type {0} not valid", thisType));
+        }
+    }
+
+    void ClientLog(string message){
+        TimeLogger.Log("CLIENT - {0}", message);
+    }
+
+    void ServerLog(string message){
+        TimeLogger.Log("SERVER - {0}", message);
+    }
+
+    PackageMetadata ReadPackageMetadata(DataStreamReader reader){
         DataStreamReader.Context readerCtx = default(DataStreamReader.Context);
         int command = reader.ReadInt(ref readerCtx);
+        int id = reader.ReadInt(ref readerCtx);
 
-        try{
-            return command;
-        }catch{
-            throw new System.Exception(string.Format("Command number {0} not found", command));
+        return new PackageMetadata(command, id);
+    }
+
+    void ProcessId(int internalId, int packageId){
+        if(!connectionIndex.ContainsValue(packageId)){
+            connectionIndex.Add(internalId, packageId);
         }
     }
 

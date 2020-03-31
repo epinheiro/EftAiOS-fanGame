@@ -4,8 +4,8 @@ using Unity.Jobs;
 
 public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommunication>
 {
-    public ProcessServerCommandCoroutine(ServerCommunication owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler, NetworkConnection connection) : 
-        base(owner, driver, jobHandler, connection){
+    public ProcessServerCommandCoroutine(ServerCommunication owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler) :
+        base(owner, driver, jobHandler){
     }
     
     protected override void ProcessCommandReceived(int enumCommandNumber, UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
@@ -28,8 +28,8 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
 
     void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         PutPlayRequest requestReceived = new PutPlayRequest(strm);
-        TimeLogger.Log("SERVER - {0} request - PutPlay (({1:00},{2:00}) ({3:00},{4:00}) ({5}))",
-        requestReceived.playerId, requestReceived.movementTo.x, requestReceived.movementTo.y, requestReceived.sound.x, requestReceived.sound.y, requestReceived.PlayerAttacked);
+        TimeLogger.Log("SERVER - {0}[{1}] request - PutPlay (({2:00},{3:00}) ({4:00},{5:00}) ({6}))",
+        requestReceived.playerId, connection.InternalId, requestReceived.movementTo.x, requestReceived.movementTo.y, requestReceived.sound.x, requestReceived.sound.y, requestReceived.PlayerAttacked);
 
         ((ServerCommunication)owner).serverController.InsertNewPlayTurnData(requestReceived);
 
@@ -44,7 +44,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
 
         ServerController.ServerState currentServerState = ((ServerCommunication)owner).serverController.CurrentState;
 
-        TimeLogger.Log("SERVER - {0} request - GetState ({1})", clientId, currentServerState);
+        TimeLogger.Log("SERVER - {0}[{1}] request - GetState ({2})", clientId, connection.InternalId, currentServerState);
 
         GetStateResponse response = new GetStateResponse(clientId, currentServerState);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
@@ -59,7 +59,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
         ClientController.PlayerState state;
         ((ServerCommunication)owner).serverController.GetPlayerData(clientId, out position, out state);
 
-        TimeLogger.Log("SERVER - {0} request - GetResults ({1})", clientId, state);
+        TimeLogger.Log("SERVER - {0}[{1}] request - GetResults ({2})", clientId, connection.InternalId, state);
 
         GetResultsResponse response = new GetResultsResponse(clientId, state, position);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());

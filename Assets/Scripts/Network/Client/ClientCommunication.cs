@@ -15,6 +15,8 @@ public class ClientCommunication : NodeCommunication
 
     private CommunicationJobHandler jobHandler;
 
+    ProcessClientCommandCoroutine pcc;
+
     NetworkEndPoint endpoint;
 
     public ClientController clientController;
@@ -56,6 +58,8 @@ public class ClientCommunication : NodeCommunication
 
     void Start(){
         SetClientIdentity();
+
+        pcc = new ProcessClientCommandCoroutine(this, m_ClientDriver, jobHandler);
     }
 
     void OnDestroy(){
@@ -92,7 +96,7 @@ public class ClientCommunication : NodeCommunication
         jobHandler.Complete();
 
         if(IsConnected){
-            ProcessClientCommandCoroutine pcc = new ProcessClientCommandCoroutine(this, m_ClientDriver, jobHandler, m_clientToServerConnection[0]);
+            pcc.StartProcessCoroutine(m_clientToServerConnection[0]);
             m_clientToServerConnection[0] = pcc.connection;
         }
     }

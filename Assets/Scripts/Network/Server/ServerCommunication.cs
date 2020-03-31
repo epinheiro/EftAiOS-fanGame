@@ -1,5 +1,4 @@
 using Unity.Collections;
-using UnityEngine;
 using Unity.Networking.Transport;
 
 public class ServerCommunication : NodeCommunication
@@ -15,12 +14,16 @@ public class ServerCommunication : NodeCommunication
 
     private CommunicationJobHandler jobHandler;
 
+    ProcessServerCommandCoroutine pcc;
+
     public ServerController serverController;
 
     void Awake(){
         serverController = this.GetComponent<ServerController>();
         jobHandler = new CommunicationJobHandler();
         InitServer();
+
+        pcc = new ProcessServerCommandCoroutine(this, m_ServerDriver, jobHandler);
     }
 
      void LateUpdate(){
@@ -59,7 +62,7 @@ public class ServerCommunication : NodeCommunication
         jobHandler.Complete();
 
         for(int i=0 ; i<m_connections.Length ; i++){
-            ProcessServerCommandCoroutine pcc = new ProcessServerCommandCoroutine(this, m_ServerDriver, jobHandler, m_connections[i]);
+            pcc.StartProcessCoroutine(m_connections[i]);
             m_connections[i] = pcc.connection;
         }
     }
