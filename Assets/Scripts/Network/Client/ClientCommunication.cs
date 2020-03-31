@@ -106,7 +106,7 @@ public class ClientCommunication : NodeCommunication
         bool atk = attacked;
 
         PutPlayRequest request = new PutPlayRequest(id, movX, movY, sndX, sndY, atk);
-        TimeLogger.Log("CLIENT {0} - request - PutPlay (({1:00},{2:00}) ({3:00},{4:00}) ({5}))", id, movX, movY, sndX, sndY, atk);
+        TimeLogger.Log("CLIENT {0} - schedule request - PutPlay (({1:00},{2:00}) ({3:00},{4:00}) ({5}))", id, movX, movY, sndX, sndY, atk);
 
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
         jobHandler.QueueJob(job);
@@ -116,7 +116,7 @@ public class ClientCommunication : NodeCommunication
         int id = ClientId;
 
         GetStateRequest request = new GetStateRequest(ClientId);
-        TimeLogger.Log("CLIENT {0} - request - GetState", id);
+        TimeLogger.Log("CLIENT {0} - schedule request - GetState", id);
 
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
         jobHandler.QueueJob(job);
@@ -126,7 +126,7 @@ public class ClientCommunication : NodeCommunication
         int id = ClientId;
 
         GetResultsRequest request = new GetResultsRequest(id);
-        TimeLogger.Log("CLIENT {0} - request - GetResults", id);
+        TimeLogger.Log("CLIENT {0} - schedule request - GetResults", id);
 
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
         jobHandler.QueueJob(job);
