@@ -28,7 +28,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
 
     void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         PutPlayRequest requestReceived = new PutPlayRequest(strm);
-        TimeLogger.Log("SERVER - {0} request - PutPlay (({1},{2}) ({3},{4}) ({5}))", 
+        TimeLogger.Log("SERVER - {0} request - PutPlay (({1:00},{2:00}) ({3:00},{4:00}) ({5}))",
         requestReceived.playerId, requestReceived.movementTo.x, requestReceived.movementTo.y, requestReceived.sound.x, requestReceived.sound.y, requestReceived.PlayerAttacked);
 
         ((ServerCommunication)owner).serverController.InsertNewPlayTurnData(requestReceived);
