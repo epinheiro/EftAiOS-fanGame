@@ -18,6 +18,7 @@
 
     protected override void StateEnd(){
         clientController.InstantiateBoardManager();
+        TimeLogger.Log("CLIENT {0} - game start", clientController.ClientId);
         ResetStateController();
     }
 }
