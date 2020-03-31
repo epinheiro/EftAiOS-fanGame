@@ -1,4 +1,4 @@
-﻿using Unity.Networking.Transport;
+using Unity.Networking.Transport;
 using System.Collections;
 using UnityEngine;
 
@@ -27,11 +27,16 @@ public class ProcessCommandCoroutine<T> where T : MonoBehaviour
         // Pop all events for the connection
         while ((cmd = driver.PopEventForConnection(connection, out strm)) != NetworkEvent.Type.Empty)
         {
-            if (cmd == NetworkEvent.Type.Data)
+            if (cmd == NetworkEvent.Type.Connect)
+            {
+                ConnectProcedure();
+            }
+            else if (cmd == NetworkEvent.Type.Data)
             {                
                 /////////////////////////////////////////////////////////////////////////
                 ////////////////////////// RECEIVE DATA FROM CLIENT /////////////////////
                 int command = ReadCommandReceived(strm);
+                DataReceivedProcedure();
                 ProcessCommandReceived(command, driver, connection, strm);
                 ////////////////////////// SENT DATA BACK TO CLIENT /////////////////////
                 /////////////////////////////////////////////////////////////////////////
@@ -40,6 +45,7 @@ public class ProcessCommandCoroutine<T> where T : MonoBehaviour
             {
                 // When disconnected we make sure the connection return false to IsCreated so the next frames
                 // DriverUpdateJob will remove it
+                DisconnectProcedure();
                 connection.Disconnect(driver);
                 connection.Close(driver);
                 connection = default(NetworkConnection);
@@ -62,5 +68,28 @@ public class ProcessCommandCoroutine<T> where T : MonoBehaviour
 
     protected virtual void ProcessCommandReceived(int command, UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         throw new System.Exception("ProcessCommandCoroutine child must implements own ProcessCommandReceived");
+    }
+
+    protected virtual void ConnectProcedure(){
+        // throw new System.Exception("ProcessCommandCoroutine child must implements own ConnectProcedure");
+    }
+
+    protected virtual void DataReceivedProcedure(){
+        // throw new System.Exception("ProcessCommandCoroutine child must implements own DataProcedure");
+    }
+
+    protected virtual void DisconnectProcedure(){
+        // throw new System.Exception("ProcessCommandCoroutine child must implements own DisconnectProcedure");
+    }
+
+
+    struct PackageMetadata{
+        public readonly int command;
+        public readonly int id;
+
+        public PackageMetadata(int command, int id){
+            this.command = command;
+            this.id = id;
+        }
     }
 }
