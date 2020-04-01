@@ -119,7 +119,7 @@ public class ServerController : BaseController
             switch(finalState){
                 case ClientController.PlayerState.Died:
                 case ClientController.PlayerState.Escaped:
-                case ClientController.PlayerState.HumanDelayed:
+                case ClientController.PlayerState.AlienOverrun:
                     playerTurnDict.Remove(playerId);
                     break;
             }

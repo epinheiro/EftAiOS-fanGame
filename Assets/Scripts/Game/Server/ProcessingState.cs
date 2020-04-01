@@ -45,13 +45,21 @@ public class ProcessingState : IStateController
         // If Aliens delayed humans for 39 turns
         bool isFinalTurn = serverController.TurnsLeft <= 0;
 
+        // If with the remaining roles is possible to end the game
+        bool isPossibleToProceed = true;
+        if(!isFinalTurn){
+            isPossibleToProceed = IsPossibleToProceedGame();
+        }
+
         // Update players stati
-        UpdatePlayersStati(escapees, attacked, isFinalTurn);
+        UpdatePlayersStati(escapees, attacked, isFinalTurn, isPossibleToProceed);
     }
 
+    bool IsPossibleToProceedGame(){
+        return true;
+    }
 
-
-    void UpdatePlayersStati(List<int> escapess, List<int> attacked, bool isFinalTurn){
+    void UpdatePlayersStati(List<int> escapess, List<int> attacked, bool isFinalTurn, bool isPossibleToProceed){
         foreach(int code in escapess){
             PlayerTurnData data;
             serverController.PlayerTurnDict.TryGetValue(code, out data);
@@ -74,8 +82,25 @@ public class ProcessingState : IStateController
                         data.role = ClientController.PlayerState.Died;
                         break;
                     case ClientController.PlayerState.Alien:
-                        data.role = ClientController.PlayerState.HumanDelayed;
+                        data.role = ClientController.PlayerState.AlienOverrun;
                         break;
+                }
+            }
+        }else{
+            if(!isPossibleToProceed){
+                // In possible future ADVANCED game will need another methods
+                foreach(int key in serverController.PlayerTurnDict.Keys){
+                    PlayerTurnData data;
+                    serverController.PlayerTurnDict.TryGetValue(key, out data);
+
+                    switch(data.role){
+                        case ClientController.PlayerState.Human:
+                            data.role = ClientController.PlayerState.Escaped;
+                            break;
+                        case ClientController.PlayerState.Alien:
+                            data.role = ClientController.PlayerState.AlienOverrun;
+                            break;
+                    }
                 }
             }
         }

@@ -31,8 +31,8 @@ public class UpdatingClientState : IStateController
                 clientController.ResetClient();
                 break;
 
-            case ClientController.PlayerState.HumanDelayed:
-                this.uiController.SetOnlyTextInfoText("You delayed the humans!");
+            case ClientController.PlayerState.AlienOverrun:
+                this.uiController.SetOnlyTextInfoText("You surpassed the humans!");
                 clientController.ResetClient();
                 break;
         }
