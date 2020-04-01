@@ -51,7 +51,7 @@ public class ServerController : BaseController
     }
 
     void Start(){
-        InstantiateCanvas();
+        InstantiateUICanvas();
 
         SetUpServer();
     }

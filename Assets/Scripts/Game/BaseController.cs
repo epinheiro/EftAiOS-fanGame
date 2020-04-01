@@ -17,7 +17,7 @@ public class BaseController : MonoBehaviour
         }
     }
 
-    public void InstantiateCanvas(){
+    public void InstantiateUICanvas(){
         GameObject go = Instantiate(uiCanvasPrefab, new Vector2(0, 0), Quaternion.identity);
         UIController = go.GetComponent<UIController>();
         go.name = "UICanvas";
