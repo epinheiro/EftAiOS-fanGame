@@ -7,15 +7,21 @@ public class ProcessingState : IStateController
     ServerCommunication serverCommunication;
     UIController uiController;
 
+    bool isProcessing;
+
     public ProcessingState(ServerController serverController, ServerCommunication serverCommunication){
         this.serverController = serverController;
         this.serverCommunication = serverCommunication;
         this.uiController = serverController.UIController;
+        isProcessing = false;
     }
 
     protected override void ExecuteLogic(){
         // Show "animation" of the turn
-        serverController.DelayedCall(ProcessingStateLogic, 1.2f); // DEBUG DELAY - TODO change
+        if(!isProcessing){
+            isProcessing = true;
+            serverController.DelayedCall(ProcessingStateLogic, 1.2f); // DEBUG DELAY - TODO change
+        }
         // ProcessingState();
     }
 
@@ -30,6 +36,7 @@ public class ProcessingState : IStateController
 
     protected override void StateEnd(){
         ResetStateController();
+        isProcessing = false;
         serverController.NextState = ServerController.ServerState.Updating;
     }
 
