@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 public class ServerController : BaseController
@@ -64,6 +64,7 @@ public class ServerController : BaseController
         states.Add(ServerState.Processing, new ProcessingState(this, serverCommunication));
         states.Add(ServerState.Updating, new UpdatingServerState(this, serverCommunication));
 
+        _turnCountdown = _turnLimit;
     }
 
     // Update is called once per frame
