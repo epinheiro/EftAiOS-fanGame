@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 public class ServerController : BaseController
@@ -53,6 +53,10 @@ public class ServerController : BaseController
     void Start(){
         InstantiateCanvas();
 
+        SetUpServer();
+    }
+
+    void SetUpServer(){
         playerRolesToGive = new ExtendedList<ClientController.PlayerState>();
         playerTurnDict = new Dictionary<int, PlayerTurnData>();
 
@@ -65,6 +69,20 @@ public class ServerController : BaseController
         states.Add(ServerState.Updating, new UpdatingServerState(this, serverCommunication));
 
         _turnCountdown = _turnLimit;
+    }
+
+    public void ResetServer(){
+        playerRolesToGive = null;
+        playerTurnDict = null;
+
+        Destroy(this.GetComponent<ServerCommunication>());
+
+        states = null;
+
+        _currentState = ServerState.SetUp;
+        nextState = ServerState.SetUp;
+
+        SetUpServer();
     }
 
     // Update is called once per frame
@@ -129,7 +147,28 @@ public class ServerController : BaseController
         position = finalPosition;
         state = finalState;
     }
-   
+
+    public bool IsPossibleToProceedGame(){
+        int countAliens = 0;
+        int countHumans = 0;
+
+        foreach(int key in PlayerTurnDict.Keys){
+            PlayerTurnData data;
+            PlayerTurnDict.TryGetValue(key, out data);
+
+            switch(data.playingRole){
+                case ClientController.PlayerState.Alien:
+                    ++countAliens;
+                    break;
+
+                case ClientController.PlayerState.Human:
+                    ++countHumans;
+                    break;
+            }
+        }
+        return !((countAliens==0 && countHumans>0) || (countAliens>0 && countHumans==0));
+    }
+
     public void CreateBoardManager(){
         InstantiateBoardManager();
     }

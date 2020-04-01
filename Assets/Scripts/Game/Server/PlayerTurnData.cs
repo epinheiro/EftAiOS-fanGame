@@ -1,17 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class PlayerTurnData
+﻿public class PlayerTurnData
 {
     public PutPlayRequest lastPlay;
     public bool playedThisTurn;
     public ClientController.PlayerState role;
+    public ClientController.PlayerState playingRole;
 
     public PlayerTurnData(PutPlayRequest lastPutPlay, ClientController.PlayerState role){
         this.lastPlay = lastPutPlay;
         this.playedThisTurn = false;
         this.role = role;
+        playingRole = role;
     }
 
     public void InputNewPutPlay(PutPlayRequest newPutPlay){
