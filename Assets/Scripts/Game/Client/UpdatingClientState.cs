@@ -30,6 +30,11 @@ public class UpdatingClientState : IStateController
                 this.uiController.SetOnlyTextInfoText("You won!");
                 clientController.ResetClient();
                 break;
+
+            case ClientController.PlayerState.HumanDelayed:
+                this.uiController.SetOnlyTextInfoText("You delayed the humans!");
+                clientController.ResetClient();
+                break;
         }
     }
     protected override void GUISetter(){

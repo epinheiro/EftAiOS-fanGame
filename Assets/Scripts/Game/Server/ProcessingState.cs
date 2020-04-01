@@ -34,17 +34,24 @@ public class ProcessingState : IStateController
     }
 
     void ProcessResults(){
+        /// Turn countdown
+        serverController.DecreaseTurnNumber();
+
         // Human escaped
         List<int> escapees = ProcessHumanEscapees();
         // Player kills another
         List<int> attacked = ProcessAttacks();
+
+        // If Aliens delayed humans for 39 turns
+        bool isFinalTurn = serverController.TurnsLeft <= 0;
+
         // Update players stati
-        UpdatePlayersStati(escapees, attacked);
-        // Aliens delayed humans for 39 turns
-        /// TODO turn countdown
+        UpdatePlayersStati(escapees, attacked, isFinalTurn);
     }
 
-    void UpdatePlayersStati(List<int> escapess, List<int> attacked){
+
+
+    void UpdatePlayersStati(List<int> escapess, List<int> attacked, bool isFinalTurn){
         foreach(int code in escapess){
             PlayerTurnData data;
             serverController.PlayerTurnDict.TryGetValue(code, out data);
@@ -55,6 +62,22 @@ public class ProcessingState : IStateController
             PlayerTurnData data;
             serverController.PlayerTurnDict.TryGetValue(code, out data);
             data.role = ClientController.PlayerState.Died;
+        }
+
+        if(isFinalTurn){
+            foreach(int key in serverController.PlayerTurnDict.Keys){
+                PlayerTurnData data;
+                serverController.PlayerTurnDict.TryGetValue(key, out data);
+
+                switch(data.role){
+                    case ClientController.PlayerState.Human:
+                        data.role = ClientController.PlayerState.Died;
+                        break;
+                    case ClientController.PlayerState.Alien:
+                        data.role = ClientController.PlayerState.HumanDelayed;
+                        break;
+                }
+            }
         }
     }
 

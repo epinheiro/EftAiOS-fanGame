@@ -14,6 +14,16 @@ public class ServerController : BaseController
 
     Dictionary<ServerState, IStateController> states;
 
+    int _turnLimit = 39;
+    int _turnCountdown;
+    public int TurnsLeft{
+        get { return _turnCountdown; }
+    }
+    public int DecreaseTurnNumber(){
+        return --_turnCountdown;
+    }
+
+
     ServerState _currentState = ServerState.SetUp;
     public ServerState CurrentState{
         get { return _currentState; }
@@ -109,6 +119,7 @@ public class ServerController : BaseController
             switch(finalState){
                 case ClientController.PlayerState.Died:
                 case ClientController.PlayerState.Escaped:
+                case ClientController.PlayerState.HumanDelayed:
                     playerTurnDict.Remove(playerId);
                     break;
             }

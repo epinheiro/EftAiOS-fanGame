@@ -18,7 +18,7 @@ public class ClientController : BaseController
 
     Dictionary<ClientState, IStateController> states;
 
-    public enum PlayerState {Unassigned, Alien, Human, Died, Escaped};
+    public enum PlayerState {Unassigned, Alien, Human, Died, Escaped, HumanDelayed};
 
     PlayerState currentPlayerState = PlayerState.Unassigned;
     public PlayerState CurrentPlayerState{
