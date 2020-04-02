@@ -151,6 +151,8 @@ public class ServerController : BaseController
     }
 
     public bool IsPossibleToProceedGame(){
+        if(_turnCountdown == _turnLimit) return true;
+
         int countAliens = 0;
         int countHumans = 0;
 
