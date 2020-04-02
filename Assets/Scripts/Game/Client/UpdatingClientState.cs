@@ -27,7 +27,7 @@ public class UpdatingClientState : IStateController
                 break;
 
             case ClientController.PlayerState.Escaped:
-                this.uiController.SetOnlyTextInfoText("You won!");
+                this.uiController.SetOnlyTextInfoText("You escaped the ship!");
                 clientController.ResetClient();
                 break;
 
