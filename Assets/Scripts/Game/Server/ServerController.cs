@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 public class ServerController : BaseController
@@ -50,17 +50,19 @@ public class ServerController : BaseController
         get { return playerRolesToGive; }
     }
 
+    void Awake(){
+        serverCommunication = gameObject.AddComponent(typeof(ServerCommunication)) as ServerCommunication;
+    }
+
     void Start(){
         InstantiateUICanvas();
 
-        SetUpServer();
+        SetUp();
     }
 
-    void SetUpServer(){
+    void SetUp(){
         playerRolesToGive = new ExtendedList<ClientController.PlayerState>();
         playerTurnDict = new Dictionary<int, PlayerTurnData>();
-
-        serverCommunication = gameObject.AddComponent(typeof(ServerCommunication)) as ServerCommunication;
 
         states = new Dictionary<ServerState, IStateController>();
         states.Add(ServerState.SetUp, new SetUpState(this, serverCommunication));
