@@ -41,7 +41,7 @@ public class SetUpState : IStateController
     }
 
     bool IsPossibleToBeginMatch(){
-        return serverCommunication.ConnectionQuantity > 0; // TODO  -DEBUG value - Correct value is 1 
+        return serverCommunication.ConnectionQuantity >= 2;
     }
 
     protected override void StateEnd(){
