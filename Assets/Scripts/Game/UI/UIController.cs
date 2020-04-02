@@ -5,22 +5,68 @@ public class UIController : MonoBehaviour
 {
     public enum Layout {Default, TwoButtons, InsertText, OnlyText, ConditionalButton, AllInactive}
 
+    ///// Header /////
+    Transform headerGroup;
+    // Line 1 group
+    Transform line1Group;
+    SimpleTextHelper infoText;
+    // TODO - infoGroup
+    // Line 2 group
+    Transform line2Group;
     ButtonHelper button1;
     InputFieldHelper textInput;
     ButtonHelper button2;
-    SimpleTextHelper infoText;
 
-    Transform horizontalGroup;
+    ///// Footer /////
+    // Transform footerGroup;
+    // TODO - progress text
+    // TODO - progressBar
+    // TODO - total text
 
     void Setup(){
-        Transform VerticalGroup = transform.Find("VerticalGroup");
-        horizontalGroup = VerticalGroup.Find("HorizontalGroup");
-        button1 = new ButtonHelper(horizontalGroup.transform.Find("Button1").gameObject);
-        textInput = new InputFieldHelper(horizontalGroup.transform.Find("InputField").gameObject);
-        infoText = new SimpleTextHelper(VerticalGroup.transform.Find("InfoText").gameObject);
-        button2 = new ButtonHelper(horizontalGroup.transform.Find("Button2").gameObject);
+        HeaderSetup();
+
+        //FooterSetup();
 
         SetGenericLayout(Layout.AllInactive);
+    }
+
+    void HeaderSetup(){
+        headerGroup = transform.Find("HeaderGroup");
+        H_Line1Setup();
+        H_Line2Setup();
+    }
+
+    void H_Line1Setup(){
+        line1Group = headerGroup.Find("Line1Group");
+        infoText = new SimpleTextHelper(line1Group.transform.Find("InfoText").gameObject);
+        // infoGroup
+    }
+
+    void H_Line2Setup(){
+        line2Group = headerGroup.Find("Line2Group");
+        button1 = new ButtonHelper(line2Group.transform.Find("Button1").gameObject);
+        textInput = new InputFieldHelper(line2Group.transform.Find("InputField").gameObject);
+        button2 = new ButtonHelper(line2Group.transform.Find("Button2").gameObject);
+    }
+
+    void FooterSetup(){
+        //footerGroup = headerGroup.Find("FooterGroup");
+        F_ProgressText();
+        F_ProgressBar();
+        F_TotalText();
+    }
+
+    void F_ProgressText(){
+
+    }
+
+    void F_ProgressBar(){
+
+    }
+
+    void F_TotalText(){
+
     }
 
     // Start is called before the first frame update
@@ -110,8 +156,8 @@ public class UIController : MonoBehaviour
     }
 
     void SetUpUIElements(bool resetHorizontalGroup, bool resetInputField, bool resetText, Nullable<ButtonHelper.ButtonType> resetButton1To = null, Nullable<ButtonHelper.ButtonType> resetButton2To = null){
-        if(resetHorizontalGroup != horizontalGroup.gameObject.activeSelf){
-            horizontalGroup.gameObject.SetActive(resetHorizontalGroup);
+        if(resetHorizontalGroup != line2Group.gameObject.activeSelf){
+            line2Group.gameObject.SetActive(resetHorizontalGroup);
         }
         
         if(resetInputField) {
@@ -121,21 +167,31 @@ public class UIController : MonoBehaviour
         }
 
         if(resetText) {
+            line1Group.gameObject.SetActive(true);
             infoText.ResetUIComponent();
         }else{
+            line1Group.gameObject.SetActive(false);
             infoText.IsActive = false;
         }
 
-        if(resetButton1To.HasValue) {
-            button1.ResetUIComponent(resetButton1To.Value);
-        }else{
+        if(!resetButton1To.HasValue && !resetButton2To.HasValue){
             button1.IsActive = false;
-        }
-
-        if(resetButton2To.HasValue) {
-            button2.ResetUIComponent(resetButton2To.Value);
-        }else{
             button2.IsActive = false;
+            line2Group.gameObject.SetActive(false);
+        }else{
+            if(resetButton1To.HasValue) {
+                line2Group.gameObject.SetActive(true);
+                button1.ResetUIComponent(resetButton1To.Value);
+            }else{
+                button1.IsActive = false;
+            }
+
+            if(resetButton2To.HasValue) {
+                line2Group.gameObject.SetActive(true);
+                button2.ResetUIComponent(resetButton2To.Value);
+            }else{
+                button2.IsActive = false;
+            }
         }
     }
 }
