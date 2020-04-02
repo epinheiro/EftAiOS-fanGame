@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System;
 
@@ -148,6 +149,10 @@ public class ClientController : BaseController
         Destroy(GameObject.Find("BoardManager"));
 
         SetUpClient();
+    }
+
+    public void ReloadClient(){
+        SceneManager.LoadScene("OnlyClient");
     }
 
     // Update is called once per second
