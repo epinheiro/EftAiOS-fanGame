@@ -17,6 +17,13 @@ public class ClientController : BaseController
         Updating
     }
 
+    string _lastSucessfulIP = "";
+    public string LastSucessfulIp{
+        get { return _lastSucessfulIP; }
+        set { _lastSucessfulIP = value; }
+    }
+
+
     Dictionary<ClientState, IStateController> states;
 
     public enum PlayerState {Unassigned, Alien, Human, Died, Escaped, AlienOverrun};
@@ -113,7 +120,7 @@ public class ClientController : BaseController
 
     public void SetUpClient(){
         states = new Dictionary<ClientState, IStateController>();
-        states.Add(ClientState.ToConnect, new ToConnectState(this));
+        states.Add(ClientState.ToConnect, new ToConnectState(this, _lastSucessfulIP));
         states.Add(ClientState.WaitingGame, new WaitingGameState(this));
         states.Add(ClientState.BeginTurn, new BeginTurnState(this));
         states.Add(ClientState.Playing, new PlayingState(this));

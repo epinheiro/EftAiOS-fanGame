@@ -14,7 +14,9 @@ public class ToConnectState : IStateController
     const float connTimeOut = 5f;
     Nullable<DateTime> timeoutEnd;
 
-    public ToConnectState(ClientController clientController){
+    public ToConnectState(ClientController clientController, string customIP = ""){
+        if(!string.IsNullOrEmpty(customIP)) _insertedString = customIP;
+
         this.clientController = clientController;
         SetClientIdentity();
         clientController.ClientCommunication = clientController.gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
@@ -75,6 +77,7 @@ public class ToConnectState : IStateController
 
             case Connection.Connected:
                 TimeLogger.Log("CLIENT - connected to {0}", logMessage);
+                if(!string.IsNullOrEmpty(_insertedString)) clientController.LastSucessfulIp = _insertedString;
                 StateEnd();
                 break;
         }
