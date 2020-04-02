@@ -55,15 +55,11 @@ public class ProcessingState : IStateController
         // If with the remaining roles is possible to end the game
         bool isPossibleToProceed = true;
         if(!isFinalTurn){
-            isPossibleToProceed = IsPossibleToProceedGame();
+            isPossibleToProceed = serverController.IsPossibleToProceedGame();
         }
 
         // Update players stati
         UpdatePlayersStati(escapees, attacked, isFinalTurn, isPossibleToProceed);
-    }
-
-    bool IsPossibleToProceedGame(){
-        return true;
     }
 
     void UpdatePlayersStati(List<int> escapess, List<int> attacked, bool isFinalTurn, bool isPossibleToProceed){

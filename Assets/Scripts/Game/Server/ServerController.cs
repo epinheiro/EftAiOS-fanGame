@@ -1,4 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public class ServerController : BaseController
@@ -9,7 +10,9 @@ public class ServerController : BaseController
         // In-game states
         WaitingPlayers, 
         Processing, 
-        Updating
+        Updating,
+        // Post-game states
+        EndGame
     }
 
     Dictionary<ServerState, IStateController> states;
@@ -69,22 +72,13 @@ public class ServerController : BaseController
         states.Add(ServerState.WaitingPlayers, new WaitingPlayersServerState(this, serverCommunication));
         states.Add(ServerState.Processing, new ProcessingState(this, serverCommunication));
         states.Add(ServerState.Updating, new UpdatingServerState(this, serverCommunication));
+        states.Add(ServerState.EndGame, new EndGameState(this));
 
         _turnCountdown = _turnLimit;
     }
 
-    public void ResetServer(){
-        playerRolesToGive = null;
-        playerTurnDict = null;
-
-        Destroy(this.GetComponent<ServerCommunication>());
-
-        states = null;
-
-        _currentState = ServerState.SetUp;
-        nextState = ServerState.SetUp;
-
-        SetUpServer();
+    public void Reset(){
+        SceneManager.LoadScene("OnlyServer");
     }
 
     // Update is called once per frame

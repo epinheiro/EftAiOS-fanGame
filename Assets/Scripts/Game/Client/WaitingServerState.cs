@@ -9,7 +9,11 @@
     }
 
     protected override void ExecuteLogic(){
-        clientController.ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientController.ClientState.Updating, delegate(){ StateEnd(); });
+        clientController.ChangeClientStateBaseOnServer(
+            new ServerController.ServerState[]{ServerController.ServerState.WaitingPlayers, ServerController.ServerState.EndGame},
+            ClientController.ClientState.Updating,
+            delegate(){ StateEnd(); }
+        );
     }
     
     protected override void GUISetter(){

@@ -14,12 +14,16 @@ public class WaitingPlayersServerState : IStateController
     }
 
     protected override void ExecuteLogic(){
-        if (AllPlayersPlayed()){
-            TimeLogger.Log("SERVER - all players played");
-            this.uiController.SetOnlyTextInfoText("All players played");
-            StateEnd();
+        if(serverController.IsPossibleToProceedGame()){
+            if (AllPlayersPlayed()){
+                TimeLogger.Log("SERVER - all players played");
+                this.uiController.SetOnlyTextInfoText("All players played");
+                StateEnd();
+            }else{
+                this.uiController.SetOnlyTextInfoText(string.Format("{0} of {1} players waiting", WaitingPlayersNumber(), PlayingPlayersNumber()));
+            }
         }else{
-            this.uiController.SetOnlyTextInfoText(string.Format("{0} of {1} players waiting", WaitingPlayersNumber(), PlayingPlayersNumber()));
+            serverController.NextState = ServerController.ServerState.EndGame;
         }
     }
 
