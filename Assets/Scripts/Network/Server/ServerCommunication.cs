@@ -23,9 +23,13 @@ public class ServerCommunication : NodeCommunication
     }
 
     void Awake(){
+        InitServer();
+        SetUp();
+    }
+
+    void SetUp(){
         serverController = this.GetComponent<ServerController>();
         jobHandler = new CommunicationJobHandler();
-        InitServer();
 
         pcc = new ProcessServerCommandCoroutine(this, m_ServerDriver, jobHandler);
     }
