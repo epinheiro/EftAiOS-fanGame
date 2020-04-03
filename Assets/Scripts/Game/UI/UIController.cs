@@ -184,6 +184,9 @@ public class UIController : MonoBehaviour
             button1.ResetUIComponent(newButton.Value);
         }else{
             button1.IsActive = false;
+            if(!button2.IsActive){
+                line2Group.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -193,6 +196,9 @@ public class UIController : MonoBehaviour
             button2.ResetUIComponent(newButton.Value);
         }else{
             button2.IsActive = false;
+            if(!button1.IsActive){
+                line2Group.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -206,13 +212,7 @@ public class UIController : MonoBehaviour
 
         InfoTextSetActive(infoText);
 
-        if(!newButton1.HasValue && !newButton2.HasValue){
-            button1.IsActive = false;
-            button2.IsActive = false;
-            line2Group.gameObject.SetActive(false);
-        }else{
-            Button1SetButton(newButton1);
-            Button2SetButton(newButton2);
-        }
+        Button1SetButton(newButton1);
+        Button2SetButton(newButton2);
     }
 }
