@@ -55,7 +55,9 @@ public class UIController : MonoBehaviour
         totalText = new SimpleTextHelper(footerGroup.transform.Find("Total").gameObject);
     }
 
-    // Start is called before the first frame update
+    //////////////////
+
+
     void Awake()
     {
         Setup();
@@ -84,20 +86,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void SetAllInactiveLayout(){
-        SetGenericLayout(Layout.AllInactive);
-    }
-
-    public void SetOnlyTextLayout(string text, Nullable<Color> color = null){
-        SetGenericLayout(Layout.OnlyText);
-        infoText.Text = text;
-        if(color.HasValue) infoText.ChangeTextColor(color.Value);
-    }
-
-    public void SetOnlyTextInfoText(string newString = ""){
-        infoText.Text = newString;
-    }
-
+    // TwoButtons /////////////////////////
     public void SetTwoButtonsLayout(string leftButtonText, UIHelper.BaseAction leftButtonCallback, string rightButtonText, UIHelper.BaseAction rightButtonCallback){
         SetGenericLayout(Layout.TwoButtons);
         button1.Text = leftButtonText;
@@ -111,6 +100,7 @@ public class UIController : MonoBehaviour
         button2.IsVisible = isVisible;
     }
 
+    // InsertText /////////////////////////
     public void SetInsertTextLayout(string placeholderText, string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
         SetGenericLayout(Layout.InsertText);
         this.infoText.Text = infoText;
@@ -132,6 +122,18 @@ public class UIController : MonoBehaviour
         return textInput.Text;
     }
 
+    // OnlyText /////////////////////////
+    public void SetOnlyTextLayout(string text, Nullable<Color> color = null){
+        SetGenericLayout(Layout.OnlyText);
+        infoText.Text = text;
+        if(color.HasValue) infoText.ChangeTextColor(color.Value);
+    }
+
+    public void SetOnlyTextInfoText(string newString = ""){
+        infoText.Text = newString;
+    }
+
+    // ConditionalButton /////////////////////////
     public void SetConditionalButtonLayout(string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
         SetGenericLayout(Layout.ConditionalButton);
         this.infoText.Text = infoText;
@@ -144,6 +146,13 @@ public class UIController : MonoBehaviour
     public void SetConditionalButtonVisibility(bool isHiding){
         button2.IsVisible = isHiding;
     }
+
+    // AllInactive /////////////////////////
+    public void SetAllInactiveLayout(){
+        SetGenericLayout(Layout.AllInactive);
+    }
+
+    /////////////////////////////////////////////////////
 
     void SetUpUIElements(bool resetHorizontalGroup, bool resetInputField, bool resetText, Nullable<ButtonHelper.ButtonType> resetButton1To = null, Nullable<ButtonHelper.ButtonType> resetButton2To = null){
         infoGroup.IsActive = false; // TODO - change
