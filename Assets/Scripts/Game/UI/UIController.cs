@@ -3,7 +3,7 @@ using System;
 
 public class UIController : MonoBehaviour
 {
-    public enum Layout {Default, TwoButtons, InsertText, OnlyText, ConditionalButton, AllInactive}
+    enum Layout {Default, TwoButtons, InsertText, OnlyText, ConditionalButton, AllInactive}
 
     ///// Header /////
     Transform headerGroup;
@@ -61,7 +61,7 @@ public class UIController : MonoBehaviour
         Setup();
     }
 
-    public void SetGenericLayout(Layout layout){
+    void SetGenericLayout(Layout layout){
         switch(layout){
             case Layout.Default:
                 SetUpUIElements(true, true, true, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Default, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Default);
@@ -82,6 +82,10 @@ public class UIController : MonoBehaviour
                 SetUpUIElements(false, false, false, null, null);
                 break;
         }
+    }
+
+    public void SetAllInactiveLayout(){
+        SetGenericLayout(Layout.AllInactive);
     }
 
     public void SetOnlyTextLayout(string text, Nullable<Color> color = null){

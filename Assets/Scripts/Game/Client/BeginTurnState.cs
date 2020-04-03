@@ -23,7 +23,7 @@
         StateEnd();
     }
     protected override void GUISetter(){
-        uiController.SetGenericLayout(UIController.Layout.AllInactive);
+        uiController.SetAllInactiveLayout();
     }
 
     protected override void StateEnd(){
