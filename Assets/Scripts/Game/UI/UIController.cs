@@ -10,7 +10,7 @@ public class UIController : MonoBehaviour
     // Line 1 group
     Transform line1Group;
     SimpleTextHelper infoText;
-    Transform infoGroup;
+    SpriteArrayHelper infoGroup;
     // Line 2 group
     Transform line2Group;
     ButtonHelper button1;
@@ -20,7 +20,7 @@ public class UIController : MonoBehaviour
     ///// Footer /////
     Transform footerGroup;
     SimpleTextHelper progressText;
-    GameObject progressBar;
+    ProgressBarHelper progressBar;
     SimpleTextHelper totalText;
 
     void Setup(){
@@ -38,7 +38,7 @@ public class UIController : MonoBehaviour
     void H_Line1Setup(){
         line1Group = headerGroup.Find("Line1Group");
         infoText = new SimpleTextHelper(line1Group.transform.Find("InfoText").gameObject);
-        infoGroup = line1Group.transform.Find("InfoGroup");
+        infoGroup = new SpriteArrayHelper(line1Group.transform.Find("InfoGroup").gameObject);
     }
 
     void H_Line2Setup(){
@@ -51,7 +51,7 @@ public class UIController : MonoBehaviour
     void FooterSetup(){
         footerGroup = transform.Find("FooterGroup");
         progressText = new SimpleTextHelper(footerGroup.transform.Find("Progress").gameObject);
-        progressBar = footerGroup.transform.Find("ProgressBar").gameObject;
+        progressBar = new ProgressBarHelper(footerGroup.transform.Find("ProgressBar").gameObject);
         totalText = new SimpleTextHelper(footerGroup.transform.Find("Total").gameObject);
     }
 
@@ -142,6 +142,9 @@ public class UIController : MonoBehaviour
     }
 
     void SetUpUIElements(bool resetHorizontalGroup, bool resetInputField, bool resetText, Nullable<ButtonHelper.ButtonType> resetButton1To = null, Nullable<ButtonHelper.ButtonType> resetButton2To = null){
+        infoGroup.IsActive = false; // TODO - change
+        footerGroup.gameObject.SetActive(false); // TODO - change
+        
         if(resetHorizontalGroup != line2Group.gameObject.activeSelf){
             line2Group.gameObject.SetActive(resetHorizontalGroup);
         }
