@@ -66,22 +66,28 @@ public class UIController : MonoBehaviour
     void SetGenericLayout(Layout layout){
         switch(layout){
             case Layout.TwoButtons:
-                SetHeaderUIElements(true, false, false, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
+                SetHeaderUIElements(true, false, false, false, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
+                SetFooterUIElements(false);
                 break;
             case Layout.InsertText:
-                SetHeaderUIElements(true, true, false, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
+                SetHeaderUIElements(true, true, false, false, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
+                SetFooterUIElements(false);
                 break;
             case Layout.OnlyText:
-                SetHeaderUIElements(false, false, true, null, null);
+                SetHeaderUIElements(false, false, true, false, null, null);
+                SetFooterUIElements(false);
                 break;
             case Layout.ConditionalButton:
-                SetHeaderUIElements(true, false, true, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack);
+                SetHeaderUIElements(true, false, true, false, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack);
+                SetFooterUIElements(false);
                 break;
             case Layout.AllActive:
-                SetHeaderUIElements(true, true, true, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Default, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Default);
+                SetHeaderUIElements(true, true, true, false, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Default, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Default);
+                SetFooterUIElements(false);
                 break;
             case Layout.AllInactive:
-                SetHeaderUIElements(false, false, false, null, null);
+                SetHeaderUIElements(false, false, false, false, null, null);
+                SetFooterUIElements(false);
                 break;
         }
     }
@@ -178,6 +184,14 @@ public class UIController : MonoBehaviour
         }
     }
 
+    void InfoGroupSetActive(bool IsActive){
+        if(IsActive){
+            infoGroup.ResetUIComponent();
+        }else{
+            infoGroup.IsActive = false;
+        }
+    }
+
     void Button1SetButton(Nullable<ButtonHelper.ButtonType> newButton = null){
         if(newButton.HasValue) {
             line2Group.gameObject.SetActive(true);
@@ -202,17 +216,20 @@ public class UIController : MonoBehaviour
         }
     }
 
-    void SetHeaderUIElements(bool horizontalGroup, bool inputField, bool infoText, ButtonHelper.ButtonType? newButton1 = null, ButtonHelper.ButtonType? newButton2 = null){
-        infoGroup.IsActive = false; // TODO - change
-        footerGroup.gameObject.SetActive(false); // TODO - change
-
+    void SetHeaderUIElements(bool horizontalGroup, bool inputField, bool infoText, bool infoGroup, ButtonHelper.ButtonType? newButton1 = null, ButtonHelper.ButtonType? newButton2 = null){        
         HorizontalGroupSetActive(horizontalGroup);
 
         InputFieldSetActive(inputField);
 
         InfoTextSetActive(infoText);
 
+        InfoGroupSetActive(infoGroup);
+
         Button1SetButton(newButton1);
         Button2SetButton(newButton2);
+    }
+
+    void SetFooterUIElements(bool slider){ // TODO - change
+        footerGroup.gameObject.SetActive(slider); 
     }
 }
