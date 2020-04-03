@@ -9,9 +9,9 @@ public class ProgressBarHelper : UIHelper
         slider = uiObject.GetComponent<Slider>();
     }
 
-    public void SetValues(int currentValue, int maxValue){
+    public void SetValues(int currentValue, int? maxValue = null){
         slider.value = currentValue;
-        slider.maxValue = maxValue;
+        if(maxValue.HasValue) slider.maxValue = (int) maxValue;
     }
 
     public override void ResetUIComponent(){
