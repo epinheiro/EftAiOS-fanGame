@@ -10,7 +10,7 @@ public class UIController : MonoBehaviour
     // Line 1 group
     Transform line1Group;
     SimpleTextHelper infoText;
-    // TODO - infoGroup
+    Transform infoGroup;
     // Line 2 group
     Transform line2Group;
     ButtonHelper button1;
@@ -18,16 +18,14 @@ public class UIController : MonoBehaviour
     ButtonHelper button2;
 
     ///// Footer /////
-    // Transform footerGroup;
-    // TODO - progress text
-    // TODO - progressBar
-    // TODO - total text
+    Transform footerGroup;
+    SimpleTextHelper progressText;
+    GameObject progressBar;
+    SimpleTextHelper totalText;
 
     void Setup(){
         HeaderSetup();
-
-        //FooterSetup();
-
+        FooterSetup();
         SetGenericLayout(Layout.AllInactive);
     }
 
@@ -40,7 +38,7 @@ public class UIController : MonoBehaviour
     void H_Line1Setup(){
         line1Group = headerGroup.Find("Line1Group");
         infoText = new SimpleTextHelper(line1Group.transform.Find("InfoText").gameObject);
-        // infoGroup
+        infoGroup = line1Group.transform.Find("InfoGroup");
     }
 
     void H_Line2Setup(){
@@ -51,22 +49,10 @@ public class UIController : MonoBehaviour
     }
 
     void FooterSetup(){
-        //footerGroup = headerGroup.Find("FooterGroup");
-        F_ProgressText();
-        F_ProgressBar();
-        F_TotalText();
-    }
-
-    void F_ProgressText(){
-
-    }
-
-    void F_ProgressBar(){
-
-    }
-
-    void F_TotalText(){
-
+        footerGroup = transform.Find("FooterGroup");
+        progressText = new SimpleTextHelper(footerGroup.transform.Find("Progress").gameObject);
+        progressBar = footerGroup.transform.Find("ProgressBar").gameObject;
+        totalText = new SimpleTextHelper(footerGroup.transform.Find("Total").gameObject);
     }
 
     // Start is called before the first frame update
