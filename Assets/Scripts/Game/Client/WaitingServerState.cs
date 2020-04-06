@@ -17,7 +17,7 @@
     }
     
     protected override void GUISetter(){
-        this.uiController.SetOnlyTextLayout("What happened:");
+        this.uiController.SetInfoText("What happened:");
     }
 
     protected override void StateEnd(){

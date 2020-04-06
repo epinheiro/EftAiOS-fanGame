@@ -16,7 +16,7 @@
         );
     }
     protected override void GUISetter(){
-        this.uiController.SetOnlyTextLayout("Waiting players turn");
+        this.uiController.SetInfoText("Waiting players turn");
     }
 
     protected override void StateEnd(){

@@ -26,7 +26,7 @@ public class ProcessingState : IStateController
     }
 
     protected override void GUISetter(){
-        this.uiController.SetOnlyTextLayout("Server processing");
+        this.uiController.SetInfoText("Server processing");
     }
 
     public void ProcessingStateLogic(){

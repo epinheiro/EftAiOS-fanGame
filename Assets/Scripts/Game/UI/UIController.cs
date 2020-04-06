@@ -138,13 +138,6 @@ public class UIController : MonoBehaviour
         return textInput.Text;
     }
 
-    // OnlyText /////////////////////////
-    public void SetOnlyTextLayout(string text, Nullable<Color> color = null){
-        SetPresetLayout(Layout.OnlyText);
-        infoText.Text = text;
-        if(color.HasValue) infoText.ChangeTextColor(color.Value);
-    }
-
     // ConditionalButton /////////////////////////
     public void SetConditionalButtonLayout(string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
         SetPresetLayout(Layout.ConditionalButton);
@@ -175,6 +168,9 @@ public class UIController : MonoBehaviour
             InfoTextSetActive(true);
             infoText.Text = newString;
         }
+    }
+    public void SetInfoTextColor(Color newColor){
+        infoText.ChangeTextColor(newColor);
     }
     // InfoGroup
 

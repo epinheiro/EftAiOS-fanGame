@@ -18,7 +18,7 @@ public class UpdatingServerState : IStateController
     }
 
     protected override void GUISetter(){
-        this.uiController.SetOnlyTextLayout("Board Updating");
+        this.uiController.SetInfoText("Board Updating");
     }
 
     void UpdatingStateLogic(){

@@ -38,7 +38,7 @@ public class UpdatingClientState : IStateController
         }
     }
     protected override void GUISetter(){
-        this.uiController.SetOnlyTextLayout("Updating ship");
+        this.uiController.SetInfoText("Updating ship");
     }
 
     protected override void StateEnd(){
