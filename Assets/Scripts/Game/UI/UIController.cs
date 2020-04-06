@@ -3,7 +3,7 @@ using System;
 
 public class UIController : MonoBehaviour
 {
-    enum Layout {TwoButtons, InsertText, OnlyText, ConditionalButton, AllActive, AllInactive}
+    enum Layout {TwoButtons, InsertText, OnlyText, ConditionalButton, AllActive, AllInactive, BoardDefault, ClientDefault}
 
     ///// Header /////
     Transform headerGroup;
@@ -65,6 +65,16 @@ public class UIController : MonoBehaviour
 
     void SetGenericLayout(Layout layout){
         switch(layout){
+            case Layout.BoardDefault:
+                SetHeaderUIElements(true, null, false, null, null);
+                SetFooterUIElements(true);
+                break;
+            case Layout.ClientDefault:
+                SetHeaderUIElements(true, null, false, null, null);
+                SetFooterUIElements(false);
+                break;
+
+            /////////////////////////////
             case Layout.TwoButtons:
                 SetHeaderUIElements(false, null, false, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
                 SetFooterUIElements(false);
