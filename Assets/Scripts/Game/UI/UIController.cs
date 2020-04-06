@@ -66,27 +66,27 @@ public class UIController : MonoBehaviour
     void SetGenericLayout(Layout layout){
         switch(layout){
             case Layout.TwoButtons:
-                SetHeaderUIElements(true, false, false, false, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
+                SetHeaderUIElements(false, false, false, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
                 SetFooterUIElements(false);
                 break;
             case Layout.InsertText:
-                SetHeaderUIElements(true, true, false, false, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
+                SetHeaderUIElements(false, false, true, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
                 SetFooterUIElements(false);
                 break;
             case Layout.OnlyText:
-                SetHeaderUIElements(false, false, true, false, null, null);
+                SetHeaderUIElements(true, false, false, null, null);
                 SetFooterUIElements(false);
                 break;
             case Layout.ConditionalButton:
-                SetHeaderUIElements(true, false, true, false, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack);
+                SetHeaderUIElements(true, false, false, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack);
                 SetFooterUIElements(false);
                 break;
             case Layout.AllActive:
-                SetHeaderUIElements(true, true, true, false, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Default, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Default);
+                SetHeaderUIElements(true, false, true, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Default, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Default);
                 SetFooterUIElements(false);
                 break;
             case Layout.AllInactive:
-                SetHeaderUIElements(false, false, false, false, null, null);
+                SetHeaderUIElements(false, false, false, null, null);
                 SetFooterUIElements(false);
                 break;
         }
@@ -217,7 +217,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    void SetHeaderUIElements(bool horizontalGroup, bool inputField, bool infoText, bool infoGroup, ButtonHelper.ButtonType? newButton1 = null, ButtonHelper.ButtonType? newButton2 = null){        
+    void SetHeaderUIElements(bool infoText, bool infoGroup, bool inputField, ButtonHelper.ButtonType? newButton1 = null, ButtonHelper.ButtonType? newButton2 = null){
         // Line 1
         if(!infoText && !infoGroup) {
             Line1SetActive(false);
