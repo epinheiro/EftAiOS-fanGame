@@ -238,7 +238,12 @@ public class UIController : MonoBehaviour
         }
     }
 
+    void SetFooterUIElements(int currentValue){
+        footerGroup.gameObject.SetActive(true);
+        progressBar.SetValues(currentValue);
+    }
+
     void SetFooterUIElements(bool slider){ // TODO - change
-        footerGroup.gameObject.SetActive(slider); 
+        footerGroup.gameObject.SetActive(slider);
     }
 }
