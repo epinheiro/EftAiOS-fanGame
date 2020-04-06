@@ -33,7 +33,7 @@ public class SetUpState : IStateController
     }
 
     public string IPStrings(){
-        return string.Format("Connect to {0} or {1}", NodeCommunication.GetLocalIPAddress(), NodeCommunication.GetExternalIPAddress());
+        return string.Format("{0} or {1}", NodeCommunication.GetLocalIPAddress(), NodeCommunication.GetExternalIPAddress());
     }
 
     public void Callback(){
