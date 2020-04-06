@@ -160,17 +160,10 @@ public class UIController : MonoBehaviour
 
     /////////////////////////////////////////////////////
 
-    void HorizontalGroupSetActive(bool IsActive){
-        if(IsActive != line2Group.gameObject.activeSelf){
-            line2Group.gameObject.SetActive(IsActive);
-        }
-    }
-
-    void InputFieldSetActive(bool IsActive){
-        if(IsActive) {
-            textInput.ResetUIComponent();
-        }else{
-            textInput.IsActive = false;
+    // Line 1 //
+    void Line1SetActive(bool IsActive){
+        if(IsActive != line1Group.gameObject.activeSelf){
+            line1Group.gameObject.SetActive(IsActive);
         }
     }
 
@@ -179,7 +172,6 @@ public class UIController : MonoBehaviour
             line1Group.gameObject.SetActive(true);
             infoText.ResetUIComponent();
         }else{
-            line1Group.gameObject.SetActive(false);
             infoText.IsActive = false;
         }
     }
@@ -192,15 +184,27 @@ public class UIController : MonoBehaviour
         }
     }
 
+    // Line 2 //
+    void Line2SetActive(bool IsActive){
+        if(IsActive != line2Group.gameObject.activeSelf){
+            line2Group.gameObject.SetActive(IsActive);
+        }
+    }
+
     void Button1SetButton(Nullable<ButtonHelper.ButtonType> newButton = null){
         if(newButton.HasValue) {
             line2Group.gameObject.SetActive(true);
             button1.ResetUIComponent(newButton.Value);
         }else{
             button1.IsActive = false;
-            if(!button2.IsActive){
-                line2Group.gameObject.SetActive(false);
-            }
+        }
+    }
+
+    void InputFieldSetActive(bool IsActive){
+        if(IsActive) {
+            textInput.ResetUIComponent();
+        }else{
+            textInput.IsActive = false;
         }
     }
 
@@ -210,23 +214,28 @@ public class UIController : MonoBehaviour
             button2.ResetUIComponent(newButton.Value);
         }else{
             button2.IsActive = false;
-            if(!button1.IsActive){
-                line2Group.gameObject.SetActive(false);
-            }
         }
     }
 
     void SetHeaderUIElements(bool horizontalGroup, bool inputField, bool infoText, bool infoGroup, ButtonHelper.ButtonType? newButton1 = null, ButtonHelper.ButtonType? newButton2 = null){        
-        HorizontalGroupSetActive(horizontalGroup);
+        // Line 1
+        if(!infoText && !infoGroup) {
+            Line1SetActive(false);
+        }else{
+            Line1SetActive(true);
+            InfoTextSetActive(infoText);
+            InfoGroupSetActive(infoGroup);
+        }
 
-        InputFieldSetActive(inputField);
-
-        InfoTextSetActive(infoText);
-
-        InfoGroupSetActive(infoGroup);
-
-        Button1SetButton(newButton1);
-        Button2SetButton(newButton2);
+        // Line 2
+        if(!newButton1.HasValue && !inputField && !newButton2.HasValue){
+            Line2SetActive(false);
+        }else{
+            Line2SetActive(true);
+            Button1SetButton(newButton1);
+            InputFieldSetActive(inputField);
+            Button2SetButton(newButton2);
+        }
     }
 
     void SetFooterUIElements(bool slider){ // TODO - change
