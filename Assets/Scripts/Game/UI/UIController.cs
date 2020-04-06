@@ -176,8 +176,20 @@ public class UIController : MonoBehaviour
 
     // Line 2 //
     // Button1
-    // Input
+    public void SetButton1(UIHelper.BaseAction callback, string buttonText = "",  Nullable<ButtonHelper.ButtonType> buttonType = null){
+        SetButton(button1, callback, buttonText, buttonType);
+    }
     // Button2
+    public void SetButton2(UIHelper.BaseAction callback, string buttonText = "",  Nullable<ButtonHelper.ButtonType> buttonType = null){
+        SetButton(button2, callback, buttonText, buttonType);
+    }
+    // Generic button
+    void SetButton(ButtonHelper button, UIHelper.BaseAction callback, string buttonText = "",  Nullable<ButtonHelper.ButtonType> buttonType = null){
+        button.InsertCallback(callback);
+        if(buttonType.HasValue) button.SetButtonToPreMade(buttonType.Value);
+        button.Text = buttonText;
+    }
+    // Input
 
     /////////////////////////////////////////////////////
 
