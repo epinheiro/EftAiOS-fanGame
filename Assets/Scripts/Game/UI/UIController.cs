@@ -3,7 +3,7 @@ using System;
 
 public class UIController : MonoBehaviour
 {
-    enum Layout {TwoButtons, InsertText, OnlyText, ConditionalButton, AllActive, AllInactive, BoardDefault, ClientDefault}
+    public enum Layout {TwoButtons, InsertText, OnlyText, ConditionalButton, AllActive, AllInactive, BoardDefault, ClientDefault}
 
     ///// Header /////
     Transform headerGroup;
@@ -26,7 +26,7 @@ public class UIController : MonoBehaviour
     void Setup(){
         HeaderSetup();
         FooterSetup();
-        SetGenericLayout(Layout.AllInactive);
+        SetPresetLayout(Layout.AllInactive);
     }
 
     void HeaderSetup(){
@@ -63,7 +63,7 @@ public class UIController : MonoBehaviour
         Setup();
     }
 
-    void SetGenericLayout(Layout layout){
+    public void SetPresetLayout(Layout layout){
         switch(layout){
             case Layout.BoardDefault:
                 SetHeaderUIElements(true, null, false, null, null);
@@ -104,7 +104,7 @@ public class UIController : MonoBehaviour
 
     // TwoButtons /////////////////////////
     public void SetTwoButtonsLayout(string leftButtonText, UIHelper.BaseAction leftButtonCallback, string rightButtonText, UIHelper.BaseAction rightButtonCallback){
-        SetGenericLayout(Layout.TwoButtons);
+        SetPresetLayout(Layout.TwoButtons);
         button1.Text = leftButtonText;
         button1.InsertCallback(leftButtonCallback);
         button2.Text = rightButtonText;
@@ -118,7 +118,7 @@ public class UIController : MonoBehaviour
 
     // InsertText /////////////////////////
     public void SetInsertTextLayout(string placeholderText, string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
-        SetGenericLayout(Layout.InsertText);
+        SetPresetLayout(Layout.InsertText);
         this.infoText.Text = infoText;
         textInput.PlaceholderText = placeholderText;
         button2.Text = buttonText;
@@ -140,7 +140,7 @@ public class UIController : MonoBehaviour
 
     // OnlyText /////////////////////////
     public void SetOnlyTextLayout(string text, Nullable<Color> color = null){
-        SetGenericLayout(Layout.OnlyText);
+        SetPresetLayout(Layout.OnlyText);
         infoText.Text = text;
         if(color.HasValue) infoText.ChangeTextColor(color.Value);
     }
@@ -151,7 +151,7 @@ public class UIController : MonoBehaviour
 
     // ConditionalButton /////////////////////////
     public void SetConditionalButtonLayout(string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
-        SetGenericLayout(Layout.ConditionalButton);
+        SetPresetLayout(Layout.ConditionalButton);
         this.infoText.Text = infoText;
         button2.Text = buttonText;
         button2.InsertCallback(buttonCallback);
@@ -165,7 +165,7 @@ public class UIController : MonoBehaviour
 
     // AllInactive /////////////////////////
     public void SetAllInactiveLayout(){
-        SetGenericLayout(Layout.AllInactive);
+        SetPresetLayout(Layout.AllInactive);
     }
 
     /////////////////////////////////////////////////////
