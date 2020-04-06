@@ -15,4 +15,8 @@ public class SpriteArrayHelper : UIHelper
         IsActive = true;
         IsVisible = true;
     }
+
+    public void SetUIComponent(Sprites[] array){
+        // TODO - Not yet implemented
+    }
 }

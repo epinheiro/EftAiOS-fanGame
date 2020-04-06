@@ -178,7 +178,7 @@ public class UIController : MonoBehaviour
 
     void InfoGroupSetArray(SpriteArrayHelper.Sprites[] array){
         if(array!=null){
-            infoGroup.ResetUIComponent();
+            infoGroup.SetUIComponent(array);
         }else{
             infoGroup.IsActive = false;
         }
