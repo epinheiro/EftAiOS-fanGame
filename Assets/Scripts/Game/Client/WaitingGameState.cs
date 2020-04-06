@@ -13,6 +13,7 @@
         clientController.ChangeClientStateBaseOnServer(ServerController.ServerState.WaitingPlayers, ClientController.ClientState.Updating, delegate(){ StateEnd(); });
     }
     protected override void GUISetter(){
+        this.uiController.SetPresetLayout(UIController.Layout.ClientDefault);
         this.uiController.SetInfoText("Waiting players to enter");
     }
 
