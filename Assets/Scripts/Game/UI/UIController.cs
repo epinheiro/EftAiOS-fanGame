@@ -194,7 +194,7 @@ public class UIController : MonoBehaviour
     void Button1SetButton(Nullable<ButtonHelper.ButtonType> newButton = null){
         if(newButton.HasValue) {
             line2Group.gameObject.SetActive(true);
-            button1.ResetUIComponent(newButton.Value);
+            button1.SetUIComponent(newButton.Value);
         }else{
             button1.IsActive = false;
         }
@@ -211,7 +211,7 @@ public class UIController : MonoBehaviour
     void Button2SetButton(Nullable<ButtonHelper.ButtonType> newButton = null){
         if(newButton.HasValue) {
             line2Group.gameObject.SetActive(true);
-            button2.ResetUIComponent(newButton.Value);
+            button2.SetUIComponent(newButton.Value);
         }else{
             button2.IsActive = false;
         }

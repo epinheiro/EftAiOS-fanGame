@@ -30,9 +30,9 @@ public class ButtonHelper : UIHelper
     //////////////////////////////////////////////////
     //// Generic setups
     public override void ResetUIComponent(){
-        ResetUIComponent(ButtonType.Default);
+        SetUIComponent(ButtonType.Default);
     }
-    public void ResetUIComponent(ButtonType type){
+    public void SetUIComponent(ButtonType type){
         IsActive = true;
         IsVisible = true;
         CleanCallbacks();
