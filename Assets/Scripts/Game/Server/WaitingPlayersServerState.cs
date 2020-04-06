@@ -17,10 +17,10 @@ public class WaitingPlayersServerState : IStateController
         if(serverController.IsPossibleToProceedGame()){
             if (AllPlayersPlayed()){
                 TimeLogger.Log("SERVER - all players played");
-                this.uiController.SetOnlyTextInfoText("All players played");
+                this.uiController.SetInfoText("All players played");
                 StateEnd();
             }else{
-                this.uiController.SetOnlyTextInfoText(string.Format("{0} of {1} players waiting", WaitingPlayersNumber(), PlayingPlayersNumber()));
+                this.uiController.SetInfoText(string.Format("{0} of {1} players waiting", WaitingPlayersNumber(), PlayingPlayersNumber()));
             }
         }else{
             serverController.NextState = ServerController.ServerState.EndGame;
@@ -28,7 +28,7 @@ public class WaitingPlayersServerState : IStateController
     }
 
     protected override void GUISetter(){
-        this.uiController.SetOnlyTextLayout("Waiting player to make their move");
+        this.uiController.SetPresetLayout(UIController.Layout.BoardDefault);
     }
 
     protected override void StateEnd(){

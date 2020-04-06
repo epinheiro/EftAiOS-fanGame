@@ -145,10 +145,6 @@ public class UIController : MonoBehaviour
         if(color.HasValue) infoText.ChangeTextColor(color.Value);
     }
 
-    public void SetOnlyTextInfoText(string newString = ""){
-        infoText.Text = newString;
-    }
-
     // ConditionalButton /////////////////////////
     public void SetConditionalButtonLayout(string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
         SetPresetLayout(Layout.ConditionalButton);
@@ -167,6 +163,25 @@ public class UIController : MonoBehaviour
     public void SetAllInactiveLayout(){
         SetPresetLayout(Layout.AllInactive);
     }
+
+    /////////////////////////////////////////////////////
+
+    // Line 1 //
+    // InfoText
+    public void SetInfoText(string newString = null){
+        if(string.IsNullOrEmpty(newString)){
+            InfoTextSetActive(false);
+        }else{
+            InfoTextSetActive(true);
+            infoText.Text = newString;
+        }
+    }
+    // InfoGroup
+
+    // Line 2 //
+    // Button1
+    // Input
+    // Button2
 
     /////////////////////////////////////////////////////
 
