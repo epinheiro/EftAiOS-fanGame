@@ -13,7 +13,11 @@ public class UIHelper
     List<Component> objectComponents;
     public bool IsActive{
         get { return uiObject.activeSelf; }
-        set { uiObject.SetActive(value); }
+        set {
+            if( uiObject.activeSelf != value){
+                uiObject.SetActive(value); 
+            }
+        }
     }
 
     public bool IsVisible{
