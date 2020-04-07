@@ -21,5 +21,6 @@
     }
 
     protected override void GUISetter(){
+        this.serverController.UIController.SetInfoText("Shutting down ship AI");
     }
 }

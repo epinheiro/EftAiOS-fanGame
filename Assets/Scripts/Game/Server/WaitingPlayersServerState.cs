@@ -17,11 +17,11 @@ public class WaitingPlayersServerState : IStateController
         if(serverController.IsPossibleToProceedGame()){
             if (AllPlayersPlayed()){
                 TimeLogger.Log("SERVER - all players played");
-                this.uiController.SetInfoText("All players played");
+                this.uiController.SetInfoText("All passagers moved");
                 this.uiController.SetPlayersStatus(0, serverController.PlayersPlaying, serverController.PlayersDead, serverController.PlayersEscaped);
                 StateEnd();
             }else{
-                this.uiController.SetInfoText(string.Format("{0} of {1} players waiting", WaitingPlayersNumber(), PlayingPlayersNumber()));
+                this.uiController.SetInfoText("Passengers moving");
                 this.uiController.SetPlayersStatus(PlayingPlayersNumber()-WaitingPlayersNumber(), WaitingPlayersNumber(), serverController.PlayersDead, serverController.PlayersEscaped);
             }
         }else{

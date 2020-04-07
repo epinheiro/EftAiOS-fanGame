@@ -14,7 +14,7 @@
     }
     protected override void GUISetter(){
         this.uiController.SetPresetLayout(UIController.Layout.ClientDefault);
-        this.uiController.SetInfoText("Waiting players to enter");
+        this.uiController.SetInfoText("Waiting passengers to awake");
     }
 
     protected override void StateEnd(){

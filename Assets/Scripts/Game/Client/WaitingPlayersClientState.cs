@@ -16,7 +16,7 @@
         );
     }
     protected override void GUISetter(){
-        this.uiController.SetInfoText("Waiting players turn");
+        this.uiController.SetInfoText("Waiting other passengers");
     }
 
     protected override void StateEnd(){

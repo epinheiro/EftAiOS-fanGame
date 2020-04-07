@@ -17,7 +17,7 @@
     }
     
     protected override void GUISetter(){
-        this.uiController.SetInfoText("What happened:");
+        this.uiController.SetInfoText("Check AI system screen");
     }
 
     protected override void StateEnd(){

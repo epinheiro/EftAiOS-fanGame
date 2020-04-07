@@ -71,6 +71,7 @@ public class PlayingClientState : IStateController
                     switch(cardType){
                         case EventDeck.CardTypes.AnySectorSound:
                             TimeLogger.Log("CLIENT {0} can choose a sector to make a noise", clientController.ClientId);
+                            uiController.SetInfoText("Choose an alarm sector");
                             ActivateEffectFeedback(EffectFeedback.ChooseSector);
                             clientController.BoardManagerRef.GlowPossibleNoises();
                             currentTurnStep = TurnSteps.Noise;
@@ -104,6 +105,7 @@ public class PlayingClientState : IStateController
                 break;
 
             case TurnSteps.SendData:
+                uiController.SetInfoText();
                 clientController.ClientCommunication.SchedulePutPlayRequest(
                     (Vector2Int) clientController.PlayerNullableNextPosition,
                     clientController.PlayerNullableNexSound.HasValue ? (Vector2Int) clientController.PlayerNullableNexSound : new Vector2Int(-1,-1), // TODO - check if is there better solutions than V(-1,-1)

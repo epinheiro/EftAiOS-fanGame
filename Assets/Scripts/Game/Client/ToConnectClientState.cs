@@ -28,11 +28,11 @@ public class ToConnectClientState : IStateController
          if(state == Connection.Disconnected){
             if(string.IsNullOrEmpty(_insertedString)){
                 uiController.SetInsertTextButtonVisibility(true);
-                uiController.SetInsertTextButtonAttributes("JOIN GAME (std IP)");
+                uiController.SetInsertTextButtonAttributes("ENTER SHIP (std IP)");
             }else{
                 if(NodeCommunication.IsIPValid(_insertedString)){
                     uiController.SetInsertTextButtonVisibility(true);
-                    uiController.SetInsertTextButtonAttributes("JOIN GAME");
+                    uiController.SetInsertTextButtonAttributes("ENTER SHIP");
                 }else{
                     uiController.SetInsertTextButtonVisibility(false);
                 }

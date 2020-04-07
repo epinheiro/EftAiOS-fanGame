@@ -6,7 +6,7 @@ public class SetUpServerState : IStateController
     ServerCommunication serverCommunication;
     UIController uiController;
 
-    readonly string buttonText = "Begin match with {0} players";
+    readonly string buttonText = "Begin with {0} passengers";
 
     public SetUpServerState(ServerController serverController, ServerCommunication serverCommunication){
         this.serverController = serverController;

@@ -23,7 +23,7 @@ public class UpdatingServerState : IStateController
     }
 
     protected override void GUISetter(){
-        this.uiController.SetInfoText("Board Updating");
+        this.uiController.SetInfoText("Checking alive passengers");
     }
 
     void UpdatingStateLogic(){
