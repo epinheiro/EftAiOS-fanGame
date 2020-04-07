@@ -21,8 +21,6 @@ public class UIController : MonoBehaviour
         ClientDefault,
 
         /////// Currently unused
-        OnlyText,
-        AllActive
     }
 
     ///// Header /////
@@ -103,16 +101,8 @@ public class UIController : MonoBehaviour
                 SetHeaderUIElements(false, null, true, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
                 SetFooterUIElements(false);
                 break;
-            case Layout.OnlyText:
-                SetHeaderUIElements(true, null, false, null, null);
-                SetFooterUIElements(false);
-                break;
             case Layout.ConditionalButton:
                 SetHeaderUIElements(true, null, false, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack);
-                SetFooterUIElements(false);
-                break;
-            case Layout.AllActive:
-                SetHeaderUIElements(true, null, true, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Default, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Default);
                 SetFooterUIElements(false);
                 break;
             case Layout.AllInactive:
