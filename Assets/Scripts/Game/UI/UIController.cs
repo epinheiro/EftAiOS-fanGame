@@ -170,6 +170,7 @@ public class UIController : MonoBehaviour
     /////////////////////////////////////////////////////
     // Generic methods //////////////////////////////////
 
+    //////// HEADER
     // Line 1 //
     // InfoText
     public void SetInfoText(string newString = null){
@@ -201,6 +202,16 @@ public class UIController : MonoBehaviour
         if(buttonType.HasValue) button.SetButtonToPreMade(buttonType.Value);
     }
     // Input
+
+    //////// FOOTER
+    public void SetProgressBarValues(int currentValue, int? maxValue = null){
+        footerGroup.gameObject.SetActive(true);
+
+        progressBar.SetValues(currentValue, maxValue);
+
+        progressText.Text = currentValue.ToString();
+        if(maxValue.HasValue) totalText.Text = maxValue.Value.ToString();
+    }
 
     /////////////////////////////////////////////////////
 
@@ -280,11 +291,6 @@ public class UIController : MonoBehaviour
             InputFieldSetActive(inputField);
             Button2SetButton(newButton2);
         }
-    }
-
-    void SetFooterUIElements(int currentValue){
-        footerGroup.gameObject.SetActive(true);
-        progressBar.SetValues(currentValue);
     }
 
     void SetFooterUIElements(bool slider){ // TODO - change

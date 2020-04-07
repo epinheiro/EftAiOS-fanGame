@@ -49,6 +49,9 @@ public class SetUpState : IStateController
         serverController.CreateBoardManager();
         ResetStateController();
         serverController.NextState = ServerController.ServerState.WaitingPlayers;
+
+        this.uiController.SetPresetLayout(UIController.Layout.BoardDefault);
+        this.uiController.SetProgressBarValues(serverController.TurnLimit-serverController.TurnsLeft, serverController.TurnLimit);
     }
 
     void PreparePossibleRoles(){

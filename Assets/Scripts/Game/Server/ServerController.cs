@@ -18,12 +18,17 @@ public class ServerController : BaseController
     Dictionary<ServerState, IStateController> states;
 
     int _turnLimit = 39;
+    public int TurnLimit{
+        get { return _turnLimit; }
+    }
     int _turnCountdown;
     public int TurnsLeft{
         get { return _turnCountdown; }
     }
     public int DecreaseTurnNumber(){
-        return --_turnCountdown;
+        int nextTurn = (_turnLimit) - (--_turnCountdown);
+        UIController.SetProgressBarValues(nextTurn, _turnLimit);
+        return nextTurn;
     }
 
 
