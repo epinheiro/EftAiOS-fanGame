@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class UpdatingServerState : IStateController
@@ -58,7 +58,8 @@ public class UpdatingServerState : IStateController
     }
 
     public void ResetTurnControlVariables(){
-        int playersPlaying = serverController.playersPlaying + serverController.playersEscaped + serverController.playersDied;
+        int total = serverController.PlayersPlaying + serverController.PlayersEscaped + serverController.PlayersDead;
+        int playersPlaying = total;
         int playersEscaped = 0;
         int playersDied = 0;
 
@@ -87,8 +88,8 @@ public class UpdatingServerState : IStateController
             }
         }
 
-        serverController.playersPlaying = playersPlaying;
-        serverController.playersEscaped = playersEscaped;
-        serverController.playersDied = playersDied;
+        serverController.PlayersPlaying = serverController.PlayersPlaying - (playersEscaped + playersDied);
+        serverController.PlayersEscaped = serverController.PlayersEscaped + playersEscaped;
+        serverController.PlayersDead = serverController.PlayersDead + playersDied;
     }
 }

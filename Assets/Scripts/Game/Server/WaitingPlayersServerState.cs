@@ -18,9 +18,11 @@ public class WaitingPlayersServerState : IStateController
             if (AllPlayersPlayed()){
                 TimeLogger.Log("SERVER - all players played");
                 this.uiController.SetInfoText("All players played");
+                this.uiController.SetPlayersStatus(0, serverController.PlayersPlaying, serverController.PlayersDead, serverController.PlayersEscaped);
                 StateEnd();
             }else{
                 this.uiController.SetInfoText(string.Format("{0} of {1} players waiting", WaitingPlayersNumber(), PlayingPlayersNumber()));
+                this.uiController.SetPlayersStatus(PlayingPlayersNumber()-WaitingPlayersNumber(), WaitingPlayersNumber(), serverController.PlayersDead, serverController.PlayersEscaped);
             }
         }else{
             serverController.NextState = ServerController.ServerState.EndGame;
@@ -29,6 +31,7 @@ public class WaitingPlayersServerState : IStateController
 
     protected override void GUISetter(){
         this.uiController.SetPresetLayout(UIController.Layout.BoardDefault);
+        this.uiController.SetPlayersStatus(serverController.PlayersPlaying, 0, serverController.PlayersDead, serverController.PlayersEscaped);
     }
 
     protected override void StateEnd(){
@@ -38,7 +41,7 @@ public class WaitingPlayersServerState : IStateController
     }
 
     int PlayingPlayersNumber(){
-        return serverCommunication.ConnectionQuantity;
+        return serverController.PlayerTurnDict.Count;
     }
 
     int WaitingPlayersNumber(){

@@ -45,17 +45,35 @@ public class ServerController : BaseController
 
     ServerCommunication serverCommunication;
 
-    public int playersPlaying;
-    public int playersEscaped;
-    public int playersDied;
+    public int _playersPlaying;
+    public int PlayersPlaying{
+        set{
+            _playersPlaying = value;
+        }
+        get{ return _playersPlaying; }
+    }
+    public int _playersEscaped;
+    public int PlayersEscaped{
+        set{
+            _playersEscaped = value;
+        }
+        get{ return _playersEscaped; }
+    }
+    public int _playersDead;
+    public int PlayersDead{
+        set{
+            _playersDead = value;
+        }
+        get{ return _playersDead; }
+    }
 
     Dictionary<int, PlayerTurnData> playerTurnDict;
     public Dictionary<int, PlayerTurnData> PlayerTurnDict{
         get{ return playerTurnDict; }
     }
     public void PlayerDisconnection(int playerId){
-        --playersPlaying;
-        ++playersDied;
+        --PlayersPlaying;
+        ++PlayersDead;
         playerTurnDict.Remove(playerId);
     }
 
@@ -87,9 +105,9 @@ public class ServerController : BaseController
 
         _turnCountdown = _turnLimit;
 
-        playersPlaying = 0;
-        playersEscaped = 0;
-        playersDied = 0;
+        PlayersPlaying = 0;
+        PlayersEscaped = 0;
+        PlayersDead = 0;
     }
 
     public void Reset(){
@@ -148,14 +166,14 @@ public class ServerController : BaseController
 
             switch(finalState){
                 case ClientController.PlayerState.Died:
-                    --playersPlaying;
-                    ++playersDied;
+                    --PlayersPlaying;
+                    ++PlayersDead;
                     playerTurnDict.Remove(playerId);
                     break;
 
                 case ClientController.PlayerState.Escaped:
-                    --playersPlaying;
-                    ++playersEscaped;
+                    --PlayersPlaying;
+                    ++PlayersEscaped;
                     playerTurnDict.Remove(playerId);
                     break;
 
