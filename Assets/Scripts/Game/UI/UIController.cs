@@ -84,29 +84,29 @@ public class UIController : MonoBehaviour
     public void SetPresetLayout(Layout layout){
         switch(layout){
             case Layout.BoardDefault:
-                SetHeaderUIElements(true, null, false, null, null);
+                SetHeaderUIElements(true, false, null, null);
                 SetFooterUIElements(true);
                 break;
             case Layout.ClientDefault:
-                SetHeaderUIElements(true, null, false, null, null);
+                SetHeaderUIElements(true, false, null, null);
                 SetFooterUIElements(false);
                 break;
 
             /////////////////////////////
             case Layout.TwoButtons:
-                SetHeaderUIElements(false, null, false, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
+                SetHeaderUIElements(false, false, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
                 SetFooterUIElements(false);
                 break;
             case Layout.InsertText:
-                SetHeaderUIElements(false, null, true, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
+                SetHeaderUIElements(false, true, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
                 SetFooterUIElements(false);
                 break;
             case Layout.ConditionalButton:
-                SetHeaderUIElements(true, null, false, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack);
+                SetHeaderUIElements(true, false, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack);
                 SetFooterUIElements(false);
                 break;
             case Layout.AllInactive:
-                SetHeaderUIElements(false, null, false, null, null);
+                SetHeaderUIElements(false, false, null, null);
                 SetFooterUIElements(false);
                 break;
         }
@@ -185,6 +185,9 @@ public class UIController : MonoBehaviour
         infoText.ChangeTextColor(newColor);
     }
     // InfoGroup
+    public void SetPlayersStatus(int playersToPlay = 0, int playersPlayed = 0, int playersDied = 0, int playersEscaped = 0){
+        SetInfoGroup(playersToPlay, playersPlayed, playersDied, playersEscaped);
+    }
 
     // Line 2 //
     // Button1
@@ -231,11 +234,12 @@ public class UIController : MonoBehaviour
         }
     }
 
-    void InfoGroupSetArray(SpriteArrayHelper.Sprites[] array){
-        if(array!=null){
-            infoGroup.SetUIComponent(array);
-        }else{
+    void SetInfoGroup(int playersToPlay = 0, int playersPlayed = 0, int playersDied = 0, int playersEscaped = 0){
+        if(playersToPlay == 0  && playersPlayed == 0  && playersDied == 0  && playersEscaped == 0){
             infoGroup.IsActive = false;
+        }else{
+            infoGroup.IsActive = true;
+            infoGroup.SetUIComponent(playersToPlay, playersPlayed, playersDied, playersEscaped);
         }
     }
 
@@ -272,14 +276,14 @@ public class UIController : MonoBehaviour
         }
     }
 
-    void SetHeaderUIElements(bool infoText, SpriteArrayHelper.Sprites[] infoGroup, bool inputField, ButtonHelper.ButtonType? newButton1 = null, ButtonHelper.ButtonType? newButton2 = null){
+    void SetHeaderUIElements(bool infoText, bool inputField, ButtonHelper.ButtonType? newButton1 = null, ButtonHelper.ButtonType? newButton2 = null){
         // Line 1
         if(!infoText && infoGroup==null) {
             Line1SetActive(false);
         }else{
             Line1SetActive(true);
             InfoTextSetActive(infoText);
-            InfoGroupSetArray(infoGroup);
+            SetInfoGroup();
         }
 
         // Line 2
