@@ -3,7 +3,27 @@ using System;
 
 public class UIController : MonoBehaviour
 {
-    public enum Layout {TwoButtons, InsertText, OnlyText, ConditionalButton, AllActive, AllInactive, BoardDefault, ClientDefault}
+    public enum Layout {
+        /////// Client
+        // ToConnect
+        InsertText,
+        // BeginTurnState
+        AllInactive,
+        // Playing state
+        TwoButtons,
+
+        /////// Server
+        // SetUp
+        ConditionalButton,
+
+        /////// Generic layout
+        BoardDefault,
+        ClientDefault,
+
+        /////// Currently unused
+        OnlyText,
+        AllActive
+    }
 
     ///// Header /////
     Transform headerGroup;
@@ -102,21 +122,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    // TwoButtons /////////////////////////
-    public void SetTwoButtonsLayout(string leftButtonText, UIHelper.BaseAction leftButtonCallback, string rightButtonText, UIHelper.BaseAction rightButtonCallback){
-        SetPresetLayout(Layout.TwoButtons);
-        button1.Text = leftButtonText;
-        button1.InsertCallback(leftButtonCallback);
-        button2.Text = rightButtonText;
-        button2.InsertCallback(rightButtonCallback);
-    }
-
-    public void SetTwoButtonsVisibility(bool isVisible){
-        button1.IsVisible = isVisible;
-        button2.IsVisible = isVisible;
-    }
-
-    // InsertText /////////////////////////
+    // CLIENT - ToConnect state /////////////////////////
     public void SetInsertTextLayout(string placeholderText, string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
         SetPresetLayout(Layout.InsertText);
         this.infoText.Text = infoText;
@@ -138,7 +144,26 @@ public class UIController : MonoBehaviour
         return textInput.Text;
     }
 
-    // ConditionalButton /////////////////////////
+    // CLIENT - BeginTurnState /////////////////////////
+    public void SetAllInactiveLayout(){
+        SetPresetLayout(Layout.AllInactive);
+    }
+
+    // CLIENT - Playing state /////////////////////////
+    public void SetTwoButtonsLayout(string leftButtonText, UIHelper.BaseAction leftButtonCallback, string rightButtonText, UIHelper.BaseAction rightButtonCallback){
+        SetPresetLayout(Layout.TwoButtons);
+        button1.Text = leftButtonText;
+        button1.InsertCallback(leftButtonCallback);
+        button2.Text = rightButtonText;
+        button2.InsertCallback(rightButtonCallback);
+    }
+
+    public void SetTwoButtonsVisibility(bool isVisible){
+        button1.IsVisible = isVisible;
+        button2.IsVisible = isVisible;
+    }
+
+    // SERVER - SetUp state /////////////////////////
     public void SetConditionalButtonLayout(string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
         SetPresetLayout(Layout.ConditionalButton);
         this.infoText.Text = infoText;
@@ -152,12 +177,8 @@ public class UIController : MonoBehaviour
         button2.IsVisible = isHiding;
     }
 
-    // AllInactive /////////////////////////
-    public void SetAllInactiveLayout(){
-        SetPresetLayout(Layout.AllInactive);
-    }
-
     /////////////////////////////////////////////////////
+    // Generic methods //////////////////////////////////
 
     // Line 1 //
     // InfoText
