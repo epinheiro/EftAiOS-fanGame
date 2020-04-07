@@ -31,7 +31,7 @@ struct DriverUpdateJob : IJob{
                 NetworkConnection con = driver.Accept();
                 // "Nothing more to accept" is signaled by returning an invalid connection from accept
                 if (con.IsCreated){
-                    TimeLogger.Log("SERVER - new connection - [{0}]", con.InternalId);
+                    // TimeLogger.Log("SERVER - new connection - [{0}]", con.InternalId);
                     connections.Add(con);
                 }else{
                     break;
