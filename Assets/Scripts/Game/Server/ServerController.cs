@@ -97,11 +97,11 @@ public class ServerController : BaseController
         playerTurnDict = new Dictionary<int, PlayerTurnData>();
 
         states = new Dictionary<ServerState, IStateController>();
-        states.Add(ServerState.SetUp, new SetUpState(this, serverCommunication));
+        states.Add(ServerState.SetUp, new SetUpServerState(this, serverCommunication));
         states.Add(ServerState.WaitingPlayers, new WaitingPlayersServerState(this, serverCommunication));
-        states.Add(ServerState.Processing, new ProcessingState(this, serverCommunication));
+        states.Add(ServerState.Processing, new ProcessingServerState(this, serverCommunication));
         states.Add(ServerState.Updating, new UpdatingServerState(this, serverCommunication));
-        states.Add(ServerState.EndGame, new EndGameState(this));
+        states.Add(ServerState.EndGame, new EndGameServerState(this));
 
         _turnCountdown = _turnLimit;
 

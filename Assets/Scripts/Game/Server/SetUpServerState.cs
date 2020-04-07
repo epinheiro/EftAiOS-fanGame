@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class SetUpState : IStateController
+public class SetUpServerState : IStateController
 {
     ServerController serverController;
     ServerCommunication serverCommunication;
@@ -8,7 +8,7 @@ public class SetUpState : IStateController
 
     readonly string buttonText = "Begin match with {0} players";
 
-    public SetUpState(ServerController serverController, ServerCommunication serverCommunication){
+    public SetUpServerState(ServerController serverController, ServerCommunication serverCommunication){
         this.serverController = serverController;
         this.serverCommunication = serverCommunication;
         this.uiController = serverController.UIController;

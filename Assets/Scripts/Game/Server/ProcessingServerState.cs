@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class ProcessingState : IStateController
+public class ProcessingServerState : IStateController
 {
     ServerController serverController;
     ServerCommunication serverCommunication;
@@ -9,7 +9,7 @@ public class ProcessingState : IStateController
 
     bool isProcessing;
 
-    public ProcessingState(ServerController serverController, ServerCommunication serverCommunication){
+    public ProcessingServerState(ServerController serverController, ServerCommunication serverCommunication){
         this.serverController = serverController;
         this.serverCommunication = serverCommunication;
         this.uiController = serverController.UIController;

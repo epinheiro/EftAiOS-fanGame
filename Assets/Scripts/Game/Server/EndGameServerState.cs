@@ -1,9 +1,9 @@
-﻿public class EndGameState : IStateController
+﻿public class EndGameServerState : IStateController
 {
     bool isExecuting = false;
     ServerController serverController;
 
-    public EndGameState(ServerController serverController){
+    public EndGameServerState(ServerController serverController){
         this.serverController = serverController;
     }
 
