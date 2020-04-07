@@ -51,10 +51,37 @@ public class UpdatingServerState : IStateController
     }
 
     public void ResetTurnControlVariables(){
+        int playersPlaying = serverController.playersPlaying + serverController.playersEscaped + serverController.playersDied;
+        int playersEscaped = 0;
+        int playersDied = 0;
+
         foreach(int key in serverController.PlayerTurnDict.Keys){
             PlayerTurnData data;
             serverController.PlayerTurnDict.TryGetValue(key, out data);
             data.playedThisTurn = false;
+
+            switch(data.role){
+                case ClientController.PlayerState.Died:
+                    --playersPlaying;
+                    ++playersDied;
+                    break;
+
+                case ClientController.PlayerState.Escaped:
+                    --playersPlaying;
+                    ++playersEscaped;
+                    break;
+
+                // case ClientController.PlayerState.Alien:
+                // case ClientController.PlayerState.Human:
+                // case ClientController.PlayerState.AlienOverrun:
+
+                case ClientController.PlayerState.Unassigned:
+                    throw new System.Exception("In this step was not suppose to be Unassigned player roles");
+            }
         }
+
+        serverController.playersPlaying = playersPlaying;
+        serverController.playersEscaped = playersEscaped;
+        serverController.playersDied = playersDied;
     }
 }

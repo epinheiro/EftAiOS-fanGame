@@ -45,11 +45,17 @@ public class ServerController : BaseController
 
     ServerCommunication serverCommunication;
 
+    public int playersPlaying;
+    public int playersEscaped;
+    public int playersDied;
+
     Dictionary<int, PlayerTurnData> playerTurnDict;
     public Dictionary<int, PlayerTurnData> PlayerTurnDict{
         get{ return playerTurnDict; }
     }
     public void PlayerDisconnection(int playerId){
+        --playersPlaying;
+        ++playersDied;
         playerTurnDict.Remove(playerId);
     }
 
@@ -80,6 +86,10 @@ public class ServerController : BaseController
         states.Add(ServerState.EndGame, new EndGameState(this));
 
         _turnCountdown = _turnLimit;
+
+        playersPlaying = 0;
+        playersEscaped = 0;
+        playersDied = 0;
     }
 
     public void Reset(){
@@ -127,7 +137,7 @@ public class ServerController : BaseController
                 new PlayerTurnData(
                     new PutPlayRequest(playerId, finalPosition.x, finalPosition.y, finalPosition.x, finalPosition.y, false),
                     finalState
-                )                
+                )
             );
         }else{
             PlayerTurnData data;
@@ -138,7 +148,17 @@ public class ServerController : BaseController
 
             switch(finalState){
                 case ClientController.PlayerState.Died:
+                    --playersPlaying;
+                    ++playersDied;
+                    playerTurnDict.Remove(playerId);
+                    break;
+
                 case ClientController.PlayerState.Escaped:
+                    --playersPlaying;
+                    ++playersEscaped;
+                    playerTurnDict.Remove(playerId);
+                    break;
+
                 case ClientController.PlayerState.AlienOverrun:
                     playerTurnDict.Remove(playerId);
                     break;

@@ -45,6 +45,8 @@ public class SetUpState : IStateController
     }
 
     protected override void StateEnd(){
+        serverController.playersPlaying = serverCommunication.ConnectionQuantity;
+
         PreparePossibleRoles();
         serverController.CreateBoardManager();
         ResetStateController();
