@@ -45,7 +45,7 @@ public class SpriteArrayHelper : UIHelper
         int total = playersToPlay + playersPlayed + playersDied + playersEscaped;
         if( this.playersToPlay != playersToPlay || this.playersPlayed != playersPlayed || this.playersDied != playersDied || this.playersEscaped != playersEscaped ){
 
-            Debug.Log(string.Format("DEBUG - [Total {0}](ToPlay {2} e Played {3}) (Dead {4} - Escaped {5}) [childs {1}]", total,verticalGroup.transform.childCount,playersToPlay,playersPlayed,playersDied,playersEscaped));
+            // Debug.Log(string.Format("DEBUG - [Total {0}](ToPlay {2} e Played {3}) (Dead {4} - Escaped {5}) [childs {1}]", total,verticalGroup.transform.childCount,playersToPlay,playersPlayed,playersDied,playersEscaped));
 
             if(verticalGroup.transform.childCount < total){
                 InstantiateSprites(total - verticalGroup.transform.childCount);
