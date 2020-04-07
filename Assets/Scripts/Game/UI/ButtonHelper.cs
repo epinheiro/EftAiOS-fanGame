@@ -19,10 +19,10 @@ public class ButtonHelper : UIHelper
         this.textComponent = base.uiObject.transform.Find("Text").GetComponent<Text>();
 
         preMadeButtons = new Dictionary<ButtonType, PreMadeButton>();
-        preMadeButtons.Add(ButtonType.Default, new PreMadeButton(Color.white, Color.black, "Button"));
-        preMadeButtons.Add(ButtonType.Attack, new PreMadeButton(Color.red, Color.white, "Button"));
-        preMadeButtons.Add(ButtonType.DontAttack, new PreMadeButton(Color.blue, Color.white, "Button"));
-        preMadeButtons.Add(ButtonType.Connect, new PreMadeButton(Color.white, Color.black, "Button"));
+        preMadeButtons.Add(ButtonType.Default, new PreMadeButton(Color.white, Color.black));
+        preMadeButtons.Add(ButtonType.Attack, new PreMadeButton(Color.red, Color.white));
+        preMadeButtons.Add(ButtonType.DontAttack, new PreMadeButton(Color.blue, Color.white));
+        preMadeButtons.Add(ButtonType.Connect, new PreMadeButton(Color.white, Color.black));
 
         SetButtonToPreMade(ButtonType.Default);
     }
@@ -57,22 +57,29 @@ public class ButtonHelper : UIHelper
     struct PreMadeButton{
         public Color buttonColor;
         public Color textColor;
-        public string text;
 
-        public PreMadeButton(Color buttonColor, Color textColor, string text){
+        public PreMadeButton(Color buttonColor, Color textColor){
             this.buttonColor = buttonColor;
             this.textColor = textColor;
-            this.text = text;
         }
     }
 
-    public void SetButtonToPreMade(ButtonType type){
+    public void SetButtonToPreMade(ButtonType type, string buttonText = null){
         PreMadeButton buttonConfig;
         preMadeButtons.TryGetValue(type, out buttonConfig);
 
         this.ChangeButtonColor(buttonConfig.buttonColor);
         this.ChangeTextColor(buttonConfig.textColor);
-        this.Text = buttonConfig.text;
+
+        if(buttonText != null){
+            string buttonString;
+            if(string.IsNullOrEmpty(buttonText)){
+                buttonString = "";
+            }else{
+                buttonString = buttonText;
+            }
+            this.Text = buttonString;
+        }
     }
 
 

@@ -186,8 +186,8 @@ public class UIController : MonoBehaviour
     // Generic button
     void SetButton(ButtonHelper button, UIHelper.BaseAction callback, string buttonText = "",  Nullable<ButtonHelper.ButtonType> buttonType = null){
         button.InsertCallback(callback);
-        if(buttonType.HasValue) button.SetButtonToPreMade(buttonType.Value);
         button.Text = buttonText;
+        if(buttonType.HasValue) button.SetButtonToPreMade(buttonType.Value);
     }
     // Input
 
