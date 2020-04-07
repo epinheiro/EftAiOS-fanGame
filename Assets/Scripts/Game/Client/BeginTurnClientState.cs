@@ -1,9 +1,9 @@
-﻿public class BeginTurnState : IStateController
+﻿public class BeginTurnClientState : IStateController
 {
     ClientController clientController;
     UIController uiController;
 
-    public BeginTurnState(ClientController clientController){
+    public BeginTurnClientState(ClientController clientController){
         this.clientController = clientController;
         this.uiController = clientController.UIController;
     }

@@ -1,9 +1,9 @@
-﻿public class WaitingServerState : IStateController
+﻿public class WaitingServerClientState : IStateController
 {
     ClientController clientController; 
     UIController uiController;
 
-    public WaitingServerState(ClientController clientController){
+    public WaitingServerClientState(ClientController clientController){
         this.clientController = clientController;
         this.uiController = clientController.UIController;
     }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 
-public class ToConnectState : IStateController
+public class ToConnectClientState : IStateController
 {
     ClientController clientController; 
     UIController uiController;
@@ -14,7 +14,7 @@ public class ToConnectState : IStateController
     const float connTimeOut = 5f;
     Nullable<DateTime> timeoutEnd;
 
-    public ToConnectState(ClientController clientController, string customIP = ""){
+    public ToConnectClientState(ClientController clientController, string customIP = ""){
         if(!string.IsNullOrEmpty(customIP)) _insertedString = customIP;
 
         this.clientController = clientController;

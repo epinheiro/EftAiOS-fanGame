@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class PlayingState : IStateController
+public class PlayingClientState : IStateController
 {
     enum EffectFeedback {Silent, ChooseSector, SectorSound}
     Dictionary<EffectFeedback, Color> effects;
@@ -19,7 +19,7 @@ public class PlayingState : IStateController
     }
     TurnSteps currentTurnStep = TurnSteps.Movement;
 
-    public PlayingState(ClientController clientController){
+    public PlayingClientState(ClientController clientController){
         this.clientController = clientController;
         this.uiController = clientController.UIController;
 

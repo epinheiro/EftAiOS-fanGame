@@ -120,12 +120,12 @@ public class ClientController : BaseController
 
     public void SetUpClient(){
         states = new Dictionary<ClientState, IStateController>();
-        states.Add(ClientState.ToConnect, new ToConnectState(this, _lastSucessfulIP));
-        states.Add(ClientState.WaitingGame, new WaitingGameState(this));
-        states.Add(ClientState.BeginTurn, new BeginTurnState(this));
-        states.Add(ClientState.Playing, new PlayingState(this));
+        states.Add(ClientState.ToConnect, new ToConnectClientState(this, _lastSucessfulIP));
+        states.Add(ClientState.WaitingGame, new WaitingGameClientState(this));
+        states.Add(ClientState.BeginTurn, new BeginTurnClientState(this));
+        states.Add(ClientState.Playing, new PlayingClientState(this));
         states.Add(ClientState.WaitingPlayers, new WaitingPlayersClientState(this));
-        states.Add(ClientState.WaitingServer, new WaitingServerState(this));
+        states.Add(ClientState.WaitingServer, new WaitingServerClientState(this));
         states.Add(ClientState.Updating, new UpdatingClientState(this));
 
         deck = new EventDeck();

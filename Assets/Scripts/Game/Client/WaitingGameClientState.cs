@@ -1,10 +1,10 @@
-﻿public class WaitingGameState : IStateController
+﻿public class WaitingGameClientState : IStateController
 {
     ClientController clientController;
 
     UIController uiController;
 
-    public WaitingGameState(ClientController clientController){
+    public WaitingGameClientState(ClientController clientController){
         this.clientController = clientController;
         this.uiController = clientController.UIController;
     }
