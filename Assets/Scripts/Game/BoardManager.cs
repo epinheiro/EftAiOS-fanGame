@@ -135,7 +135,7 @@ public class BoardManager : MonoBehaviour
 
         GameObject go = Instantiate(glowUsed, new Vector3(0, 0, 0), Quaternion.identity);
         go.name = tileCode;
-        FitUIElementOnScreen(go);
+        FitUIElementOnServerScreen(go);
         go.transform.parent = aggregatorUsed.transform;
         go.transform.position = new Vector2(worldPosition.x, worldPosition.y);
     }
@@ -271,14 +271,21 @@ public class BoardManager : MonoBehaviour
 
             CreateTileInMap(tileId, tileType);
         }
-        FitUIElementOnScreen(this.gameObject);
+        FitUIElementOnServerScreen(this.gameObject);
     }
 
-    void FitUIElementOnScreen(GameObject go){
+    void FitUIElementOnClientScreen(GameObject go){
         // TODO - technical dept - rescalling map proportions to 16:10
         go.transform.position = new Vector3(-6, 4, 0);
         go.transform.localScale = new Vector3(.3f, .3f, 1);
     }
+
+    void FitUIElementOnServerScreen(GameObject go){
+        // TODO - technical dept - rescalling map proportions to 16:10
+        go.transform.position = new Vector3(-4.5f, 3, 0);
+        go.transform.localScale = new Vector3(.23f, .23f, 1);
+    }
+
     void CreateTileInMap(string tileId, string tileType){
         string[] result = ParseTileCode(tileId);
         string columnId = result[0];
