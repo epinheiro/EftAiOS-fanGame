@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UpdatingServerState : IStateController
@@ -7,6 +7,8 @@ public class UpdatingServerState : IStateController
     ServerCommunication serverCommunication;
     UIController uiController;
 
+    bool isUpdating;
+
     public UpdatingServerState(ServerController serverController, ServerCommunication serverCommunication){
         this.serverController = serverController;
         this.serverCommunication = serverCommunication;
@@ -14,7 +16,10 @@ public class UpdatingServerState : IStateController
     }
 
     protected override void ExecuteLogic(){
-        serverController.DelayedCall(UpdatingStateLogic, 1.2f); // DEBUG DELAY - TODO change
+        if(!isUpdating){
+            isUpdating=true;
+            serverController.DelayedCall(UpdatingStateLogic, 1.2f); // DEBUG DELAY - TODO change
+        }
     }
 
     protected override void GUISetter(){
@@ -30,6 +35,8 @@ public class UpdatingServerState : IStateController
         ResetTurnControlVariables();
         ResetStateController();
         serverController.NextState = ServerController.ServerState.WaitingPlayers;
+
+        isUpdating = false;
     }
 
     void SpawnLastNoises(){
