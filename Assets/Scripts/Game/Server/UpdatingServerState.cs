@@ -27,7 +27,7 @@ public class UpdatingServerState : IStateController
 
     protected override void StateEnd(){
         SpawnLastNoises();
-        ResetPlayerTurnControl();
+        ResetTurnControlVariables();
         ResetStateController();
         serverController.NextState = ServerController.ServerState.WaitingPlayers;
     }
@@ -50,14 +50,8 @@ public class UpdatingServerState : IStateController
         serverController.BoardManagerRef.LastSoundEffects(noises);
     }
 
-    public void ResetPlayerTurnControl(){
-        List<int> keys = new List<int>();
-
+    public void ResetTurnControlVariables(){
         foreach(int key in serverController.PlayerTurnDict.Keys){
-            keys.Add(key);
-        }
-
-        foreach(int key in keys){
             PlayerTurnData data;
             serverController.PlayerTurnDict.TryGetValue(key, out data);
             data.playedThisTurn = false;
