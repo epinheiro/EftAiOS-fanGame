@@ -21,6 +21,11 @@
 
     protected override void StateEnd(){
         ResetStateController();
-        // clientController.BoardManagerRef.CleanGlowTiles(); // INFO - To delete current position uncomment this line
+
+        // INFO - Two options of feedbacks
+        ///// Option 1 - delete all input traces
+        // clientController.BoardManagerRef.CleanGlowTiles(); 
+        ///// Option 2 - maintain current position
+        clientController.BoardManagerRef.CleanSoundGlowTiles();
     }
 }

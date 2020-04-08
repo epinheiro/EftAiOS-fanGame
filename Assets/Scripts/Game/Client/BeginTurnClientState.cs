@@ -19,6 +19,7 @@
                 movement = 1;
                 break;
         }
+        clientController.BoardManagerRef.CleanMovementTile(currentTileCode); // INFO - related to WaitingPlayersClientState Option2 feedback
         clientController.BoardManagerRef.GlowPossibleMovements(currentTileCode, movement, clientController.CurrentPlayerState);
         StateEnd();
     }
