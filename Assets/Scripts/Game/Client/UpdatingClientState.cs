@@ -23,17 +23,17 @@ public class UpdatingClientState : IStateController
 
             case ClientController.PlayerState.Died:
                 this.uiController.SetInfoText("You died!");
-                clientController.ResetClient();
+                clientController.DelayedCall(clientController.ResetClient, 3f);
                 break;
 
             case ClientController.PlayerState.Escaped:
                 this.uiController.SetInfoText("You escaped the ship!");
-                clientController.ResetClient();
+                clientController.DelayedCall(clientController.ResetClient, 3f);
                 break;
 
             case ClientController.PlayerState.AlienOverrun:
                 this.uiController.SetInfoText("You surpassed the humans!");
-                clientController.ResetClient();
+                clientController.DelayedCall(clientController.ResetClient, 3f);
                 break;
         }
     }
