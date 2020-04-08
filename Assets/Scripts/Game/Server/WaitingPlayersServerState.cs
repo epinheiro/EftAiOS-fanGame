@@ -19,13 +19,13 @@ public class WaitingPlayersServerState : IStateController
                 TimeLogger.Log("SERVER - all players played");
                 this.uiController.SetInfoText("All passagers moved");
                 this.uiController.SetPlayersStatus(0, serverController.PlayersPlaying, serverController.PlayersDead, serverController.PlayersEscaped);
-                StateEnd();
+                StateEnd(ServerController.ServerState.Processing);
             }else{
                 this.uiController.SetInfoText("Passengers moving");
                 this.uiController.SetPlayersStatus(PlayingPlayersNumber()-WaitingPlayersNumber(), WaitingPlayersNumber(), serverController.PlayersDead, serverController.PlayersEscaped);
             }
         }else{
-            serverController.NextState = ServerController.ServerState.EndGame;
+            StateEnd(ServerController.ServerState.EndGame);
         }
     }
 
@@ -34,10 +34,14 @@ public class WaitingPlayersServerState : IStateController
         this.uiController.SetPlayersStatus(serverController.PlayersPlaying, 0, serverController.PlayersDead, serverController.PlayersEscaped);
     }
 
+    void StateEnd(ServerController.ServerState nextState){
+        StateEnd();
+        serverController.NextState = nextState;
+    }
+
     protected override void StateEnd(){
         serverController.BoardManagerRef.CleanLastSoundEffects();
         ResetStateController();
-        serverController.NextState = ServerController.ServerState.Processing;
     }
 
     int PlayingPlayersNumber(){
