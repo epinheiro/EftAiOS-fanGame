@@ -31,7 +31,13 @@ public class ClientController : BaseController
     PlayerState currentPlayerState = PlayerState.Unassigned;
     public PlayerState CurrentPlayerState{
         get { return currentPlayerState; }
-        set { currentPlayerState = value;}
+        set {
+            if(currentPlayerState == PlayerState.Unassigned){
+                UIController.SetPlayerRole(value);
+                UIController.ShowRolePopup();
+            }
+            currentPlayerState = value;
+        }
     }
     PlayerState _nextPlayerState = PlayerState.Unassigned;
     public PlayerState NextPlayerState{

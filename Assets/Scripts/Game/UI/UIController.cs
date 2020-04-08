@@ -23,6 +23,9 @@ public class UIController : MonoBehaviour
         /////// Currently unused
     }
 
+    ///// Role Popup /////
+    RoleUIController roleUI;
+
     ///// Header /////
     Transform headerGroup;
     // Line 1 group
@@ -42,9 +45,15 @@ public class UIController : MonoBehaviour
     SimpleTextHelper totalText;
 
     void Setup(){
+        RoleUISetup();
+
         HeaderSetup();
         FooterSetup();
         SetPresetLayout(Layout.AllInactive);
+    }
+
+    void RoleUISetup(){
+        roleUI = transform.Find("RoleUI").GetComponent<RoleUIController>();
     }
 
     void HeaderSetup(){
@@ -112,6 +121,15 @@ public class UIController : MonoBehaviour
                 break;
         }
     }
+
+    // CLIENT - Role UI /////////////////////////
+    public void SetPlayerRole(ClientController.PlayerState role){
+        roleUI.SetRole(role);
+    }
+    public void ShowRolePopup(){
+        roleUI.ShowPopup();
+    }
+
 
     // CLIENT - ToConnect state /////////////////////////
     public void SetInsertTextLayout(string placeholderText, string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
