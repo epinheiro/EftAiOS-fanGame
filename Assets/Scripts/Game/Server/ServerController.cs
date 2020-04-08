@@ -207,7 +207,7 @@ public class ServerController : BaseController
                     break;
             }
         }
-        return !((countAliens==0 && countHumans>0) || (countAliens>0 && countHumans==0));
+        return !( countAliens==0 || countHumans==0 );
     }
 
     public void CreateBoardManager(){
