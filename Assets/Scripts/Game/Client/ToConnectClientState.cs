@@ -111,6 +111,9 @@ public class ToConnectClientState : IStateController
     }
 
     public void SetClientIdentity(){
-        clientController.ClientId = Mathf.Abs(clientController.gameObject.GetInstanceID() + System.DateTime.Now.Second);
+        int seed1 = Mathf.Abs(Convert.ToInt32(System.DateTime.Now.Second * UnityEngine.Random.Range(0f, 1f)));
+        int seed2 = Mathf.Abs(Convert.ToInt32(clientController.gameObject.GetInstanceID() * UnityEngine.Random.Range(0f, 1f)));
+
+        clientController.ClientId =  Mathf.Abs(Convert.ToInt32((seed1 + seed2) * UnityEngine.Random.Range(0f, 1f)));
     }
 }
