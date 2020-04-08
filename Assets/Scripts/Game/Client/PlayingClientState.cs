@@ -141,7 +141,19 @@ public class PlayingClientState : IStateController
     }
 
     void ClientPing(){
-        clientController.ScheduleGetStateRequest();
+        clientController.ChangeClientStateBaseOnServer(ServerController.ServerState.EndGame, ClientController.ClientState.Updating, delegate(){ ForceEndGame(); });
+    }
+
+    void ForceEndGame(){
+        uiController.HideRolePopup();
+        switch(clientController.CurrentPlayerState){
+            case ClientController.PlayerState.Alien:
+                clientController.NextPlayerState = ClientController.PlayerState.AlienOverrun;
+                break;
+            case ClientController.PlayerState.Human:
+                clientController.NextPlayerState = ClientController.PlayerState.Escaped;
+                break;
+        }
     }
 
     protected override void StateEnd(){

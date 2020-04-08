@@ -129,6 +129,9 @@ public class UIController : MonoBehaviour
     public void ShowRolePopup(){
         roleUI.ShowPopup();
     }
+    public void HideRolePopup(){
+        roleUI.HidePopup();
+    }
 
 
     // CLIENT - ToConnect state /////////////////////////

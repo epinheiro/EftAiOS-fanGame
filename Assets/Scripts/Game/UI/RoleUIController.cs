@@ -96,6 +96,10 @@ public class RoleUIController : MonoBehaviour
         SetActive(true);
     }
 
+    public void HidePopup(){
+        SetActive(false);
+    }
+
     public void OnClickClose(){
         SetActive(false);
         //Destroy(this.gameObject);
