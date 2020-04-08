@@ -78,6 +78,7 @@ public class UIController : MonoBehaviour
 
     void Awake()
     {
+        this.GetComponent<Canvas>().worldCamera = Camera.main;
         Setup();
     }
 
