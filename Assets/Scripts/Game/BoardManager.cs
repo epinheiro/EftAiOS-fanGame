@@ -241,11 +241,24 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void CleanSoundGlowTiles(string remainingTileCode){
+    public void CleanSoundGlowTiles(string remainingTileCode = ""){
         CleanGlowTiles(remainingTileCode, glowSoundTilesAggregator);
     }
 
-    public void CleanMovementGlowTiles(string remainingTileCode){
+    public void CleanMovementTile(string codeToDelete){
+        int glowTilesNumber = glowMovementTilesAggregator.transform.childCount;
+
+        for (int i=0 ; i<glowTilesNumber ; i++){
+            GameObject child = glowMovementTilesAggregator.transform.GetChild(i).gameObject;
+            if(string.Equals(child.name, codeToDelete)){
+                GameObject.Destroy(child);
+                break;
+            }
+        }
+    }
+
+
+    public void CleanMovementGlowTiles(string remainingTileCode = ""){
         CleanGlowTiles(remainingTileCode, glowMovementTilesAggregator);
     }
 
