@@ -21,6 +21,6 @@
 
     protected override void StateEnd(){
         ResetStateController();
-        clientController.BoardManagerRef.CleanGlowTiles();
+        // clientController.BoardManagerRef.CleanGlowTiles(); // INFO - To delete current position uncomment this line
     }
 }
