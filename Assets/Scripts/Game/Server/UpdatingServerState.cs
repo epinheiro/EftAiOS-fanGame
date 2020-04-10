@@ -88,8 +88,10 @@ public class UpdatingServerState : IStateController
             }
         }
 
-        serverController.PlayersPlaying = serverController.PlayersPlaying - (playersEscaped + playersDied);
-        serverController.PlayersEscaped = serverController.PlayersEscaped + playersEscaped;
-        serverController.PlayersDead = serverController.PlayersDead + playersDied;
+        serverController.SetGameState(
+            serverController.PlayersPlaying - (playersEscaped + playersDied),
+            serverController.PlayersEscaped + playersEscaped,
+            serverController.PlayersDead + playersDied
+        );
     }
 }

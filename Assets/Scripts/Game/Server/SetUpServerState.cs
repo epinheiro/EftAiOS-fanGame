@@ -45,9 +45,7 @@ public class SetUpServerState : IStateController
     }
 
     protected override void StateEnd(){
-        serverController.PlayersPlaying = serverCommunication.ConnectionQuantity;
-        serverController.PlayersEscaped = 0;
-        serverController.PlayersDead = 0;
+        serverController.SetInitialGameState(serverCommunication.ConnectionQuantity);
 
         PreparePossibleRoles();
         serverController.CreateBoardManager();
