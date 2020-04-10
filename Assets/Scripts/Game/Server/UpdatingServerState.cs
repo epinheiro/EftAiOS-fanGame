@@ -58,7 +58,7 @@ public class UpdatingServerState : IStateController
     }
 
     public void ResetTurnControlVariables(){
-        int total = serverController.PlayersPlaying + serverController.PlayersEscaped + serverController.PlayersDead;
+        int total = serverController.State.PlayersAlive + serverController.State.PlayersEscaped + serverController.State.PlayersDead;
         int playersPlaying = total;
         int playersEscaped = 0;
         int playersDied = 0;
@@ -88,10 +88,10 @@ public class UpdatingServerState : IStateController
             }
         }
 
-        serverController.SetGameState(
-            serverController.PlayersPlaying - (playersEscaped + playersDied),
-            serverController.PlayersEscaped + playersEscaped,
-            serverController.PlayersDead + playersDied
+        serverController.State.SetGameState(
+            serverController.State.PlayersAlive - (playersEscaped + playersDied),
+            serverController.State.PlayersEscaped + playersEscaped,
+            serverController.State.PlayersDead + playersDied
         );
     }
 }

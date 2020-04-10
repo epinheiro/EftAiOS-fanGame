@@ -45,58 +45,17 @@ public class ServerController : BaseController
 
     ServerCommunication serverCommunication;
 
-    ///////////////////////////////////////////////
-    public int _playersPlaying;
-    public int PlayersPlaying{
-        get{ return _playersPlaying; }
+    GameState _state;
+    public GameState State{
+        get { return _state; }
     }
-    public int _playersEscaped;
-    public int PlayersEscaped{
-        get{ return _playersEscaped; }
-    }
-    public void IncreaseEscapees(){
-        --_playersPlaying;
-        ++_playersEscaped;
-    }
-
-    public int _playersDead;
-    public int PlayersDead{
-        set{
-            _playersDead = value;
-        }
-        get{ return _playersDead; }
-    }
-    public void IncreaseDead(){
-        --_playersPlaying;
-        ++_playersDead;
-    }
-
-    public void ResetGameState(){
-        _playersPlaying = 0;
-        _playersDead = 0;
-        _playersEscaped = 0;
-    }
-
-    public void SetInitialGameState(int numberOfPlayers){
-        _playersPlaying = numberOfPlayers;
-        _playersDead = 0;
-        _playersEscaped = 0;
-    }
-
-    public void SetGameState(int playersAlive, int playersDead, int playersEscaped){
-        _playersPlaying = playersAlive;
-        _playersDead = playersDead;
-        _playersEscaped = playersEscaped;
-    }
-
-    ///////////////////////////////////////////////
 
     Dictionary<int, PlayerTurnData> playerTurnDict;
     public Dictionary<int, PlayerTurnData> PlayerTurnDict{
         get{ return playerTurnDict; }
     }
     public void PlayerDisconnection(int playerId){
-        IncreaseDead();
+        _state.IncreaseDead();
         playerTurnDict.Remove(playerId);
     }
 
@@ -110,6 +69,8 @@ public class ServerController : BaseController
     }
 
     void Start(){
+        _state = new GameState();
+
         InstantiateUICanvas();
 
         SetUp();
@@ -127,10 +88,6 @@ public class ServerController : BaseController
         states.Add(ServerState.EndGame, new EndGameServerState(this));
 
         _turnCountdown = _turnLimit;
-
-        _playersPlaying = 0;
-        _playersEscaped = 0;
-        _playersDead = 0;
     }
 
     public void Reset(){
@@ -189,12 +146,12 @@ public class ServerController : BaseController
 
             switch(finalState){
                 case ClientController.PlayerState.Died:
-                    IncreaseDead();
+                    _state.IncreaseDead();
                     playerTurnDict.Remove(playerId);
                     break;
 
                 case ClientController.PlayerState.Escaped:
-                    IncreaseEscapees();
+                    _state.IncreaseEscapees();
                     playerTurnDict.Remove(playerId);
                     break;
 
