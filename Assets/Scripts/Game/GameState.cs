@@ -11,9 +11,9 @@ public class GameState
     //////////////////////////////////////////
     ///////////// Players control ////////////
     //////////////////////////////////////////
-    public int _playersAlive;
-    public int _playersEscaped;
-    public int _playersDead;
+    int _playersAlive;
+    int _playersEscaped;
+    int _playersDead;
 
     public int PlayersAlive{
         get{ return _playersAlive; }
