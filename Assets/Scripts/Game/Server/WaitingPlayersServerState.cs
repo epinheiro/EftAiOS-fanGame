@@ -18,11 +18,25 @@ public class WaitingPlayersServerState : IStateController
             if (AllPlayersPlayed()){
                 TimeLogger.Log("SERVER - all players played");
                 this.uiController.SetInfoText("All passagers moved");
-                this.uiController.SetPlayersStatus(0, serverController.State.PlayersAlive, serverController.State.PlayersDead, serverController.State.PlayersEscaped);
+                this.uiController.SetPlayersStatus(
+                    serverController,
+                    0,
+                    serverController.State.PlayersAlive,
+                    serverController.State.PlayersDead,
+                    serverController.State.PlayersEscaped
+                );
                 StateEnd(ServerController.ServerState.Processing);
             }else{
+                int waitingPlayers = WaitingPlayersNumber();
+
                 this.uiController.SetInfoText("Passengers moving");
-                this.uiController.SetPlayersStatus(PlayingPlayersNumber()-WaitingPlayersNumber(), WaitingPlayersNumber(), serverController.State.PlayersDead, serverController.State.PlayersEscaped);
+                this.uiController.SetPlayersStatus(
+                    serverController,
+                    PlayingPlayersNumber()-waitingPlayers,
+                    waitingPlayers,
+                    serverController.State.PlayersDead,
+                    serverController.State.PlayersEscaped
+                );
             }
         }else{
             StateEnd(ServerController.ServerState.EndGame);
@@ -31,7 +45,13 @@ public class WaitingPlayersServerState : IStateController
 
     protected override void GUISetter(){
         this.uiController.SetPresetLayout(UIController.Layout.BoardDefault);
-        this.uiController.SetPlayersStatus(serverController.State.PlayersAlive, 0, serverController.State.PlayersDead, serverController.State.PlayersEscaped);
+        this.uiController.SetPlayersStatus(
+            serverController,
+            serverController.State.PlayersAlive,
+            0,
+            serverController.State.PlayersDead,
+            serverController.State.PlayersEscaped
+        );
     }
 
     void StateEnd(ServerController.ServerState nextState){

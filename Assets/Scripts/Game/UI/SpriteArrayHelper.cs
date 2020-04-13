@@ -41,13 +41,11 @@ public class SpriteArrayHelper : UIHelper
         playersEscaped = 0;
     }
 
-    public void SetUIComponent(int playersToPlay, int playersPlayed, int playersDied, int playersEscaped){
+    public void SetUIComponent(ServerController serverController, int playersToPlay, int playersPlayed, int playersDied, int playersEscaped){
         int total = playersToPlay + playersPlayed + playersDied + playersEscaped;
         if( this.playersToPlay != playersToPlay || this.playersPlayed != playersPlayed || this.playersDied != playersDied || this.playersEscaped != playersEscaped ){
 
-            // Debug.Log(string.Format("DEBUG - [Total {0}](ToPlay {2} e Played {3}) (Dead {4} - Escaped {5}) [childs {1}]", total,verticalGroup.transform.childCount,playersToPlay,playersPlayed,playersDied,playersEscaped));
-
-            if(verticalGroup.transform.childCount < total){
+            if((serverController.TurnLimit == serverController.TurnsLeft) && verticalGroup.transform.childCount < total){
                 InstantiateSprites(total - verticalGroup.transform.childCount);
             }
 
@@ -57,6 +55,8 @@ public class SpriteArrayHelper : UIHelper
             this.playersEscaped = playersEscaped;
 
             int count = 0;
+
+            //Debug.Log(string.Format("DEBUG - [Total {0}](ToPlay {2} e Played {3}) (Dead {4} - Escaped {5}) [childs {1}]", total,verticalGroup.transform.childCount,playersToPlay,playersPlayed,playersDied,playersEscaped));
 
             ChangeIcons(playersEscaped, ref count, spaceShipIcon);
             ChangeIcons(playersDied,    ref count, skullIcon);

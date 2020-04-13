@@ -207,8 +207,8 @@ public class UIController : MonoBehaviour
         infoText.ChangeTextColor(newColor);
     }
     // InfoGroup
-    public void SetPlayersStatus(int playersToPlay = 0, int playersPlayed = 0, int playersDied = 0, int playersEscaped = 0){
-        SetInfoGroup(playersToPlay, playersPlayed, playersDied, playersEscaped);
+    public void SetPlayersStatus(ServerController serverController, int playersToPlay = 0, int playersPlayed = 0, int playersDied = 0, int playersEscaped = 0){
+        SetInfoGroup(serverController, playersToPlay, playersPlayed, playersDied, playersEscaped);
     }
 
     // Line 2 //
@@ -256,12 +256,16 @@ public class UIController : MonoBehaviour
         }
     }
 
-    void SetInfoGroup(int playersToPlay = 0, int playersPlayed = 0, int playersDied = 0, int playersEscaped = 0){
+    void InitialInfoGroup(){
+        infoGroup.IsActive = false;
+    }
+
+    void SetInfoGroup(ServerController serverController, int playersToPlay = 0, int playersPlayed = 0, int playersDied = 0, int playersEscaped = 0){
         if(playersToPlay == 0  && playersPlayed == 0  && playersDied == 0  && playersEscaped == 0){
             infoGroup.IsActive = false;
         }else{
             infoGroup.IsActive = true;
-            infoGroup.SetUIComponent(playersToPlay, playersPlayed, playersDied, playersEscaped);
+            infoGroup.SetUIComponent(serverController, playersToPlay, playersPlayed, playersDied, playersEscaped);
         }
     }
 
@@ -305,7 +309,7 @@ public class UIController : MonoBehaviour
         }else{
             Line1SetActive(true);
             InfoTextSetActive(infoText);
-            SetInfoGroup();
+            InitialInfoGroup();
         }
 
         // Line 2
