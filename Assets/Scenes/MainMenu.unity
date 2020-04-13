@@ -553,8 +553,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 44.699997, y: -16.9}
-  m_SizeDelta: {x: 46.74, y: 38}
+  m_AnchoredPosition: {x: 75, y: -16.9}
+  m_SizeDelta: {x: 134.9, y: 38}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &640726366
 MonoBehaviour:
@@ -575,9 +575,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: facc6c625e4520b4393792d1555ea6bd, type: 3}
     m_FontSize: 20
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 2
     m_MaxSize: 40
@@ -587,7 +587,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Play
+  m_Text: begin as
 --- !u!222 &640726367
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -652,7 +652,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: facc6c625e4520b4393792d1555ea6bd, type: 3}
     m_FontSize: 40
     m_FontStyle: 1
     m_BestFit: 0
@@ -664,7 +664,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Escape from the Aliens in Outer Space fan game
+  m_Text: escape from the Aliens in outer space <fAn gAme>
 --- !u!222 &1310368946
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -847,7 +847,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 56157d3d213027843b27611fac5a4601, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
@@ -859,7 +859,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Board
+  m_Text: Ship
 --- !u!222 &1717047534
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -904,8 +904,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 118.9, y: -19}
-  m_SizeDelta: {x: 90.3, y: 29.7}
+  m_AnchoredPosition: {x: 207.7, y: -19}
+  m_SizeDelta: {x: 110, y: 29.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1735452244
 MonoBehaviour:
@@ -979,7 +979,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: d82a137cbb37ebc448ebe71f1909bac9, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -988,7 +988,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 15
 --- !u!222 &1735452246
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1110,7 +1110,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 219, y: -22.7125}
-  m_SizeDelta: {x: 328.2, y: 45.425}
+  m_SizeDelta: {x: 438, y: 45.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1909612698
 GameObject:
@@ -1168,7 +1168,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 56157d3d213027843b27611fac5a4601, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
@@ -1180,7 +1180,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Player
+  m_Text: Passenger
 --- !u!222 &1909612701
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1225,8 +1225,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 215.3, y: -19}
-  m_SizeDelta: {x: 90.3, y: 29.7}
+  m_AnchoredPosition: {x: 326.58, y: -19}
+  m_SizeDelta: {x: 110, y: 29.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2053586121
 MonoBehaviour:
@@ -1300,7 +1300,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: d82a137cbb37ebc448ebe71f1909bac9, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1309,7 +1309,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 15
 --- !u!222 &2053586123
 CanvasRenderer:
   m_ObjectHideFlags: 0
