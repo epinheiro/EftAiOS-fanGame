@@ -146,14 +146,6 @@ public class PlayingClientState : IStateController
 
     void ForceEndGame(){
         uiController.HideRolePopup();
-        switch(clientController.CurrentPlayerState){
-            case ClientController.PlayerState.Alien:
-                clientController.NextPlayerState = ClientController.PlayerState.AlienOverrun;
-                break;
-            case ClientController.PlayerState.Human:
-                clientController.NextPlayerState = ClientController.PlayerState.Escaped;
-                break;
-        }
     }
 
     protected override void StateEnd(){
