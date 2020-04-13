@@ -67,8 +67,10 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
     }
 
     protected  override void DisconnectProcedure(NetworkConnection connection){
-        int internalId = connection.InternalId;
-        int clientId = GetClientIdByInternalId(internalId);
-        owner.ClientDisconnection(clientId);
+        if(((ServerCommunication)owner).serverController.CurrentState == ServerController.ServerState.WaitingPlayers){
+            int internalId = connection.InternalId;
+            int clientId = GetClientIdByInternalId(internalId);
+            owner.ClientDisconnection(clientId);
+        }
     }
 }

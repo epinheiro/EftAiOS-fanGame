@@ -55,7 +55,6 @@ public class ServerController : BaseController
         get{ return playerTurnDict; }
     }
     public void PlayerDisconnection(int playerId){
-        _state.IncreaseDead();
         playerTurnDict.Remove(playerId);
     }
 
