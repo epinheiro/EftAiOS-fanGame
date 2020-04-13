@@ -32,13 +32,13 @@ public class GameState
         _playersEscaped = playersEscaped;
     }
 
-    public void IncreaseDead(){
-        --_playersAlive;
-        ++_playersDead;
+    public void IncreaseDead(int newDeads = 1){
+        _playersAlive -= newDeads;
+        _playersDead  += newDeads;
     }
 
-    public void IncreaseEscapees(){
-        --_playersAlive;
-        ++_playersEscaped;
+    public void IncreaseEscapees(int newEscapees = 1){
+        _playersAlive -= newEscapees;
+        _playersDead  += newEscapees;
     }
 }
