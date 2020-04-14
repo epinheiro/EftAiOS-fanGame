@@ -674,7 +674,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: escape from the Aliens in outer space <fAn gAme>
+  m_Text: "escape from the Aliens in outer space \n<fAn gAme>"
 --- !u!222 &1310368946
 CanvasRenderer:
   m_ObjectHideFlags: 0
