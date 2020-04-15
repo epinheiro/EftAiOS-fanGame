@@ -33,5 +33,17 @@ public class AudioController
     public void AlienOverrunEffect(){
         effect.PlayClip("AlienOverrun");
     }
+
+    public void EndGameEffect(){
+        MonoBehaviour ownerScript = owner.GetComponent<ServerController>();
+        float delay = 1f;
+        music.PlayWithFade(ownerScript, delay, false, 0);
+        CoroutineHelper.DelayedCall(ownerScript, EndgamePlayShutdown, delay);
+    }
+
+    void EndgamePlayShutdown(){
+        Debug.Log("SOUND");
+        effect.PlayClip("Shutdown");
+    }
 }
 

@@ -56,6 +56,8 @@
                 }
             }
         }
+
+        serverController.Audio.EndGameEffect();
     }
 
     void ResetGame(){
