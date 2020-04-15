@@ -42,7 +42,6 @@ public class AudioController
     }
 
     void EndgamePlayShutdown(){
-        Debug.Log("SOUND");
         effect.PlayClip("Shutdown");
     }
 }
