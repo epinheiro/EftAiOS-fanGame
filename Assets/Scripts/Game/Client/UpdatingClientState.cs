@@ -23,16 +23,19 @@ public class UpdatingClientState : IStateController
 
             case ClientController.PlayerState.Died:
                 this.uiController.SetInfoText("You died!");
+                this.clientController.Audio.PlayerDiedEffect();
                 clientController.DelayedCall(clientController.ResetClient, 3f);
                 break;
 
             case ClientController.PlayerState.Escaped:
                 this.uiController.SetInfoText("You escaped the ship!");
+                this.clientController.Audio.PlayerEscapedEffect();
                 clientController.DelayedCall(clientController.ResetClient, 3f);
                 break;
 
             case ClientController.PlayerState.AlienOverrun:
                 this.uiController.SetInfoText("You surpassed the humans!");
+                this.clientController.Audio.AlienOverrunEffect();
                 clientController.DelayedCall(clientController.ResetClient, 3f);
                 break;
         }

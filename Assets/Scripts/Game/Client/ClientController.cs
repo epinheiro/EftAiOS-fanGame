@@ -122,6 +122,8 @@ public class ClientController : BaseController
         InstantiateUICanvas();
 
         SetUpClient();
+
+        InstantiateAudioController();
     }
 
     public void SetUpClient(){
