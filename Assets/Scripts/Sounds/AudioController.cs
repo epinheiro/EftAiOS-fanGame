@@ -18,7 +18,7 @@ public class AudioController
     ////// Sound events
     public void MatchStart(){
         float clipSeconds = effect.SetAudioClip("Door");
-        music.PlayWithFade(owner.GetComponent<ServerController>(), clipSeconds * 0.75f, true);
+        music.PlayWithFade(owner.GetComponent<ServerController>(), clipSeconds * 0.60f, true);
         effect.PlayClip();
     }
 
