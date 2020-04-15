@@ -3,6 +3,16 @@ using UnityEngine;
 
 public class BaseController : MonoBehaviour
 {
+    /// Audio related fields
+    AudioController _audioController;
+    public AudioController Audio{
+        get { return _audioController; }
+    }
+
+    public void InstantiateAudioController(){
+        _audioController = new AudioController(this.gameObject);
+    }
+
     /// UI canvas related fields
     public GameObject uiCanvasPrefab;
     protected UIController _uiController;
