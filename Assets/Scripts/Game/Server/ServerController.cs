@@ -63,6 +63,11 @@ public class ServerController : BaseController
         get { return playerRolesToGive; }
     }
 
+    AudioController _audioController;
+    public AudioController Audio{
+        get { return _audioController; }
+    }
+
     void Awake(){
         serverCommunication = gameObject.AddComponent(typeof(ServerCommunication)) as ServerCommunication;
     }
@@ -73,6 +78,8 @@ public class ServerController : BaseController
         InstantiateUICanvas();
 
         SetUp();
+
+        _audioController = new AudioController(this.gameObject);
     }
 
     void SetUp(){

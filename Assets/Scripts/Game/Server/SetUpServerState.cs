@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class SetUpServerState : IStateController
 {
@@ -38,6 +38,7 @@ public class SetUpServerState : IStateController
 
     public void Callback(){
         StateEnd();
+        serverController.Audio.MatchStart();
     }
 
     bool IsPossibleToBeginMatch(){
