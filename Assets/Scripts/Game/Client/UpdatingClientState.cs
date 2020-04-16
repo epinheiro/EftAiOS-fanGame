@@ -29,21 +29,21 @@ public class UpdatingClientState : IStateController
                     receivedResponse = true;
                     this.uiController.SetInfoText("You died!");
                     this.clientController.Audio.PlayerDiedEffect();
-                    clientController.DelayedCall(clientController.ResetClient, 3f);
+                    clientController.DelayedCall(clientController.SoftResetClient, 3f);
                     break;
 
                 case ClientController.PlayerState.Escaped:
                     receivedResponse = true;
                     this.uiController.SetInfoText("You escaped the ship!");
                     this.clientController.Audio.PlayerEscapedEffect();
-                    clientController.DelayedCall(clientController.ResetClient, 3f);
+                    clientController.DelayedCall(clientController.SoftResetClient, 3f);
                     break;
 
                 case ClientController.PlayerState.AlienOverrun:
                     receivedResponse = true;
                     this.uiController.SetInfoText("You surpassed the humans!");
                     this.clientController.Audio.AlienOverrunEffect();
-                    clientController.DelayedCall(clientController.ResetClient, 3f);
+                    clientController.DelayedCall(clientController.SoftResetClient, 3f);
                     break;
             }
         }
