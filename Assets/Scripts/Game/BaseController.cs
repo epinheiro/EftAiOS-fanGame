@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class BaseController : MonoBehaviour
 {
+    public void SetupApplicationLogs(){
+        // Supressing intended script logs to a single line
+        Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
+    }
+
     /// Audio related fields
     AudioController _audioController;
     public AudioController Audio{

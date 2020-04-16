@@ -117,7 +117,10 @@ public class ClientController : BaseController
 
     Coroutine update;
 
-    // Start is called before the first frame update
+    void Awake(){
+        SetupApplicationLogs();
+    }
+
     void Start(){
         InstantiateUICanvas();
 

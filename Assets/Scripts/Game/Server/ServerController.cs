@@ -64,6 +64,8 @@ public class ServerController : BaseController
     }
 
     void Awake(){
+        SetupApplicationLogs();
+
         serverCommunication = gameObject.AddComponent(typeof(ServerCommunication)) as ServerCommunication;
     }
 
