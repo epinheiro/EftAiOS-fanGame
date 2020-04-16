@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class PlayingClientState : IStateController
 {
-    enum EffectFeedback {Silent, ChooseSector, SectorSound}
+    enum EffectFeedback {Silent, ChooseSector, SectorSound, LuckDangerousSector}
     Dictionary<EffectFeedback, Color> effects;
     EffectFeedback lastEffect = EffectFeedback.Silent;
 
@@ -25,7 +25,8 @@ public class PlayingClientState : IStateController
 
         effects = new Dictionary<EffectFeedback, Color>();
         effects.Add(EffectFeedback.Silent, new Color(0.086f,0.094f,0.101f));
-        effects.Add(EffectFeedback.ChooseSector, new Color(0.035f,0.282f,0.113f));
+        effects.Add(EffectFeedback.LuckDangerousSector, new Color(0.035f,0.282f,0.113f));
+        effects.Add(EffectFeedback.ChooseSector, new Color(0.780f,0.462f,0f));
         effects.Add(EffectFeedback.SectorSound, new Color(0.301f,0.058f,0.031f));
 
         ActivateEffectFeedback(EffectFeedback.Silent);
@@ -86,7 +87,7 @@ public class PlayingClientState : IStateController
 
                         case EventDeck.CardTypes.NoSound:
                             TimeLogger.Log("CLIENT {0} is silent", clientController.ClientId);
-                            ActivateEffectFeedback(EffectFeedback.Silent);
+                            ActivateEffectFeedback(EffectFeedback.LuckDangerousSector);
                             currentTurnStep = TurnSteps.SendData;
                             break;
                     }
