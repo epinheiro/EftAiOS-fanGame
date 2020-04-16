@@ -202,20 +202,17 @@ public class ClientController : BaseController
     }
 
     public void ChangeClientStateBaseOnServer(ServerController.ServerState[] expectedServerStates, ClientController.ClientState nextClientState, BaseAction delegation){
-        bool expectedServerStatesMatch = false;
         foreach(ServerController.ServerState state in expectedServerStates){
             if(_serverState == state){
-                expectedServerStatesMatch = true;
-                break;
+
+                TimeLogger.Log("CLIENT {0} - server changed to {1}", ClientId, state);
+                currentState = nextClientState;
+
+                return;
             }
         }
 
-        if(!expectedServerStatesMatch){
-            clientCommunication.ScheduleGetStateRequest();
-        }else{
-            currentState = nextClientState;
-            delegation();
-        }
+        clientCommunication.ScheduleGetStateRequest();
     }
 
     public void ScheduleGetStateRequest(){
