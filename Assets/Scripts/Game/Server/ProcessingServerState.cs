@@ -119,6 +119,7 @@ public class ProcessingServerState : IStateController
             if(data.role == ClientController.PlayerState.Human && serverController.BoardManagerRef.GetTileType(BoardManager.TranslateTilePositionToCode(lastPlay.movementTo)) == BoardManager.PossibleTypes.EscapePod){
                 playersEscapees.Add(lastPlay.playerId);
                 TimeLogger.Log("SERVER - player {0} escaped!", lastPlay.playerId);
+                serverController.State.IncreaseEscapees();
                 break;
             }
         }
@@ -148,6 +149,7 @@ public class ProcessingServerState : IStateController
             foreach(Vector2Int attackPosition in attackList){
                 if(!lastPlay.PlayerAttacked && lastPlay.movementTo == attackPosition){
                     playersAttacked.Add(lastPlay.playerId);
+                    serverController.State.IncreaseDead();
                     TimeLogger.Log("SERVER - player {0} attacked!", lastPlay.playerId);
                     break;
                 }

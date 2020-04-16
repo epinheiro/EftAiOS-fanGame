@@ -149,12 +149,10 @@ public class ServerController : BaseController
 
             switch(finalState){
                 case ClientController.PlayerState.Died:
-                    _state.IncreaseDead();
                     playerTurnDict.Remove(playerId);
                     break;
 
                 case ClientController.PlayerState.Escaped:
-                    _state.IncreaseEscapees();
                     playerTurnDict.Remove(playerId);
                     break;
 
