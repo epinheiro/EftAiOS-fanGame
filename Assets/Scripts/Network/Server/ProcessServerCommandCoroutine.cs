@@ -44,7 +44,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
 
         ServerController.ServerState currentServerState = ((ServerCommunication)owner).serverController.CurrentState;
 
-        TimeLogger.Log("SERVER - {0}[{1}] request - GetState ({2})", clientId, connection.InternalId, currentServerState);
+        //TimeLogger.Log("SERVER - {0}[{1}] request - GetState ({2})", clientId, connection.InternalId, currentServerState);
 
         GetStateResponse response = new GetStateResponse(clientId, currentServerState);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());

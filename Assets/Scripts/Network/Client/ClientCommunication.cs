@@ -120,7 +120,7 @@ public class ClientCommunication : NodeCommunication
         int id = ClientId;
 
         GetStateRequest request = new GetStateRequest(ClientId);
-        TimeLogger.Log("CLIENT {0} - schedule request - GetState", id);
+        //TimeLogger.Log("CLIENT {0} - schedule request - GetState", id);
 
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
         jobHandler.QueueJob(job);

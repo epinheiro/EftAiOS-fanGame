@@ -33,7 +33,7 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
     void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         GetStateResponse responseReceived = new GetStateResponse(strm);
 
-        TimeLogger.Log("CLIENT {0} - response - GetState ({1})", ((ClientCommunication)owner).ClientId, responseReceived.ServerState);
+        //TimeLogger.Log("CLIENT {0} - response - GetState ({1})", ((ClientCommunication)owner).ClientId, responseReceived.ServerState);
         ((ClientCommunication)owner).clientController.ServerState = responseReceived.ServerState;
     }
 
