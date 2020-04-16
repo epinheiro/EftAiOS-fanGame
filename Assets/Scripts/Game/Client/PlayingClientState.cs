@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 public class PlayingClientState : IStateController
@@ -118,6 +118,7 @@ public class PlayingClientState : IStateController
     protected override void GUISetter(){
         this.uiController.SetTwoButtonsLayout("Attack", AttackCallback, "Don't Attack", DontAttackCallback);
         this.uiController.SetTwoButtonsVisibility(false);
+        ActivateEffectFeedback(EffectFeedback.Silent);
     }
 
     void ActivateEffectFeedback(EffectFeedback effect){
