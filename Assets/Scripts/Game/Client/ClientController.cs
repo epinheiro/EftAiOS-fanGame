@@ -141,6 +141,10 @@ public class ClientController : BaseController
         update = DelayedCall(UpdateStati, 1f, true);
     }
 
+    public void Reset(){
+        SceneManager.LoadScene("OnlyClient");
+    }
+
     public void SoftResetClient(){
         Destroy(this.GetComponent<ClientCommunication>());
 
