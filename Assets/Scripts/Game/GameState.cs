@@ -39,6 +39,6 @@ public class GameState
 
     public void IncreaseEscapees(int newEscapees = 1){
         _playersAlive -= newEscapees;
-        _playersDead  += newEscapees;
+        _playersEscaped += newEscapees;
     }
 }
