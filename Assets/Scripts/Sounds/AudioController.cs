@@ -37,7 +37,7 @@ public class AudioController
     public void EndGameEffect(){
         MonoBehaviour ownerScript = owner.GetComponent<ServerController>();
         float delay = 1f;
-        music.PlayWithFade(ownerScript, delay, false, 0);
+        music.StopAfterDelay(ownerScript, delay+.15f);
         CoroutineHelper.DelayedCall(ownerScript, EndgamePlayShutdown, delay);
     }
 
