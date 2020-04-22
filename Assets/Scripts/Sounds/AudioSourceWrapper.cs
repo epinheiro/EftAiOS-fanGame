@@ -83,6 +83,11 @@ class AudioSourceWrapper{
         Volume = finalVolume;
     }
 
+    IEnumerator StopAfterDelay(float delay){
+        yield return new WaitForSeconds(delay);
+        source.Stop();
+    }
+
     /// Public API
     public Coroutine ChangeVolumeOverTime(MonoBehaviour owner, float timePeriod, float? endVolume, float? initialVolume){
         if(initialVolume.HasValue) _volume = initialVolume.Value;
@@ -168,6 +173,10 @@ class AudioSourceWrapper{
     public Coroutine PlayWithFade(MonoBehaviour owner, float timePeriod, bool inLoop = false, float? endVolume = null, float? initialVolume = null){
         PlayClip(inLoop);
         return ChangeVolumeOverTime(owner, timePeriod, endVolume, initialVolume);
+    }
+
+    public Coroutine StopAfterDelay(MonoBehaviour owner, float timePeriod){
+        return owner.StartCoroutine(StopAfterDelay(timePeriod));
     }
 }
 
