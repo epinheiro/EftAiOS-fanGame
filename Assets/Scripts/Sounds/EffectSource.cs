@@ -3,6 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 class EffectSource : AudioSourceWrapper{
-    public EffectSource(GameObject sourceOwner, float volume = 0.5f) : base(sourceOwner, volume, volume){
+    public EffectSource(GameObject sourceOwner, float volume = 0.7f) : base(sourceOwner, volume, volume){
     }
 }
