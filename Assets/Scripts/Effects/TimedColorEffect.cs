@@ -12,7 +12,7 @@ public class TimedColorEffect : MonoBehaviour
     void Start()
     {
         if(materials.Length == 0){
-            ChangeParticleSystemMaterial(GetMaterialByColorName("White"));
+            ChangeParticleSystemMaterial(FileAsset.GetMaterialOfSoundParticleByColorName("White"));
         }else{
             StartCoroutine(RotateThroughColors());
         }
@@ -25,10 +25,6 @@ public class TimedColorEffect : MonoBehaviour
 
             yield return new WaitForSecondsRealtime(interval);
         }
-    }
-
-    Material GetMaterialByColorName(string colorName){
-        return (Material) Resources.Load<Material>(string.Format("Materials/SoundParticle{0}", colorName));
     }
 
     void ChangeParticleSystemMaterial(Material material){

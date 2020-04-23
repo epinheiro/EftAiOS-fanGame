@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
@@ -7,8 +7,8 @@ using UnityEditor;
 public class FileAsset
 {
     // Highlevel class based configuration
-    static public readonly string dataPath = "Data/";
     static public readonly string mapsDataPath = "Data/Maps/";
+    static public readonly string materialsPath = "Materials/";
 
     //////////// File functions ////////////
     /// <summary>
@@ -44,6 +44,11 @@ public class FileAsset
     static public string GetMapTileInfo(string fileName){
         string mapContent = GetMapFile(fileName);
         return mapContent;
+    }
+
+    //////////// Get Resources
+    static public Material GetMaterialOfSoundParticleByColorName(string colorName){
+        return (Material) Resources.Load<Material>(string.Format("{0}SoundParticle{1}", materialsPath, colorName));
     }
 
 }
