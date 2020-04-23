@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -127,7 +127,7 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    void GlowTile(string tileCode, GameObject glowUsed, GameObject aggregatorUsed){
+    GameObject GlowTile(string tileCode, GameObject glowUsed, GameObject aggregatorUsed){
         TileData data;
         mapTiles.TryGetValue(tileCode, out data);
 
@@ -138,6 +138,8 @@ public class BoardManager : MonoBehaviour
         FitUIElementOnServerScreen(go);
         go.transform.parent = aggregatorUsed.transform;
         go.transform.position = new Vector3(worldPosition.x, worldPosition.y, 1);
+
+        return go;
     }
 
     List<TileData> PossibleMovements(string startingTile, int movement, ClientController.PlayerState role){
