@@ -11,18 +11,28 @@ public class TimedColorEffect : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(RotateThroughColors());
+        if(materials.Length == 0){
+            ChangeParticleSystemMaterial(GetMaterialByColorName("White"));
+        }else{
+            StartCoroutine(RotateThroughColors());
+        }
     }
 
     IEnumerator RotateThroughColors(){
         while(true){
-            ParticleSystemRenderer psr = GetComponent<ParticleSystemRenderer>();
-
             currentMaterial = (currentMaterial + 1)%materials.Length;
-            psr.material = materials[currentMaterial];
+            ChangeParticleSystemMaterial(materials[currentMaterial]);
 
             yield return new WaitForSecondsRealtime(interval);
-
         }
+    }
+
+    Material GetMaterialByColorName(string colorName){
+        return (Material) Resources.Load<Material>(string.Format("Materials/SoundParticle{0}", colorName));
+    }
+
+    void ChangeParticleSystemMaterial(Material material){
+        ParticleSystemRenderer psr = GetComponent<ParticleSystemRenderer>();
+        psr.material = material;
     }
 }

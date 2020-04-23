@@ -137,7 +137,7 @@ public class BoardManager : MonoBehaviour
         go.name = tileCode;
         FitUIElementOnServerScreen(go);
         go.transform.parent = aggregatorUsed.transform;
-        go.transform.position = new Vector2(worldPosition.x, worldPosition.y);
+        go.transform.position = new Vector3(worldPosition.x, worldPosition.y, 1);
     }
 
     List<TileData> PossibleMovements(string startingTile, int movement, ClientController.PlayerState role){
