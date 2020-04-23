@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -93,13 +93,17 @@ public class BoardManager : MonoBehaviour
     }
 
     public void LastSoundEffects(List<NoiseInfo> soundTileCodes){
+        List<NoiseInfo> soundNoises = new List<NoiseInfo>();
+
         foreach(NoiseInfo info in soundTileCodes){
             if(info.isAttack){
                 GlowTile(info.tileCode, attackEffectPrefab, soundEffectsAggregator);
             }else{
-                GlowTile(info.tileCode, soundEffectPrefab, soundEffectsAggregator);
+                soundNoises.Add(info);
             }
         }
+
+        GlowSoundTiles(soundNoises, soundEffectPrefab, soundEffectsAggregator);
     }
 
     public void CleanLastSoundEffects(){
@@ -124,6 +128,29 @@ public class BoardManager : MonoBehaviour
 
         foreach(TileData data in movementsList){
             GlowTile(data.tileCode, glowMovementPrefab, glowMovementTilesAggregator);
+        }
+    }
+
+    void GlowSoundTiles(List<NoiseInfo> noiseList, GameObject glowUsed, GameObject aggregatorUsed){
+        Dictionary<string, GameObject> soundEffects = new Dictionary<string, GameObject>();
+
+        foreach(NoiseInfo noise in noiseList){
+            GameObject extractedGameObject;
+            if(soundEffects.TryGetValue(noise.tileCode, out extractedGameObject)){
+                InsertMaterialInGlowTile(extractedGameObject, noise.uiColor);
+            }else{
+                GameObject newGameObject = GlowTile(noise.tileCode, glowUsed, aggregatorUsed);
+                soundEffects.Add(noise.tileCode, newGameObject);
+                InsertMaterialInGlowTile(newGameObject, noise.uiColor);
+            }
+        }
+    }
+
+    void InsertMaterialInGlowTile(GameObject glowTile, Material newMaterial){
+        try{
+            glowTile.GetComponent<TimedColorEffect>().AddMaterial(newMaterial);
+        }catch(Exception e){
+            throw new System.Exception(string.Format("Object {0} is not a glowTile", glowTile.name));
         }
     }
 
