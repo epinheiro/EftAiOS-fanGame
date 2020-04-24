@@ -207,6 +207,10 @@ public class UIController : MonoBehaviour
         infoText.ChangeTextColor(newColor);
     }
     // InfoGroup
+    public void UpdateSpriteArray(ServerController serverController, int numberOfPlayers){
+        InitialInfoGroupSetup(serverController, numberOfPlayers);
+    }
+
     public void SetPlayersStatus(ServerController serverController, int playersToPlay = 0, int playersPlayed = 0, int playersDied = 0, int playersEscaped = 0){
         SetInfoGroup(serverController, playersToPlay, playersPlayed, playersDied, playersEscaped);
     }
@@ -258,6 +262,11 @@ public class UIController : MonoBehaviour
 
     void InitialInfoGroup(){
         infoGroup.IsActive = false;
+    }
+
+    void InitialInfoGroupSetup(ServerController serverController, int players){
+        infoGroup.IsActive = true;
+        infoGroup.SetInitialSprites(serverController, players);
     }
 
     void SetInfoGroup(ServerController serverController, int playersToPlay = 0, int playersPlayed = 0, int playersDied = 0, int playersEscaped = 0){

@@ -6,6 +6,8 @@ public class SetUpServerState : IStateController
     ServerCommunication serverCommunication;
     UIController uiController;
 
+    int currentConnectedPlayers = 0;
+
     readonly string buttonText = "Begin with {0} passengers";
 
     public SetUpServerState(ServerController serverController, ServerCommunication serverCommunication){
@@ -15,6 +17,11 @@ public class SetUpServerState : IStateController
     }
 
     protected override void ExecuteLogic(){
+        if(currentConnectedPlayers != serverCommunication.ConnectionQuantity){
+            currentConnectedPlayers = serverCommunication.ConnectionQuantity;
+            this.uiController.UpdateSpriteArray(serverController, currentConnectedPlayers);
+        }
+
         if(IsPossibleToBeginMatch()){
             uiController.SetConditionalButtonVisibility(true);
             this.uiController.SetConditionalButtonText(ButtonText(serverCommunication.ConnectionQuantity));

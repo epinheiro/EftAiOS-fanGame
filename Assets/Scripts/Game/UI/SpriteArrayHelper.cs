@@ -29,6 +29,8 @@ public class SpriteArrayHelper : UIHelper
         hexagonIcon = (Sprite) Resources.Load<Sprite>("Sprites/UI/HexagonIcon");
         skullIcon = (Sprite) Resources.Load<Sprite>("Sprites/UI/SkullIcon");
         spaceShipIcon = (Sprite) Resources.Load<Sprite>("Sprites/UI/SpaceShipIcon");
+
+        spriteList = new List<GameObject>();
     }
 
     public override void ResetUIComponent(){
@@ -41,13 +43,24 @@ public class SpriteArrayHelper : UIHelper
         playersEscaped = 0;
     }
 
+    public void SetInitialSprites(ServerController serverController, int numberOfPlayers){
+        int childCount = verticalGroup.transform.childCount;
+
+        if(childCount != numberOfPlayers){
+            if(childCount < numberOfPlayers){
+                InstantiateSprites(numberOfPlayers - childCount);
+            }else{
+                RemoveSprites(childCount - numberOfPlayers);
+            }
+
+            int refCount = 0;
+            ChangeIcons(numberOfPlayers, ref refCount, hexagonIcon, Color.red);
+        }
+    }
+
     public void SetUIComponent(ServerController serverController, int playersToPlay, int playersPlayed, int playersDied, int playersEscaped){
         int total = playersToPlay + playersPlayed + playersDied + playersEscaped;
         if( this.playersToPlay != playersToPlay || this.playersPlayed != playersPlayed || this.playersDied != playersDied || this.playersEscaped != playersEscaped ){
-
-            if((serverController.TurnLimit == serverController.TurnsLeft) && verticalGroup.transform.childCount < total){
-                InstantiateSprites(total - verticalGroup.transform.childCount);
-            }
 
             this.playersToPlay = playersToPlay;
             this.playersPlayed = playersPlayed;
@@ -81,14 +94,21 @@ public class SpriteArrayHelper : UIHelper
     }
 
     public void InstantiateSprites(int length){
-        spriteList = new List<GameObject>();
         for(int i=0 ; i<length ; i++){
             GameObject go = UnityEngine.Object.Instantiate(UIIconPrefab, new Vector2(0, 0), Quaternion.identity);
-            go.name = string.Format("Icon{0}", i);
+            go.name = string.Format("Icon{0}", spriteList.Count);
             go.transform.SetParent(verticalGroup.transform);
             go.transform.localScale = Vector3.one;
 
             spriteList.Add(go);
+        }
+    }
+
+    public void RemoveSprites(int length){
+        for(int i=0 ; i<length ; i++){
+            int spriteIndex = spriteList.Count -1;
+            UnityEngine.Object.Destroy(spriteList[spriteIndex]);
+            spriteList.RemoveAt(spriteIndex);
         }
     }
 
