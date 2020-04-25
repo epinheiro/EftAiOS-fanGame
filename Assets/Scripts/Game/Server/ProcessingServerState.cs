@@ -128,6 +128,8 @@ public class ProcessingServerState : IStateController
     }
 
     List<int> ProcessAttacks(){
+        List<Color> attackingColors = new List<Color>();
+
         // Get attacks positions
         List<Vector2Int> attackList = new List<Vector2Int>();
         foreach(int key in serverController.PlayerTurnDict.Keys){
@@ -136,8 +138,11 @@ public class ProcessingServerState : IStateController
             PutPlayRequest lastPlay = data.lastPlay;
             if(lastPlay.PlayerAttacked){
                 attackList.Add(lastPlay.movementTo);
+                attackingColors.Add(data.uiColor.color);
             }
         }
+
+        uiController.SetAlienFeedback(attackingColors);
 
         // Check if players was in attack positions
         List<int> playersAttacked = new List<int>();

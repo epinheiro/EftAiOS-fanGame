@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using System;
 
@@ -38,6 +39,9 @@ public class UIController : MonoBehaviour
     InputFieldHelper textInput;
     ButtonHelper button2;
 
+    ///// AlienFeedbackGroup /////
+    AlienFeedbackGroupHelper alienFeedbackGroup;
+
     ///// Footer /////
     Transform footerGroup;
     SimpleTextHelper progressText;
@@ -48,6 +52,7 @@ public class UIController : MonoBehaviour
         RoleUISetup();
 
         HeaderSetup();
+        AlienFeedbackGroupSetup();
         FooterSetup();
         SetPresetLayout(Layout.AllInactive);
     }
@@ -73,6 +78,10 @@ public class UIController : MonoBehaviour
         button1 = new ButtonHelper(line2Group.transform.Find("Button1").gameObject);
         textInput = new InputFieldHelper(line2Group.transform.Find("InputField").gameObject);
         button2 = new ButtonHelper(line2Group.transform.Find("Button2").gameObject);
+    }
+
+    void AlienFeedbackGroupSetup(){
+        alienFeedbackGroup = new AlienFeedbackGroupHelper(transform.Find("AlienFeedbackGroup").gameObject);
     }
 
     void FooterSetup(){
@@ -231,6 +240,11 @@ public class UIController : MonoBehaviour
         if(buttonType.HasValue) button.SetButtonToPreMade(buttonType.Value);
     }
     // Input
+
+    //////// ALIEN FEEDBACK GROUP
+    public void SetAlienFeedback(List<Color> colors){
+        alienFeedbackGroup.SetAlienFeedbacks(colors);
+    }
 
     //////// FOOTER
     public void SetProgressBarValues(int currentValue, int? maxValue = null){
