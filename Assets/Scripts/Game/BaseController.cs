@@ -6,6 +6,8 @@ public class BaseController : MonoBehaviour
     public void SetupApplicationLogs(){
         // Supressing intended script logs to a single line
         Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
+        Application.SetStackTraceLogType(LogType.Error, StackTraceLogType.None);
+        Application.SetStackTraceLogType(LogType.Assert, StackTraceLogType.None);
     }
 
     /// Audio related fields
