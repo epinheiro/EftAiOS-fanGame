@@ -591,8 +591,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 461490329}
+  - component: {fileID: 461490330}
   m_Layer: 5
-  m_Name: Group
+  m_Name: Button Group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -619,6 +620,21 @@ RectTransform:
   m_AnchoredPosition: {x: 9, y: -73.8}
   m_SizeDelta: {x: 438, y: 77.85}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &461490330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461490328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f325890edfd42d4ab3e8d32c61df4de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  beginningAngle: 0
+  timeToCompleteCircle: 5
+  circleRadius: 0.5
 --- !u!1 &640726364
 GameObject:
   m_ObjectHideFlags: 0
@@ -707,8 +723,9 @@ GameObject:
   - component: {fileID: 659855718}
   - component: {fileID: 659855720}
   - component: {fileID: 659855719}
+  - component: {fileID: 659855721}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Shadow Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -773,6 +790,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 659855717}
   m_CullTransparentMesh: 0
+--- !u!114 &659855721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 659855717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f325890edfd42d4ab3e8d32c61df4de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  beginningAngle: 0
+  timeToCompleteCircle: 5
+  circleRadius: 1
 --- !u!1 &1310368943
 GameObject:
   m_ObjectHideFlags: 0
