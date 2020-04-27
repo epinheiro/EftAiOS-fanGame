@@ -19,6 +19,11 @@
                 movement = 1;
                 break;
         }
+        // INFO - Two options of feedbacks
+        ///// Option 1 - delete all input traces
+        // clientController.BoardManagerRef.CleanGlowTiles(); 
+        ///// Option 2 - maintain current position
+        clientController.BoardManagerRef.CleanSoundGlowTiles();
         clientController.BoardManagerRef.CleanMovementTile(currentTileCode); // INFO - related to WaitingPlayersClientState Option2 feedback
         clientController.BoardManagerRef.GlowPossibleMovements(currentTileCode, movement, clientController.CurrentPlayerState);
         StateEnd();
