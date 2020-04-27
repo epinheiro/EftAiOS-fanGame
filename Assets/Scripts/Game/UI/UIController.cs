@@ -46,7 +46,6 @@ public class UIController : MonoBehaviour
     Transform footerGroup;
     SimpleTextHelper progressText;
     ProgressBarHelper progressBar;
-    SimpleTextHelper totalText;
 
     void Setup(){
         RoleUISetup();
@@ -86,9 +85,8 @@ public class UIController : MonoBehaviour
 
     void FooterSetup(){
         footerGroup = transform.Find("FooterGroup");
-        progressText = new SimpleTextHelper(footerGroup.transform.Find("Progress").gameObject);
         progressBar = new ProgressBarHelper(footerGroup.transform.Find("ProgressBar").gameObject);
-        totalText = new SimpleTextHelper(footerGroup.transform.Find("Total").gameObject);
+        progressText = new SimpleTextHelper(footerGroup.transform.Find("ProgressText").gameObject);
     }
 
     //////////////////
@@ -247,13 +245,14 @@ public class UIController : MonoBehaviour
     }
 
     //////// FOOTER
-    public void SetProgressBarValues(int currentValue, int? maxValue = null){
+    public void SetProgressBarValues(int currentValue, int maxValue){
         footerGroup.gameObject.SetActive(true);
 
-        progressBar.SetValues(currentValue, maxValue);
+        int remainingValue = (maxValue-currentValue);
 
-        progressText.Text = currentValue.ToString();
-        if(maxValue.HasValue) totalText.Text = maxValue.Value.ToString();
+        progressBar.SetValues(remainingValue, maxValue);
+
+        progressText.Text = string.Format("oxygen level: {0}", remainingValue.ToString());
     }
 
     /////////////////////////////////////////////////////

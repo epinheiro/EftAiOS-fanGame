@@ -36,14 +36,14 @@ public class RoleUIController : MonoBehaviour
             new RoleData(
                 GetIcon("AlienRole"),
                 "you are a ALIEN",
-                "KILL all humans or DELAY their escape for 39 turns"
+                "KILL all humans or DELAY their escape until oxygen runs out"
             )
         );
         roles.Add(ClientController.PlayerState.Human, 
             new RoleData(
                 GetIcon("HumanRole"),
                 "you are a human",
-                "Escape in green escape pods before 39 turns pass"
+                "Escape in green escape pods before oxygen runs out"
             )
         );
     }
