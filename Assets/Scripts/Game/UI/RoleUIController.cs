@@ -81,8 +81,6 @@ public class RoleUIController : MonoBehaviour
     public void SetRole(ClientController.PlayerState role){
         currentRole = role;
 
-        Debug.Log(role + " " + roles);
-
         RoleData data;
         if(!roles.TryGetValue(role, out data)){
             throw new System.Exception(string.Format("Role {0} is not a valid player game role", role));
