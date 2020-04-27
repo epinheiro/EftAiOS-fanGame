@@ -150,7 +150,7 @@ public class BoardManager : MonoBehaviour
         try{
             glowTile.GetComponent<TimedColorEffect>().AddMaterial(newMaterial);
         }catch(Exception e){
-            throw new System.Exception(string.Format("Object {0} is not a glowTile", glowTile.name));
+            throw new System.Exception(string.Format("Object {0} is not a glowTile - {1}", glowTile.name, e));
         }
     }
 
