@@ -211,6 +211,8 @@ public class ClientController : BaseController
                 TimeLogger.Log("CLIENT {0} - server changed to {1}", ClientId, state);
                 currentState = nextClientState;
 
+                delegation();
+
                 return;
             }
         }
