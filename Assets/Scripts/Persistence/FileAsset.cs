@@ -8,7 +8,7 @@ public class FileAsset
 {
     // Highlevel class based configuration
     static public readonly string mapsDataPath = "Data/Maps/";
-    static public readonly string materialsPath = "Materials/";
+    static public readonly string materialsPath = "Materials/SoundParticle/";
 
     //////////// File functions ////////////
     /// <summary>
