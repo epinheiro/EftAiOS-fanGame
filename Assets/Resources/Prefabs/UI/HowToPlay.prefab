@@ -380,7 +380,7 @@ RectTransform:
   - {fileID: 1878363816611483827}
   - {fileID: 1878363816694373287}
   m_Father: {fileID: 6130795667659713194}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2831,7 +2831,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1878363816611483826}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
@@ -3416,7 +3416,7 @@ RectTransform:
   m_Children:
   - {fileID: 1878363816821263462}
   m_Father: {fileID: 6130795667659713194}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3898,8 +3898,8 @@ RectTransform:
   m_Children:
   - {fileID: 6130795667949452964}
   - {fileID: 6130795666870020971}
-  - {fileID: 7589163350127356558}
   - {fileID: 1878363814786094403}
+  - {fileID: 7589163350127356558}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
