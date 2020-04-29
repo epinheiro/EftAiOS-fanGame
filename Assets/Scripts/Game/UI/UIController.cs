@@ -158,6 +158,7 @@ public class UIController : MonoBehaviour
 
     public void SetPlayerColor(PlayerTurnData.UIColors playerColor){
         roleUI.SetPlayerColor(playerColor);
+        ChangeFooterButtonColor(playerColor);
     }
 
     // CLIENT - ToConnect state /////////////////////////
@@ -374,5 +375,9 @@ public class UIController : MonoBehaviour
 
     void SetClientFooterGroup(bool IsActive){
         clientFooterGroup.gameObject.SetActive(IsActive);
+    }
+
+    void ChangeFooterButtonColor(PlayerTurnData.UIColors playerColor){
+        clientFooterGroup.Find("Help").GetComponent<UnityEngine.UI.Button>().image.color = FileAsset.GetMaterialOfSoundParticleByColorName(System.Enum.GetName(typeof(PlayerTurnData.UIColors), playerColor)).color;
     }
 }
