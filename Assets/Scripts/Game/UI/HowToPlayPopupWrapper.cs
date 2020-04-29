@@ -29,9 +29,13 @@ public class HowToPlayPopupWrapper : MonoBehaviour
         
     }
 
+    public void ActivateIntroPage(){
+        SetActive(true);
+        GoToPopup(HowToPopup.Intro);
+    }
+
     public void SetActive(bool isActive){
         this.gameObject.SetActive(isActive);
-        GoToPopup(HowToPlayPopupWrapper.HowToPopup.Intro);
     }
 
     public void GoToPopup(string nextPopup){
@@ -54,7 +58,7 @@ public class HowToPlayPopupWrapper : MonoBehaviour
     }
 
     public void CloseHowToPopup(){
-        this.gameObject.SetActive(false);
+        SetActive(false);
     }
 
 }

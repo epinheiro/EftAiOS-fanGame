@@ -31,7 +31,7 @@ public class MainMenuLoader : MonoBehaviour
 
     public void HowToPlayPopup(){
         aboutPopup.SetActive(false);
-        howtoPlayScrollBar.SetActive(true);
+        howtoPlayScrollBar.ActivateIntroPage();
         mainMenu.SetActive(false);
     }
 }
