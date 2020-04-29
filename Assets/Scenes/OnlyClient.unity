@@ -1091,6 +1091,36 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3247733920252862685, guid: 9cd6002827c78464eabef69455c1f2c8,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247733920252862685, guid: 9cd6002827c78464eabef69455c1f2c8,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247733920252862685, guid: 9cd6002827c78464eabef69455c1f2c8,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247733920252862685, guid: 9cd6002827c78464eabef69455c1f2c8,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 438258344}
+    - target: {fileID: 3247733920252862685, guid: 9cd6002827c78464eabef69455c1f2c8,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GiveUpButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247733920252862685, guid: 9cd6002827c78464eabef69455c1f2c8,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 3577865545974855180, guid: 9cd6002827c78464eabef69455c1f2c8,
         type: 3}
       propertyPath: m_AnchorMin.y
