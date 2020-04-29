@@ -1,7 +1,7 @@
 ﻿public class PlayerTurnData
 {
     // UI Color controller
-    public enum UIColors {Red, Orange, Yellow, Green, Cyan, Blue, Purple, Pink, White}
+    public enum UIColors {Orange, Pink, Green, Cyan, Blue, Red, Yellow, Purple, White}
     public static int nextUiColor = 0;
 
 
