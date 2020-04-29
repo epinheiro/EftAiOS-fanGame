@@ -5,8 +5,6 @@ using System;
 
 public class ClientController : BaseController
 {
-    public static int TurnCount = 0;
-
     public enum ClientState {
         // Pre-game states
         ToConnect, 

@@ -12,6 +12,11 @@ public class RoleUIController : MonoBehaviour
     Text _UIrole;
     Text _UIobjective;
 
+    bool _popupIsVisible = false;
+    public bool PopupIsVisible{
+        get { return _popupIsVisible; }
+    }
+
     void Awake(){
         this.GetComponent<Canvas>().worldCamera = Camera.main;
         this.gameObject.SetActive(false);
@@ -50,6 +55,7 @@ public class RoleUIController : MonoBehaviour
 
     void SetActive(bool isActive){
         this.gameObject.SetActive(isActive);
+        _popupIsVisible = isActive;
     }
 
     Sprite GetIcon(string name){

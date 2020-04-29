@@ -150,6 +150,10 @@ public class UIController : MonoBehaviour
         roleUI.HidePopup();
     }
 
+    public bool IsRolePopupVisible(){
+        return roleUI.PopupIsVisible;
+    }
+
 
     // CLIENT - ToConnect state /////////////////////////
     public void SetInsertTextLayout(string placeholderText, string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
