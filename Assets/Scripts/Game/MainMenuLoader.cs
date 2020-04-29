@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class MainMenuLoader : MonoBehaviour
@@ -8,10 +7,10 @@ public class MainMenuLoader : MonoBehaviour
     public GameObject mainMenu;
 
     public GameObject howToPlayPopup;
-    public Scrollbar howtoPlayScrollBar;
+    HowToPlayPopupWrapper howtoPlayScrollBar;
 
     void Start(){
-        howtoPlayScrollBar = howToPlayPopup.transform.Find("Intro").Find("Scrollbar Vertical").GetComponent<Scrollbar>();
+        howtoPlayScrollBar = howToPlayPopup.GetComponent<HowToPlayPopupWrapper>();
     }
 
     public void LoadScene(string loadScene){
@@ -32,9 +31,7 @@ public class MainMenuLoader : MonoBehaviour
 
     public void HowToPlayPopup(){
         aboutPopup.SetActive(false);
-        howToPlayPopup.SetActive(true);
+        howtoPlayScrollBar.SetActive(true);
         mainMenu.SetActive(false);
-
-        howtoPlayScrollBar.value = 1;
     }
 }
