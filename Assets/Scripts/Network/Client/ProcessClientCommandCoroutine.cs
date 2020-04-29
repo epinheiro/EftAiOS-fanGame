@@ -1,4 +1,4 @@
-﻿using Unity.Networking.Transport;
+using Unity.Networking.Transport;
 
 public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommunication>
 {
@@ -41,11 +41,14 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
         GetResultsResponse responseReceived = new GetResultsResponse(strm);
 
         ClientController.PlayerState playerState = (ClientController.PlayerState) responseReceived.playerState;
-        TimeLogger.Log("CLIENT {0} - response - GetResults ({1} at {2})",
-            ((ClientCommunication)owner).ClientId, playerState, responseReceived.playerPosition);
+        PlayerTurnData.UIColors playerColor = (PlayerTurnData.UIColors) responseReceived.playerColor;
+
+        TimeLogger.Log("CLIENT {0} - {3} - response - GetResults ({1} at {2})",
+            ((ClientCommunication)owner).ClientId, playerState, responseReceived.playerPosition,  playerColor);
         
         ((ClientCommunication)owner).clientController.NextPlayerState = playerState;
         ((ClientCommunication)owner).clientController.playerCurrentPosition = responseReceived.playerPosition;
+        ((ClientCommunication)owner).clientController.PlayerColor = playerColor;
     }
 
     protected  override void ConnectProcedure(NetworkConnection connection){

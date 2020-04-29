@@ -10,7 +10,19 @@
     public ClientController.PlayerState role;
     public ClientController.PlayerState playingRole;
 
-    public UnityEngine.Material uiColor;
+    UIColors _uiColor;
+
+    public UIColors UIColor{
+        get { return _uiColor; }
+    }
+
+    public int IntUIColor{
+        get { return (int) _uiColor; }
+    }
+
+    public UnityEngine.Material GetUIColorMaterial(){
+        return FileAsset.GetMaterialOfSoundParticleByColorName(System.Enum.GetName(typeof(UIColors), _uiColor));
+    }
 
     public PlayerTurnData(PutPlayRequest lastPutPlay, ClientController.PlayerState role){
         this.lastPlay = lastPutPlay;
@@ -20,7 +32,7 @@
 
         int colorToGet = nextUiColor;
         ++nextUiColor;
-        uiColor = FileAsset.GetMaterialOfSoundParticleByColorName(System.Enum.GetName(typeof(UIColors), colorToGet));
+        _uiColor = (UIColors) colorToGet;
     }
 
     public void InputNewPutPlay(PutPlayRequest newPutPlay){
@@ -29,8 +41,8 @@
     }
 
     public override string ToString(){
-        return string.Format("Player {0} - ({1:00, 2:00}) ({3:00}{4:00}) ({5}) - Played {6} - Role {7}",
+        return string.Format("Player {0} {8} - ({1:00, 2:00}) ({3:00}{4:00}) ({5}) - Played {6} - Role {7}",
             lastPlay.playerId, lastPlay.movementTo.x, lastPlay.movementTo.y, lastPlay.sound.x, lastPlay.sound.y, lastPlay.PlayerAttacked,
-            playedThisTurn, role);
+            playedThisTurn, role, (UIColors) _uiColor);
     }
 }

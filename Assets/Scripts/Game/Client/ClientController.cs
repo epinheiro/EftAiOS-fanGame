@@ -28,6 +28,12 @@ public class ClientController : BaseController
 
     public enum PlayerState {Unassigned, Alien, Human, Died, Escaped, AlienOverrun};
 
+    PlayerTurnData.UIColors _playerColor;
+    public PlayerTurnData.UIColors PlayerColor{
+        get { return _playerColor; }
+        set { _playerColor = value; }
+    }
+
     PlayerState currentPlayerState = PlayerState.Unassigned;
     public PlayerState CurrentPlayerState{
         get { return currentPlayerState; }

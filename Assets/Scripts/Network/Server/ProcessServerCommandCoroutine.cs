@@ -55,13 +55,14 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
         GetResultsRequest requestReceived = new GetResultsRequest(strm);
         int clientId = requestReceived.playerId;
 
+        int playerColor;
         Vector2Int position;
         ClientController.PlayerState state;
-        ((ServerCommunication)owner).serverController.GetPlayerData(clientId, out position, out state);
+        ((ServerCommunication)owner).serverController.GetPlayerData(clientId, out playerColor, out position, out state);
 
-        TimeLogger.Log("SERVER - {0}[{1}] request - GetResults ({2})", clientId, connection.InternalId, state);
+        TimeLogger.Log("SERVER - {0}[{1}] - {3} - request - GetResults ({2})", clientId, connection.InternalId, state, (PlayerTurnData.UIColors) playerColor);
 
-        GetResultsResponse response = new GetResultsResponse(clientId, state, position);
+        GetResultsResponse response = new GetResultsResponse(clientId, playerColor, state, position);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
         jobHandler.QueueJob(job);
     }

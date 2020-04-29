@@ -138,7 +138,7 @@ public class ProcessingServerState : IStateController
             PutPlayRequest lastPlay = data.lastPlay;
             if(lastPlay.PlayerAttacked){
                 attackList.Add(lastPlay.movementTo);
-                attackingColors.Add(data.uiColor.color);
+                attackingColors.Add(data.GetUIColorMaterial().color);
             }
         }
 

@@ -6,19 +6,22 @@ public class GetResultsResponse : INetworkData
     static public readonly int commandCode = (int) ServerCommunication.ServerCommand.GetResults;
     public readonly int playerId;
 
+    public readonly int playerColor;
+
     public readonly int playerState;
 
     public readonly Vector2Int playerPosition; 
 
     public int[] DataToArray(){
-        return new int[]{commandCode, playerId, playerState, playerPosition.x, playerPosition.y};
+        return new int[]{commandCode, playerId, playerColor, playerState, playerPosition.x, playerPosition.y};
     }
 
     /// <summary>
     /// This constructor is for WRAPPING the data to make a request
     /// </summary> 
-    public GetResultsResponse(int playerId, ClientController.PlayerState playerState, Vector2Int playerPosition){
+    public GetResultsResponse(int playerId, int playerColor, ClientController.PlayerState playerState, Vector2Int playerPosition){
         this.playerId = playerId;
+        this.playerColor = playerColor;
         this.playerState = (int) playerState;
         this.playerPosition = playerPosition;
     }
@@ -33,6 +36,7 @@ public class GetResultsResponse : INetworkData
 
         if (commandCheck == commandCode){
             this.playerId = reader.ReadInt(ref readerCtx);
+            this.playerColor = reader.ReadInt(ref readerCtx);
             this.playerState = reader.ReadInt(ref readerCtx);
             playerPosition = new Vector2Int(reader.ReadInt(ref readerCtx), reader.ReadInt(ref readerCtx));
         }else{

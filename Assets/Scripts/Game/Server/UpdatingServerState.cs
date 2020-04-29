@@ -50,7 +50,7 @@ public class UpdatingServerState : IStateController
             Vector2Int sound = data.lastPlay.sound;
             if(sound.x != -1){
                 string tileCode = BoardManager.TranslateTileNumbersToCode(sound.x, sound.y);
-                noises.Add(new NoiseInfo(tileCode, data.lastPlay.PlayerAttacked, data.uiColor));
+                noises.Add(new NoiseInfo(tileCode, data.lastPlay.PlayerAttacked, data.GetUIColorMaterial()));
             }
         }
 

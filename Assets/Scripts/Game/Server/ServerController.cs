@@ -124,7 +124,8 @@ public class ServerController : BaseController
         }
     }
 
-    public void GetPlayerData(int playerId, out Vector2Int position, out ClientController.PlayerState state){
+    public void GetPlayerData(int playerId, out int playerColor, out Vector2Int position, out ClientController.PlayerState state){
+        int color;
         Vector2Int finalPosition;
         ClientController.PlayerState finalState;
 
@@ -133,17 +134,19 @@ public class ServerController : BaseController
             finalState = playerRolesToGive.PopValue();
             finalPosition = _boardManager.GetSpawnPointTileData(finalState).tilePosition;
 
-            playerTurnDict.Add(
-                playerId, 
-                new PlayerTurnData(
+            PlayerTurnData data = new PlayerTurnData(
                     new PutPlayRequest(playerId, finalPosition.x, finalPosition.y, finalPosition.x, finalPosition.y, false),
                     finalState
-                )
-            );
+                );
+
+            playerTurnDict.Add(playerId, data);
+
+            color = data.IntUIColor;
         }else{
             PlayerTurnData data;
             playerTurnDict.TryGetValue(playerId, out data);
 
+            color = data.IntUIColor;
             finalPosition = data.lastPlay.movementTo;
             finalState = data.role;
 
@@ -161,7 +164,9 @@ public class ServerController : BaseController
                     break;
             }
         }
+        
         // Method outputs
+        playerColor = color;
         position = finalPosition;
         state = finalState;
     }
