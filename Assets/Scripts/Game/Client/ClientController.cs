@@ -39,6 +39,7 @@ public class ClientController : BaseController
         get { return currentPlayerState; }
         set {
             if(currentPlayerState == PlayerState.Unassigned){
+                UIController.SetPlayerColor(_playerColor);
                 UIController.SetPlayerRole(value);
                 UIController.ShowRolePopup();
             }

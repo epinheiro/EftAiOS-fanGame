@@ -154,6 +154,11 @@ public class UIController : MonoBehaviour
         return roleUI.PopupIsVisible;
     }
 
+    //////////////////////////////////////////////////
+
+    public void SetPlayerColor(PlayerTurnData.UIColors playerColor){
+        roleUI.SetPlayerColor(playerColor);
+    }
 
     // CLIENT - ToConnect state /////////////////////////
     public void SetInsertTextLayout(string placeholderText, string buttonText, string infoText, UIHelper.BaseAction buttonCallback){

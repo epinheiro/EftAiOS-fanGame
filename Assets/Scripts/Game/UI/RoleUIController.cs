@@ -8,6 +8,7 @@ public class RoleUIController : MonoBehaviour
 
     ClientController.PlayerState currentRole;
 
+    Image _PlayerColorIcon;
     Image _UIicon;
     Text _UIrole;
     Text _UIobjective;
@@ -29,6 +30,7 @@ public class RoleUIController : MonoBehaviour
     }
 
     void SetUpUIReferences(){
+        _PlayerColorIcon = transform.Find("PlayerColor").GetComponent<Image>();
         _UIicon = transform.Find("RoleIcon").GetComponent<Image>();
         Transform group = transform.Find("InfoTexts");
         _UIrole = group.Find("Role").GetComponent<Text>();
@@ -109,5 +111,9 @@ public class RoleUIController : MonoBehaviour
     public void OnClickClose(){
         SetActive(false);
         //Destroy(this.gameObject);
+    }
+
+    public void SetPlayerColor(PlayerTurnData.UIColors playerColor){
+        _PlayerColorIcon.color = FileAsset.GetMaterialOfSoundParticleByColorName(System.Enum.GetName(typeof(PlayerTurnData.UIColors), playerColor)).color;
     }
 }
