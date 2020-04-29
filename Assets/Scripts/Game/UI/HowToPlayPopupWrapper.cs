@@ -53,5 +53,8 @@ public class HowToPlayPopupWrapper : MonoBehaviour
         }
     }
 
+    public void CloseHowToPopup(){
+        this.gameObject.SetActive(false);
+    }
 
 }
