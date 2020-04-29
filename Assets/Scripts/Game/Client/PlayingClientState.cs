@@ -119,6 +119,7 @@ public class PlayingClientState : IStateController
     protected override void GUISetter(){
         this.uiController.SetTwoButtonsLayout("Attack", AttackCallback, "Don't Attack", DontAttackCallback);
         this.uiController.SetTwoButtonsVisibility(false);
+        this.uiController.SetActiveClientFooterGroup(true);
         ActivateEffectFeedback(EffectFeedback.Silent);
     }
 
@@ -152,6 +153,8 @@ public class PlayingClientState : IStateController
 
     protected override void StateEnd(){
         ResetStateController();
+
+        this.uiController.SetActiveClientFooterGroup(false);
 
         clientController.CurrentState = ClientController.ClientState.WaitingPlayers;
         currentTurnStep = TurnSteps.Movement;

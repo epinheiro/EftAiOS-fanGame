@@ -47,6 +47,8 @@ public class UIController : MonoBehaviour
     SimpleTextHelper progressText;
     ProgressBarHelper progressBar;
 
+    Transform clientFooterGroup;
+
     void Setup(){
         RoleUISetup();
 
@@ -87,6 +89,8 @@ public class UIController : MonoBehaviour
         footerGroup = transform.Find("FooterGroup");
         progressBar = new ProgressBarHelper(footerGroup.transform.Find("ProgressBar").gameObject);
         progressText = new SimpleTextHelper(footerGroup.transform.Find("ProgressText").gameObject);
+
+        clientFooterGroup = transform.Find("ClientFooterGroup");
     }
 
     //////////////////
@@ -103,28 +107,34 @@ public class UIController : MonoBehaviour
             case Layout.BoardDefault:
                 SetHeaderUIElements(true, false, null, null);
                 SetFooterUIElements(true);
+                SetClientFooterGroup(false);
                 break;
             case Layout.ClientDefault:
                 SetHeaderUIElements(true, false, null, null);
                 SetFooterUIElements(false);
+                SetClientFooterGroup(false);
                 break;
 
             /////////////////////////////
             case Layout.TwoButtons:
                 SetHeaderUIElements(false, false, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
                 SetFooterUIElements(false);
+                SetClientFooterGroup(false);
                 break;
             case Layout.InsertText:
                 SetHeaderUIElements(false, true, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
                 SetFooterUIElements(false);
+                SetClientFooterGroup(false);
                 break;
             case Layout.ConditionalButton:
                 SetHeaderUIElements(true, false, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack);
                 SetFooterUIElements(false);
+                SetClientFooterGroup(false);
                 break;
             case Layout.AllInactive:
                 SetHeaderUIElements(false, false, null, null);
                 SetFooterUIElements(false);
+                SetClientFooterGroup(false);
                 break;
         }
     }
@@ -255,6 +265,10 @@ public class UIController : MonoBehaviour
         progressText.Text = string.Format("oxygen level: {0}", remainingValue.ToString());
     }
 
+    public void SetActiveClientFooterGroup(bool IsActive){
+        SetClientFooterGroup(IsActive);
+    }
+
     /////////////////////////////////////////////////////
 
     // Line 1 //
@@ -347,5 +361,9 @@ public class UIController : MonoBehaviour
 
     void SetFooterUIElements(bool slider){ // TODO - change
         footerGroup.gameObject.SetActive(slider);
+    }
+
+    void SetClientFooterGroup(bool IsActive){
+        clientFooterGroup.gameObject.SetActive(IsActive);
     }
 }
