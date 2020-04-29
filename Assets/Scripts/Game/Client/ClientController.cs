@@ -122,7 +122,7 @@ public class ClientController : BaseController
     }
 
     void Start(){
-        InstantiateUICanvas();
+        GetUICanvasReference();
 
         SetUpClient();
 

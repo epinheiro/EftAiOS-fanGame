@@ -72,7 +72,7 @@ public class ServerController : BaseController
     void Start(){
         _state = new GameState();
 
-        InstantiateUICanvas();
+        GetUICanvasReference();
 
         SetUp();
 

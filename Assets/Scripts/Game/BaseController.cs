@@ -34,10 +34,8 @@ public class BaseController : MonoBehaviour
         }
     }
 
-    public void InstantiateUICanvas(){
-        GameObject go = Instantiate(uiCanvasPrefab, new Vector2(0, 0), Quaternion.identity);
-        UIController = go.GetComponent<UIController>();
-        go.name = "UICanvas";
+    public void GetUICanvasReference(){
+        UIController = GameObject.Find("UICanvas").GetComponent<UIController>();
     }
 
     /// BoardManager related fields
