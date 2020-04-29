@@ -11,6 +11,8 @@ public class HowToPlayPopupWrapper : MonoBehaviour
     public GameObject humanRolePopup;
     public GameObject alienRolePopup;
 
+    public GameObject backButton;
+
     GameObject[] popups;
 
     public enum HowToPopup {Intro, Setup, Playing, Human, Alien}
@@ -43,6 +45,8 @@ public class HowToPlayPopupWrapper : MonoBehaviour
                 goPopup.SetActive(true);
                 goPopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>().value = 1;
 
+                if(nextPopup == HowToPopup.Intro) backButton.SetActive(false);
+                else backButton.SetActive(true);
             }else{
                 popups[(int)popup].SetActive(false);
             }
