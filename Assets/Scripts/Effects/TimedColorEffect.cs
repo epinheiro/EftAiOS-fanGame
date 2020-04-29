@@ -16,8 +16,12 @@ public class TimedColorEffect : MonoBehaviour
 
     IEnumerator RotateThroughColors(){
         while(true){
-            currentMaterial = (currentMaterial + 1)%materials.Count;
-            ChangeParticleSystemMaterial(materials[currentMaterial]);
+            if(materials == null || materials.Count == 0){
+                ChangeParticleSystemMaterial(FileAsset.GetMaterialOfSoundParticleByColorName("White"));
+            }else{
+                currentMaterial = (currentMaterial + 1)%materials.Count;
+                ChangeParticleSystemMaterial(materials[currentMaterial]);
+            }
 
             yield return new WaitForSecondsRealtime(interval);
         }
