@@ -290,6 +290,21 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4480760536119928623, guid: 9cd6002827c78464eabef69455c1f2c8,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 438258344}
+    - target: {fileID: 4480760536119928623, guid: 9cd6002827c78464eabef69455c1f2c8,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CloseRolePopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 4480760536119928623, guid: 9cd6002827c78464eabef69455c1f2c8,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 5290084008126817428, guid: 9cd6002827c78464eabef69455c1f2c8,
         type: 3}
       propertyPath: m_AnchorMin.y
