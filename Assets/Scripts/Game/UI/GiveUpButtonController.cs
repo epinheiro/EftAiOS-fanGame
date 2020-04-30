@@ -9,7 +9,7 @@ public class GiveUpButtonController : MonoBehaviour
     public UIController uiController;
 
     Color initialColor;
-    Color finalColor = Color.white;
+    Color finalColor = Color.grey;
     
     public float timeToHold = 3f;
     public float countingTime = 0;
