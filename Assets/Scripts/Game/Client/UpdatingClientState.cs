@@ -30,6 +30,7 @@ public class UpdatingClientState : IStateController
                 case ClientController.PlayerState.Died:
                     receivedResponse = true;
                     this.uiController.SetInfoText("You died!");
+                    this.uiController.SetActiveClientFooterGroup(false);
                     this.clientController.Audio.PlayerDiedEffect();
                     clientController.DelayedCall(clientController.Reset, secondsToResetClient);
                     break;
@@ -37,6 +38,7 @@ public class UpdatingClientState : IStateController
                 case ClientController.PlayerState.Escaped:
                     receivedResponse = true;
                     this.uiController.SetInfoText("You escaped the ship!");
+                    this.uiController.SetActiveClientFooterGroup(false);
                     this.clientController.Audio.PlayerEscapedEffect();
                     clientController.DelayedCall(clientController.Reset, secondsToResetClient);
                     break;
@@ -44,6 +46,7 @@ public class UpdatingClientState : IStateController
                 case ClientController.PlayerState.AlienOverrun:
                     receivedResponse = true;
                     this.uiController.SetInfoText("You surpassed the humans!");
+                    this.uiController.SetActiveClientFooterGroup(false);
                     this.clientController.Audio.AlienOverrunEffect();
                     clientController.DelayedCall(clientController.Reset, secondsToResetClient);
                     break;
