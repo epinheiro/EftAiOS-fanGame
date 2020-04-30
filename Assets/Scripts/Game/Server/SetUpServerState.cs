@@ -55,6 +55,8 @@ public class SetUpServerState : IStateController
     protected override void StateEnd(){
         serverController.State.SetGameState(serverCommunication.ConnectionQuantity);
 
+        uiController.DeactiveBackButton();
+
         PreparePossibleRoles();
         serverController.CreateBoardManager();
         ResetStateController();

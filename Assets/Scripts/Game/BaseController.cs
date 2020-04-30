@@ -69,4 +69,8 @@ public class BaseController : MonoBehaviour
             function();
         }while(repeat);
     }
+
+    public void LoadScene(string name){
+        UnityEngine.SceneManagement.SceneManager.LoadScene(name);
+    }
 }

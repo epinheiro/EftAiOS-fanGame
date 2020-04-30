@@ -48,6 +48,7 @@ public class UIController : MonoBehaviour
     ProgressBarHelper progressBar;
 
     Transform clientFooterGroup;
+    Transform backButtonGroup;
 
     void Setup(){
         RoleUISetup();
@@ -91,6 +92,7 @@ public class UIController : MonoBehaviour
         progressText = new SimpleTextHelper(footerGroup.transform.Find("ProgressText").gameObject);
 
         clientFooterGroup = transform.Find("ClientFooterGroup");
+        backButtonGroup = transform.Find("BackToMainMenu");
     }
 
     //////////////////
@@ -277,6 +279,10 @@ public class UIController : MonoBehaviour
 
     public void SetActiveClientFooterGroup(bool IsActive){
         SetClientFooterGroup(IsActive);
+    }
+
+    public void DeactiveBackButton(){
+        Destroy(backButtonGroup.gameObject);
     }
 
     /////////////////////////////////////////////////////
