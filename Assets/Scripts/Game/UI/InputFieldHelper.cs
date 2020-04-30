@@ -10,16 +10,16 @@ public class InputFieldHelper : UIHelper
         set { placeholderTextComponent.text = value; }
     }
 
-    readonly Text textComponent;
+    readonly InputField inputField;
 
     public string Text{
-        get { return textComponent.text; }
-        set { textComponent.text = value; }
+        get { return inputField.text; }
+        set { inputField.text = value; }
     }
 
     public InputFieldHelper(GameObject uiObject) : base(uiObject){
         this.placeholderTextComponent = base.uiObject.transform.Find("Placeholder").GetComponent<Text>();
-        this.textComponent = base.uiObject.transform.Find("Text").GetComponent<Text>();
+        this.inputField = base.uiObject.GetComponent<InputField>();
     }
 
     public override void ResetUIComponent(){
