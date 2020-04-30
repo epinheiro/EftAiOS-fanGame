@@ -34,4 +34,8 @@ public class MainMenuLoader : MonoBehaviour
         howtoPlayScrollBar.ActivateIntroPage();
         mainMenu.SetActive(false);
     }
+
+    public void ExitGame(){
+        Application.Quit();
+    }
 }
