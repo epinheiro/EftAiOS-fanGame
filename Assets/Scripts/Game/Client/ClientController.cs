@@ -125,6 +125,14 @@ public class ClientController : BaseController
     Coroutine update;
 
     void Awake(){
+        try{
+            FileAsset.GameData data = FileAsset.LoadGameData();
+            _lastSucessfulIP = data.lastIP;
+
+        } catch (System.Exception e){
+            TimeLogger.Log("No last IP found: {0}", e.Message);
+        }
+
         SetupApplicationLogs();
     }
 

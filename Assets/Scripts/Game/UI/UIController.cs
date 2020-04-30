@@ -164,10 +164,11 @@ public class UIController : MonoBehaviour
     }
 
     // CLIENT - ToConnect state /////////////////////////
-    public void SetInsertTextLayout(string placeholderText, string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
+    public void SetInsertTextLayout(string placeholderText, string insertedText, string buttonText, string infoText, UIHelper.BaseAction buttonCallback){
         SetPresetLayout(Layout.InsertText);
         this.infoText.Text = infoText;
         textInput.PlaceholderText = placeholderText;
+        textInput.Text = insertedText;
         button2.Text = buttonText;
         button2.InsertCallback(buttonCallback);
     }

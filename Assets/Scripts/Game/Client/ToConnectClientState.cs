@@ -44,7 +44,7 @@ public class ToConnectClientState : IStateController
     }
 
     protected override void GUISetter(){
-        this.uiController.SetInsertTextLayout(_customIp, "", "", delegate(){ Callback(); });
+        this.uiController.SetInsertTextLayout(_customIp, _insertedString, "", "" , delegate(){ Callback(); });
         this.uiController.SetInsertTextButtonVisibility(false);
     }
 
@@ -77,6 +77,7 @@ public class ToConnectClientState : IStateController
 
             case Connection.Connected:
                 TimeLogger.Log("CLIENT - connected to {0}", logMessage);
+                FileAsset.SaveGameData(_insertedString);
                 if(!string.IsNullOrEmpty(_insertedString)) clientController.LastSucessfulIp = _insertedString;
                 StateEnd();
                 break;
