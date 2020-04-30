@@ -17,7 +17,7 @@ public class ClientButtonWrapper : MonoBehaviour
     }
 
     void Start(){
-        uiController = controller.UIController;
+        uiController = uiCanvas.GetComponent<UIController>();
     }
 
     public void CloseRolePopup(){
