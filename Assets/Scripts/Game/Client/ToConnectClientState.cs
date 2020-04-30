@@ -28,7 +28,7 @@ public class ToConnectClientState : IStateController
          if(state == Connection.Disconnected){
             if(string.IsNullOrEmpty(_insertedString)){
                 uiController.SetInsertTextButtonVisibility(true);
-                uiController.SetInsertTextButtonAttributes("ENTER SHIP (local)");
+                uiController.SetInsertTextButtonAttributes("ENTER SHIP (SAME PC)");
             }else{
                 if(NodeCommunication.IsIPValid(_insertedString)){
                     uiController.SetInsertTextButtonVisibility(true);
