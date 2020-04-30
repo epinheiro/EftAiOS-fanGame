@@ -7,6 +7,8 @@ public class UpdatingClientState : IStateController
     ClientController clientController;
     UIController uiController;
 
+    float secondsToResetClient = 6f;
+
     public UpdatingClientState(ClientController clientController){
         this.clientController = clientController;
         this.uiController = clientController.UIController;
@@ -29,21 +31,21 @@ public class UpdatingClientState : IStateController
                     receivedResponse = true;
                     this.uiController.SetInfoText("You died!");
                     this.clientController.Audio.PlayerDiedEffect();
-                    clientController.DelayedCall(clientController.Reset, 3f);
+                    clientController.DelayedCall(clientController.Reset, secondsToResetClient);
                     break;
 
                 case ClientController.PlayerState.Escaped:
                     receivedResponse = true;
                     this.uiController.SetInfoText("You escaped the ship!");
                     this.clientController.Audio.PlayerEscapedEffect();
-                    clientController.DelayedCall(clientController.Reset, 3f);
+                    clientController.DelayedCall(clientController.Reset, secondsToResetClient);
                     break;
 
                 case ClientController.PlayerState.AlienOverrun:
                     receivedResponse = true;
                     this.uiController.SetInfoText("You surpassed the humans!");
                     this.clientController.Audio.AlienOverrunEffect();
-                    clientController.DelayedCall(clientController.Reset, 3f);
+                    clientController.DelayedCall(clientController.Reset, secondsToResetClient);
                     break;
             }
         }
