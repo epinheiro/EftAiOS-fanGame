@@ -19,6 +19,9 @@
 
     protected override void StateEnd(){
         clientController.InstantiateBoardManager();
+
+        uiController.DeactiveBackButton();
+
         TimeLogger.Log("CLIENT {0} - game start", clientController.ClientId);
         ResetStateController();
     }

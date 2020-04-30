@@ -87,8 +87,6 @@ public class ToConnectClientState : IStateController
     protected override void StateEnd(){
         ResetStateController();
 
-        uiController.DeactiveBackButton();
-
         clientController.CurrentState = ClientController.ClientState.WaitingGame;
     }
 
