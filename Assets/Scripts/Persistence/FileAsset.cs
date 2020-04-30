@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEditor;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class FileAsset
 {
     // Highlevel class based configuration
     static public readonly string mapsDataPath = "Data/Maps/";
     static public readonly string materialsPath = "Materials/SoundParticle/";
+    static public readonly string lastIPPath = "Data/";
+    static public string universalSaveName = "save.dat";
+
 
     //////////// File functions ////////////
     /// <summary>
@@ -49,6 +54,55 @@ public class FileAsset
     //////////// Get Resources
     static public Material GetMaterialOfSoundParticleByColorName(string colorName){
         return (Material) Resources.Load<Material>(string.Format("{0}SoundParticle{1}", materialsPath, colorName));
+    }
+
+    //////////// Generic file for Game Data
+    [System.Serializable]
+    public struct GameData{
+        public string lastIP; // Already used IP address
+    }
+
+    static public void SaveGameData(string lastIPUsed){
+        string destination = Path.Combine(lastIPPath, universalSaveName);
+
+        // Get or create FILE
+        FileStream file;
+        if (File.Exists(destination)) file = File.OpenWrite(destination);
+        else {
+            Directory.CreateDirectory(lastIPPath);
+            file = File.Create(destination);
+        }
+
+        // Get DATA to FILE
+        GameData data = new GameData{
+            lastIP = lastIPUsed
+        };
+
+        // Format BINARY FILE (SAVE)
+        BinaryFormatter binForm = new BinaryFormatter();
+        binForm.Serialize(file, data);
+        file.Close();
+        TimeLogger.Log("Save last ip ({0}) file in {1}", lastIPUsed, destination);
+    }
+
+    static public GameData LoadGameData(){
+        string destination = Path.Combine(lastIPPath, universalSaveName);
+
+        // Get FILE or throw exception
+        FileStream file;
+        if (File.Exists(destination)) {
+            file = File.OpenRead(destination);
+        } else {
+            throw new System.Exception(string.Format("File at {0} not found", destination));
+        }
+
+        // Get data from BINARY FILE (LOAD)
+        BinaryFormatter binForm = new BinaryFormatter();
+        GameData data = (GameData) binForm.Deserialize(file);
+        file.Close();
+        TimeLogger.Log("Loaded file from {0}", destination);
+
+        return data;
     }
 
 }
