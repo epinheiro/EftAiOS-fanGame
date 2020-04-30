@@ -55,7 +55,10 @@ public class ServerController : BaseController
         get{ return playerTurnDict; }
     }
     public void PlayerDisconnection(int playerId){
-        playerTurnDict.Remove(playerId);
+        if(playerTurnDict.ContainsKey(playerId)){
+            playerTurnDict.Remove(playerId);
+            State.IncreaseDead();
+        }
     }
 
     ExtendedList<ClientController.PlayerState> playerRolesToGive;
