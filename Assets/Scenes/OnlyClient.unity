@@ -1149,11 +1149,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 438258344}
+      objectReference: {fileID: 0}
     - target: {fileID: 3247733920252862685, guid: 9cd6002827c78464eabef69455c1f2c8,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: GiveUpButton
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3247733920252862685, guid: 9cd6002827c78464eabef69455c1f2c8,
         type: 3}

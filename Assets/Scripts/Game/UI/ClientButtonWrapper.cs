@@ -43,15 +43,6 @@ public class ClientButtonWrapper : MonoBehaviour
         }
     }
 
-    public void GiveUpButton(){
-        controller.BoardManagerRef.CleanMovementGlowTiles();
-        controller.BoardManagerRef.CleanSoundGlowTiles();
-        uiController.SetActiveClientFooterGroup(false);
-        controller.Audio.PlayerDiedEffect();
-
-        CoroutineHelper.DelayedCall(this, controller.ReloadClient, 3.5f);
-    }
-
     // Update is called once per frame
     void Update()
     {
