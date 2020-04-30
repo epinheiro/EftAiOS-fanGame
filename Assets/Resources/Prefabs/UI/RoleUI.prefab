@@ -129,6 +129,7 @@ GameObject:
   - component: {fileID: 2896181881788047633}
   - component: {fileID: 2091385960164721201}
   - component: {fileID: 2668837560871908719}
+  - component: {fileID: 6201112096864583940}
   m_Layer: 5
   m_Name: Holder
   m_TagString: Untagged
@@ -191,6 +192,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 3
+--- !u!114 &6201112096864583940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2758238137853966974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f325890edfd42d4ab3e8d32c61df4de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  beginningAngle: 0
+  timeToCompleteCircle: 5
+  circleRadius: 1
 --- !u!1 &3559347470371104206
 GameObject:
   m_ObjectHideFlags: 0
