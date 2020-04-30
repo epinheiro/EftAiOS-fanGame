@@ -1,8 +1,12 @@
 ﻿public class PlayerTurnData
 {
     // UI Color controller
-    public enum UIColors {Orange, Pink, Green, Cyan, Blue, Red, Yellow, Purple, White}
-    public static int nextUiColor = 0;
+    public enum UIColors {Orange, Pink, Green, Cyan, Blue, Red, Yellow, Purple}
+    public static int nextUiColor = UnityEngine.Random.Range(0, System.Enum.GetNames(typeof(UIColors)).Length);
+
+    void IncrementeNextUIColor(){
+        nextUiColor = (nextUiColor + 1) % System.Enum.GetNames(typeof(UIColors)).Length;
+    }
 
 
     public PutPlayRequest lastPlay;
@@ -31,7 +35,7 @@
         playingRole = role;
 
         int colorToGet = nextUiColor;
-        ++nextUiColor;
+        IncrementeNextUIColor();
         _uiColor = (UIColors) colorToGet;
     }
 
