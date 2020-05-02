@@ -9,9 +9,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 public class FileAsset
 {
     // Highlevel class based configuration
-    static public readonly string mapsDataPath = "Data/Maps/";
-    static public readonly string materialsPath = "Materials/SoundParticle/";
-    static public readonly string lastIPPath = "Data/";
+    static public readonly string resourcesMapsDataPath = "Data/Maps/";
+    static public readonly string resourcesMaterialsPath = "Materials/SoundParticle/";
+    static public readonly string manualFileLastIPPath = "Data/";
     static public string universalSaveName = "save.dat";
 
 
@@ -23,7 +23,7 @@ public class FileAsset
     /// <returns></returns>
     static protected string GetMapFile(string fileName) {
         try{
-            return GetTextFile(string.Format("{0}{1}", mapsDataPath, fileName));
+            return GetTextFile(string.Format("{0}{1}", resourcesMapsDataPath, fileName));
         }catch(Exception e){
             throw e;
         }
@@ -53,7 +53,7 @@ public class FileAsset
 
     //////////// Get Resources
     static public Material GetMaterialOfSoundParticleByColorName(string colorName){
-        return (Material) Resources.Load<Material>(string.Format("{0}SoundParticle{1}", materialsPath, colorName));
+        return (Material) Resources.Load<Material>(string.Format("{0}SoundParticle{1}", resourcesMaterialsPath, colorName));
     }
 
     //////////// Generic file for Game Data
@@ -63,13 +63,13 @@ public class FileAsset
     }
 
     static public void SaveGameData(string lastIPUsed){
-        string destination = Path.Combine(lastIPPath, universalSaveName);
+        string destination = Path.Combine(manualFileLastIPPath, universalSaveName);
 
         // Get or create FILE
         FileStream file;
         if (File.Exists(destination)) file = File.OpenWrite(destination);
         else {
-            Directory.CreateDirectory(lastIPPath);
+            Directory.CreateDirectory(manualFileLastIPPath);
             file = File.Create(destination);
         }
 
@@ -86,7 +86,7 @@ public class FileAsset
     }
 
     static public GameData LoadGameData(){
-        string destination = Path.Combine(lastIPPath, universalSaveName);
+        string destination = Path.Combine(manualFileLastIPPath, universalSaveName);
 
         // Get FILE or throw exception
         FileStream file;
