@@ -27,8 +27,10 @@ public class ToConnectClientState : IStateController
         _insertedString = uiController.GetInsertedText();
          if(state == Connection.Disconnected){
             if(string.IsNullOrEmpty(_insertedString)){
-                uiController.SetInsertTextButtonVisibility(true);
-                uiController.SetInsertTextButtonAttributes("ENTER SHIP (SAME PC)");
+                if(!Application.isMobilePlatform){
+                    uiController.SetInsertTextButtonVisibility(true);
+                    uiController.SetInsertTextButtonAttributes("ENTER SHIP (SAME PC)");
+                }
             }else{
                 if(NodeCommunication.IsIPValid(_insertedString)){
                     uiController.SetInsertTextButtonVisibility(true);
