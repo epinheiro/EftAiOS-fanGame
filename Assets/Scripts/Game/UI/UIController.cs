@@ -303,7 +303,7 @@ public class UIController : MonoBehaviour
 
     public void ActivateLoadingScreen(){
         SetPresetLayout(Layout.AllInactive);
-        DeactiveBackButton();
+        if(backButtonGroup != null && backButtonGroup.gameObject != null) DeactiveBackButton();
         SetActiveLoadingText(true);
     }
 
