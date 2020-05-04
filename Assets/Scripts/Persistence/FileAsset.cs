@@ -11,7 +11,7 @@ public class FileAsset
     // Highlevel class based configuration
     static public readonly string resourcesMapsDataPath = "Data/Maps/";
     static public readonly string resourcesMaterialsPath = "Materials/SoundParticle/";
-    static public readonly string manualFileLastIPPath = "Data/";
+    static public readonly string manualFileLastIPPath = "Data";
     static public string universalSaveName = "save.dat";
 
 
@@ -63,13 +63,13 @@ public class FileAsset
     }
 
     static public void SaveGameData(string lastIPUsed){
-        string destination = Path.Combine(manualFileLastIPPath, universalSaveName);
+        string destination = Path.Combine(Application.persistentDataPath, manualFileLastIPPath, universalSaveName);
 
         // Get or create FILE
         FileStream file;
         if (File.Exists(destination)) file = File.OpenWrite(destination);
         else {
-            Directory.CreateDirectory(manualFileLastIPPath);
+            Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, manualFileLastIPPath));
             file = File.Create(destination);
         }
 
@@ -86,7 +86,7 @@ public class FileAsset
     }
 
     static public GameData LoadGameData(){
-        string destination = Path.Combine(manualFileLastIPPath, universalSaveName);
+        string destination = Path.Combine(Application.persistentDataPath, manualFileLastIPPath, universalSaveName);
 
         // Get FILE or throw exception
         FileStream file;
