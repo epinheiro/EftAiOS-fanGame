@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuLoader : MonoBehaviour
 {
+    public GameObject loadingScreen;
     public GameObject aboutPopup;
     public GameObject mainMenu;
 
@@ -14,6 +15,12 @@ public class MainMenuLoader : MonoBehaviour
     }
 
     public void LoadScene(string loadScene){
+        aboutPopup.SetActive(false);
+        howToPlayPopup.SetActive(false);
+        mainMenu.SetActive(false);
+
+        loadingScreen.SetActive(true);
+
         SceneManager.LoadScene(loadScene);
     }
 
