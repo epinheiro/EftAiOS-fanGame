@@ -71,6 +71,8 @@ public class BaseController : MonoBehaviour
     }
 
     public void LoadScene(string name){
+        UIController.ActivateLoadingScreen();
+
         UnityEngine.SceneManagement.SceneManager.LoadScene(name);
     }
 }
