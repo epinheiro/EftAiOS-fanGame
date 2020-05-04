@@ -50,12 +50,17 @@ public class UIController : MonoBehaviour
     Transform clientFooterGroup;
     Transform backButtonGroup;
 
+    SimpleTextHelper loadingText;
+
     void Setup(){
         RoleUISetup();
 
         HeaderSetup();
         AlienFeedbackGroupSetup();
         FooterSetup();
+
+        LoadingUISetup();
+
         SetPresetLayout(Layout.AllInactive);
     }
 
@@ -95,6 +100,10 @@ public class UIController : MonoBehaviour
         backButtonGroup = transform.Find("BackToMainMenu");
     }
 
+    void LoadingUISetup(){
+        loadingText = new SimpleTextHelper(transform.Find("LoadingText").gameObject);
+    }
+
     //////////////////
 
 
@@ -110,11 +119,13 @@ public class UIController : MonoBehaviour
                 SetHeaderUIElements(true, false, null, null);
                 SetFooterUIElements(true);
                 SetClientFooterGroup(false);
+                SetActiveLoadingText(false);
                 break;
             case Layout.ClientDefault:
                 SetHeaderUIElements(true, false, null, null);
                 SetFooterUIElements(false);
                 SetClientFooterGroup(false);
+                SetActiveLoadingText(false);
                 break;
 
             /////////////////////////////
@@ -122,21 +133,25 @@ public class UIController : MonoBehaviour
                 SetHeaderUIElements(false, false, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
                 SetFooterUIElements(false);
                 SetClientFooterGroup(false);
+                SetActiveLoadingText(false);
                 break;
             case Layout.InsertText:
                 SetHeaderUIElements(false, true, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.DontAttack);
                 SetFooterUIElements(false);
                 SetClientFooterGroup(false);
+                SetActiveLoadingText(false);
                 break;
             case Layout.ConditionalButton:
                 SetHeaderUIElements(true, false, null, (ButtonHelper.ButtonType) ButtonHelper.ButtonType.Attack);
                 SetFooterUIElements(false);
                 SetClientFooterGroup(false);
+                SetActiveLoadingText(false);
                 break;
             case Layout.AllInactive:
                 SetHeaderUIElements(false, false, null, null);
                 SetFooterUIElements(false);
                 SetClientFooterGroup(false);
+                SetActiveLoadingText(false);
                 break;
         }
     }
@@ -286,6 +301,12 @@ public class UIController : MonoBehaviour
         Destroy(backButtonGroup.gameObject);
     }
 
+    public void ActivateLoadingScreen(){
+        SetPresetLayout(Layout.AllInactive);
+        DeactiveBackButton();
+        SetActiveLoadingText(true);
+    }
+
     /////////////////////////////////////////////////////
 
     // Line 1 //
@@ -386,5 +407,9 @@ public class UIController : MonoBehaviour
 
     void ChangeFooterButtonColor(PlayerTurnData.UIColors playerColor){
         clientFooterGroup.Find("Help").GetComponent<UnityEngine.UI.Button>().image.color = FileAsset.GetMaterialOfSoundParticleByColorName(System.Enum.GetName(typeof(PlayerTurnData.UIColors), playerColor)).color;
+    }
+
+    void SetActiveLoadingText(bool IsActive){
+        loadingText.IsActive = IsActive;
     }
 }
