@@ -97,7 +97,7 @@ public class ServerController : BaseController
     }
 
     public void Reset(){
-        SceneManager.LoadScene("OnlyServer");
+        LoadScene("OnlyServer");
     }
 
     // Update is called once per frame

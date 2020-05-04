@@ -160,7 +160,7 @@ public class ClientController : BaseController
     }
 
     public void Reset(){
-        SceneManager.LoadScene("OnlyClient");
+        LoadScene("OnlyClient");
     }
 
     public void SoftResetClient(){
@@ -189,7 +189,7 @@ public class ClientController : BaseController
     }
 
     public void ReloadClient(){
-        SceneManager.LoadScene("OnlyClient");
+        LoadScene("OnlyClient");
     }
 
     // Update is called once per second
