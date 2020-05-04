@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class BaseController : MonoBehaviour
 {
+    public void SetupApplication(){
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        SetupApplicationLogs();
+    }
+
     public void SetupApplicationLogs(){
         // Supressing intended script logs to a single line
         Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);

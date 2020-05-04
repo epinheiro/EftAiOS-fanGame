@@ -133,7 +133,7 @@ public class ClientController : BaseController
             TimeLogger.Log("No last IP found: {0}", e.Message);
         }
 
-        SetupApplicationLogs();
+        SetupApplication();
     }
 
     void Start(){
