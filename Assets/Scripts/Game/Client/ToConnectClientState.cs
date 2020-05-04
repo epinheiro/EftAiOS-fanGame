@@ -77,7 +77,13 @@ public class ToConnectClientState : IStateController
 
             case Connection.Connected:
                 TimeLogger.Log("CLIENT - connected to {0}", logMessage);
-                FileAsset.SaveGameData(_insertedString);
+
+                try{
+                    FileAsset.SaveGameData(_insertedString);
+                } catch (System.Exception e){
+                    TimeLogger.Log("A problem occurred while saving game data: {0}", e.Message);
+                }
+
                 if(!string.IsNullOrEmpty(_insertedString)) clientController.LastSucessfulIp = _insertedString;
                 StateEnd();
                 break;
