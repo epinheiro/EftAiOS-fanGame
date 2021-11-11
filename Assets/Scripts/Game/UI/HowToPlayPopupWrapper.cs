@@ -23,12 +23,6 @@ public class HowToPlayPopupWrapper : MonoBehaviour
         popups = new GameObject[]{introPopup, setupPopup, playingPopup, humanRolePopup, alienRolePopup};
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void ActivateIntroPage(){
         SetActive(true);
         GoToPopup(HowToPopup.Intro);
