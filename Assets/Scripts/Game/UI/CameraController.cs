@@ -2,12 +2,23 @@
 
 public class CameraController
 {
+    public static Camera _cameraComponent;
+    public static Camera CameraComponent
+    {
+        get
+        {
+            if(_cameraComponent == null)
+                _cameraComponent = Camera.main.GetComponent<Camera>();
+            return _cameraComponent;
+        }
+    }
+
     static public Color GetBackgroundColor(){
-        return Camera.main.GetComponent<Camera>().backgroundColor;
+        return CameraComponent.backgroundColor;
     }
 
     static public void ChangeCameraBackgroundColor(Color newColor){
-        Camera.main.GetComponent<Camera>().backgroundColor = newColor;
+        CameraComponent.backgroundColor = newColor;
     }
 
     static public void ChangeCameraBackgroundColor(float r, float g, float b, float a){

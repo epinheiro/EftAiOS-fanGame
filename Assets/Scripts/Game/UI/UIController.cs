@@ -48,6 +48,7 @@ public class UIController : MonoBehaviour
     ProgressBarHelper progressBar;
 
     Transform clientFooterGroup;
+    UnityEngine.UI.Button clientFooterHelperButton;
     Transform backButtonGroup;
 
     SimpleTextHelper loadingText;
@@ -97,6 +98,7 @@ public class UIController : MonoBehaviour
         progressText = new SimpleTextHelper(footerGroup.transform.Find("ProgressText").gameObject);
 
         clientFooterGroup = transform.Find("ClientFooterGroup");
+        clientFooterHelperButton = clientFooterGroup.Find("Help").GetComponent<UnityEngine.UI.Button>();
         backButtonGroup = transform.Find("BackToMainMenu");
     }
 
@@ -406,7 +408,7 @@ public class UIController : MonoBehaviour
     }
 
     void ChangeFooterButtonColor(PlayerTurnData.UIColors playerColor){
-        clientFooterGroup.Find("Help").GetComponent<UnityEngine.UI.Button>().image.color = FileAsset.GetMaterialOfSoundParticleByColorName(System.Enum.GetName(typeof(PlayerTurnData.UIColors), playerColor)).color;
+        clientFooterHelperButton.image.color = FileAsset.GetMaterialOfSoundParticleByColorName(System.Enum.GetName(typeof(PlayerTurnData.UIColors), playerColor)).color;
     }
 
     void SetActiveLoadingText(bool IsActive){
