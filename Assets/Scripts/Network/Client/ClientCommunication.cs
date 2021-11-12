@@ -109,7 +109,7 @@ public class ClientCommunication : NodeCommunication
         int sndY = sound.y;
         bool atk = attacked;
 
-        PutPlayRequest request = new PutPlayRequest(id, movX, movY, sndX, sndY, atk);
+        PutPlayRequestData request = new PutPlayRequestData(id, movX, movY, sndX, sndY, atk);
         TimeLogger.Log("CLIENT {0} - schedule request - PutPlay (({1:00},{2:00}) ({3:00},{4:00}) ({5}))", id, movX, movY, sndX, sndY, atk);
 
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
@@ -119,7 +119,7 @@ public class ClientCommunication : NodeCommunication
     public void ScheduleGetStateRequest(){
         int id = ClientId;
 
-        GetStateRequest request = new GetStateRequest(ClientId);
+        GetStateRequestData request = new GetStateRequestData(ClientId);
         //TimeLogger.Log("CLIENT {0} - schedule request - GetState", id);
 
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
@@ -129,7 +129,7 @@ public class ClientCommunication : NodeCommunication
     public void ScheduleGetResultsRequest(){
         int id = ClientId;
 
-        GetResultsRequest request = new GetResultsRequest(id);
+        GetResultsRequestData request = new GetResultsRequestData(id);
         TimeLogger.Log("CLIENT {0} - schedule request - GetResults", id);
 
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());

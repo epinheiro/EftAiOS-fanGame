@@ -112,11 +112,11 @@ public class ServerController : BaseController
     }
 
     public void InsertNewPlayTurnData(int playerId, Vector2Int movementTo, Vector2Int soundIn, bool attacked){
-        PutPlayRequest playerData = new PutPlayRequest(playerId, movementTo.x, movementTo.y, soundIn.x, soundIn.y, attacked);
+        PutPlayRequestData playerData = new PutPlayRequestData(playerId, movementTo.x, movementTo.y, soundIn.x, soundIn.y, attacked);
         InsertNewPlayTurnData(playerData);
     }
 
-    public void InsertNewPlayTurnData(PutPlayRequest putPlayData){
+    public void InsertNewPlayTurnData(PutPlayRequestData putPlayData){
         int playerId = putPlayData.playerId;
 
         PlayerTurnData turnData;
@@ -138,7 +138,7 @@ public class ServerController : BaseController
             finalPosition = _boardManager.GetSpawnPointTileData(finalState).tilePosition;
 
             PlayerTurnData data = new PlayerTurnData(
-                    new PutPlayRequest(playerId, finalPosition.x, finalPosition.y, finalPosition.x, finalPosition.y, false),
+                    new PutPlayRequestData(playerId, finalPosition.x, finalPosition.y, finalPosition.x, finalPosition.y, false),
                     finalState
                 );
 

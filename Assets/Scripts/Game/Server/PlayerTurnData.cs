@@ -9,7 +9,7 @@
     }
 
 
-    public PutPlayRequest lastPlay;
+    public PutPlayRequestData lastPlay;
     public bool playedThisTurn;
     public ClientController.PlayerState role;
     public ClientController.PlayerState playingRole;
@@ -28,7 +28,7 @@
         return FileAsset.GetMaterialOfSoundParticleByColorName(System.Enum.GetName(typeof(UIColors), _uiColor));
     }
 
-    public PlayerTurnData(PutPlayRequest lastPutPlay, ClientController.PlayerState role){
+    public PlayerTurnData(PutPlayRequestData lastPutPlay, ClientController.PlayerState role){
         this.lastPlay = lastPutPlay;
         this.playedThisTurn = false;
         this.role = role;
@@ -39,7 +39,7 @@
         _uiColor = (UIColors) colorToGet;
     }
 
-    public void InputNewPutPlay(PutPlayRequest newPutPlay){
+    public void InputNewPutPlay(PutPlayRequestData newPutPlay){
         this.lastPlay = newPutPlay;
         this.playedThisTurn = true;
     }

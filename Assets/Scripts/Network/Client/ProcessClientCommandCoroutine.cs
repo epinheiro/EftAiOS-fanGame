@@ -25,20 +25,20 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
     }
 
     void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
-        PutPlayResponse responseReceived = new PutPlayResponse(strm);
+        PutPlayResponseData responseReceived = new PutPlayResponseData(strm);
 
         TimeLogger.Log("CLIENT {0} - response - PutPlay success", ((ClientCommunication)owner).ClientId);
     }
 
     void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
-        GetStateResponse responseReceived = new GetStateResponse(strm);
+        GetStateResponseData responseReceived = new GetStateResponseData(strm);
 
         //TimeLogger.Log("CLIENT {0} - response - GetState ({1})", ((ClientCommunication)owner).ClientId, responseReceived.ServerState);
         ((ClientCommunication)owner).clientController.ServerState = responseReceived.ServerState;
     }
 
     void GetResults(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
-        GetResultsResponse responseReceived = new GetResultsResponse(strm);
+        GetResultsResponseData responseReceived = new GetResultsResponseData(strm);
 
         ClientController.PlayerState playerState = (ClientController.PlayerState) responseReceived.playerState;
         PlayerTurnData.UIColors playerColor = (PlayerTurnData.UIColors) responseReceived.playerColor;
