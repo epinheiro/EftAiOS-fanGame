@@ -30,15 +30,15 @@ public class ClientButtonWrapper : MonoBehaviour
 
         switch(controller.CurrentPlayerState){
             case ClientController.PlayerState.Alien:
-                howtoPlayScrollBar.GoToPopup(HowToPlayPopupWrapper.HowToPopup.Alien);
+                howtoPlayScrollBar.GoToPopup(HowToPopupEnum.Alien);
                 break;
 
             case ClientController.PlayerState.Human:
-                howtoPlayScrollBar.GoToPopup(HowToPlayPopupWrapper.HowToPopup.Human);
+                howtoPlayScrollBar.GoToPopup(HowToPopupEnum.Human);
                 break;
 
             default:
-                howtoPlayScrollBar.GoToPopup(HowToPlayPopupWrapper.HowToPopup.Intro);
+                howtoPlayScrollBar.GoToPopup(HowToPopupEnum.Intro);
                 break;
         }
     }

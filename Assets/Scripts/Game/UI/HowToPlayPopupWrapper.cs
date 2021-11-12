@@ -15,8 +15,6 @@ public class HowToPlayPopupWrapper : MonoBehaviour
 
     GameObject[] popups;
 
-    public enum HowToPopup {Intro, Setup, Playing, Human, Alien}
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -25,7 +23,7 @@ public class HowToPlayPopupWrapper : MonoBehaviour
 
     public void ActivateIntroPage(){
         SetActive(true);
-        GoToPopup(HowToPopup.Intro);
+        GoToPopup(HowToPopupEnum.Intro);
     }
 
     public void SetActive(bool isActive){
@@ -33,17 +31,17 @@ public class HowToPlayPopupWrapper : MonoBehaviour
     }
 
     public void GoToPopup(string nextPopup){
-        GoToPopup((HowToPopup)System.Enum.Parse(typeof(HowToPopup), nextPopup));
+        GoToPopup((HowToPopupEnum)System.Enum.Parse(typeof(HowToPopupEnum), nextPopup));
     }
 
-    public void GoToPopup(HowToPopup nextPopup){
-        foreach(HowToPopup popup in System.Enum.GetValues(typeof(HowToPopup))){
+    public void GoToPopup(HowToPopupEnum nextPopup){
+        foreach(HowToPopupEnum popup in System.Enum.GetValues(typeof(HowToPopupEnum))){
             if(nextPopup == popup){
                 GameObject goPopup = popups[(int)popup];
                 goPopup.SetActive(true);
                 goPopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>().value = 1;
 
-                if(nextPopup == HowToPopup.Intro) backButton.SetActive(false);
+                if(nextPopup == HowToPopupEnum.Intro) backButton.SetActive(false);
                 else backButton.SetActive(true);
             }else{
                 popups[(int)popup].SetActive(false);
