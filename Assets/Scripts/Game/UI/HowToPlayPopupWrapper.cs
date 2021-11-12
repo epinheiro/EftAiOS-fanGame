@@ -13,12 +13,18 @@ public class HowToPlayPopupWrapper : MonoBehaviour
 
     public GameObject backButton;
 
-    GameObject[] popups;
+    Dictionary<HowToPopupEnum, (GameObject, Scrollbar)> popups;
 
-    // Start is called before the first frame update
     void Awake()
     {
-        popups = new GameObject[]{introPopup, setupPopup, playingPopup, humanRolePopup, alienRolePopup};
+        popups = new Dictionary<HowToPopupEnum, (GameObject, Scrollbar)>()
+        {
+            {HowToPopupEnum.Intro, (introPopup, introPopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>())},
+            {HowToPopupEnum.Setup, (setupPopup, setupPopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>())},
+            {HowToPopupEnum.Playing, (playingPopup, playingPopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>())},
+            {HowToPopupEnum.Human, (humanRolePopup, humanRolePopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>())},
+            {HowToPopupEnum.Alien, (alienRolePopup, alienRolePopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>())}
+        };
     }
 
     public void ActivateIntroPage(){
@@ -35,16 +41,15 @@ public class HowToPlayPopupWrapper : MonoBehaviour
     }
 
     public void GoToPopup(HowToPopupEnum nextPopup){
-        foreach(HowToPopupEnum popup in System.Enum.GetValues(typeof(HowToPopupEnum))){
-            if(nextPopup == popup){
-                GameObject goPopup = popups[(int)popup];
-                goPopup.SetActive(true);
-                goPopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>().value = 1;
+        foreach(KeyValuePair<HowToPopupEnum, (GameObject, Scrollbar)> popup in popups){
+            if(nextPopup == popup.Key){
+                popup.Value.Item1.SetActive(true);
+                popup.Value.Item2.value = 1;
 
                 if(nextPopup == HowToPopupEnum.Intro) backButton.SetActive(false);
                 else backButton.SetActive(true);
             }else{
-                popups[(int)popup].SetActive(false);
+                popup.Value.Item1.SetActive(false);
             }
         }
     }
