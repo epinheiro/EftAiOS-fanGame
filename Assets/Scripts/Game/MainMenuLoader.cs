@@ -50,13 +50,22 @@ public class MainMenuLoader : MonoBehaviour
         currentScreen = screen;
     }
 
-    /// Public API to bind ///
-    public void LoadScene(string loadScene){
+    void LoadScene(string loadScene){
         screenCallbacksController[currentScreen].Item2.Invoke();
 
         loadingScreen.SetActive(true);
 
         SceneManager.LoadScene(loadScene);
+    }
+
+    /// Public API to bind ///
+    public void LoadOnlyClientScene()
+    {
+        LoadScene("OnlyClient");
+    }
+    public void LoadOnlyServerScene()
+    {
+        LoadScene("OnlyServer");
     }
 
     public void AboutPopup(){
