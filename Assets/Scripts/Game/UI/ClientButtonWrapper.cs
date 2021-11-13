@@ -26,7 +26,7 @@ public class ClientButtonWrapper : MonoBehaviour
     }
 
     public void HelpButton(){
-        howtoPlayScrollBar.SetActive(true);
+        howtoPlayScrollBar.ActivateIntroPage();
 
         switch(controller.CurrentPlayerState){
             case ClientController.PlayerState.Alien:
