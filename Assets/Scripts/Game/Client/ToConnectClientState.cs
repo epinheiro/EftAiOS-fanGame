@@ -19,7 +19,7 @@ public class ToConnectClientState : IStateController
 
         this.clientController = clientController;
         SetClientIdentity();
-        clientController.ClientCommunication = clientController.gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
+        clientController.StartClientCommunication();
         this.uiController = clientController.UIController;
     }
 

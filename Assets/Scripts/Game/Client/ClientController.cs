@@ -113,7 +113,7 @@ public class ClientController : BaseController
     ClientCommunication clientCommunication;
     public ClientCommunication ClientCommunication{
         get { return clientCommunication; }
-        set { clientCommunication = value; }
+        protected set { clientCommunication = value; }
     }
 
     int _clientId;
@@ -157,6 +157,11 @@ public class ClientController : BaseController
         deck = new EventDeck();
 
         update = DelayedCall(UpdateStati, 1f, true);
+    }
+
+    public void StartClientCommunication()
+    {
+        ClientCommunication = this.gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
     }
 
     public void Reset(){
