@@ -7,26 +7,8 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
     public ProcessServerCommandCoroutine(ServerCommunication owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler) :
         base(owner, driver, jobHandler){
     }
-    
-    protected override void ProcessCommandReceived(int enumCommandNumber, UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
-        ServerCommunication.ServerCommand command = (ServerCommunication.ServerCommand) enumCommandNumber;
-        
-        switch(command){
-            case ServerCommunication.ServerCommand.PutPlay:
-                PutPlayCommand(driver, connection, strm);
-            break;
-            case ServerCommunication.ServerCommand.GetState:
-                GetStateCommand(driver, connection, strm);
-            break;
-            case ServerCommunication.ServerCommand.GetResults:
-                GetResults(driver, connection, strm);
-            break;
-            default:
-                throw new System.Exception(string.Format("Command number {0} not found", enumCommandNumber));
-        }
-    }
 
-    void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+    protected override  void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         PutPlayRequestData requestReceived = new PutPlayRequestData(strm);
         TimeLogger.Log("SERVER - {0}[{1}] request - PutPlay (({2:00},{3:00}) ({4:00},{5:00}) ({6}))",
         requestReceived.playerId, connection.InternalId, requestReceived.movementTo.x, requestReceived.movementTo.y, requestReceived.sound.x, requestReceived.sound.y, requestReceived.PlayerAttacked);
@@ -38,7 +20,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
         jobHandler.QueueJob(job);
     }
 
-    void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+    protected override  void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         GetStateRequestData requestReceived = new GetStateRequestData(strm);
         int clientId = requestReceived.playerId;
 
@@ -51,7 +33,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
         jobHandler.QueueJob(job);
     }
 
-    void GetResults(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+    protected override  void GetResultsCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         GetResultsRequestData requestReceived = new GetResultsRequestData(strm);
         int clientId = requestReceived.playerId;
 

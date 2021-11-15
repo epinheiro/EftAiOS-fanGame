@@ -6,38 +6,20 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
         base(owner, driver, jobHandler){
     }
 
-    protected override void ProcessCommandReceived(int enumCommandNumber, UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
-        ServerCommunication.ServerCommand command = (ServerCommunication.ServerCommand) enumCommandNumber;
-        
-        switch(command){
-            case ServerCommunication.ServerCommand.PutPlay:
-                PutPlayCommand(driver, connection, strm);
-            break;
-            case ServerCommunication.ServerCommand.GetState:
-                GetStateCommand(driver, connection, strm);
-            break;
-            case ServerCommunication.ServerCommand.GetResults:
-                GetResults(driver, connection, strm);
-            break;
-            default:
-                throw new System.Exception(string.Format("Command number {0} not found", enumCommandNumber));
-        }
-    }
-
-    void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+    protected override void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         PutPlayResponseData responseReceived = new PutPlayResponseData(strm);
 
         TimeLogger.Log("CLIENT {0} - response - PutPlay success", ((ClientCommunication)owner).ClientId);
     }
 
-    void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+    protected override void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         GetStateResponseData responseReceived = new GetStateResponseData(strm);
 
         //TimeLogger.Log("CLIENT {0} - response - GetState ({1})", ((ClientCommunication)owner).ClientId, responseReceived.ServerState);
         ((ClientCommunication)owner).clientController.ServerState = responseReceived.ServerState;
     }
 
-    void GetResults(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+    protected override void GetResultsCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
         GetResultsResponseData responseReceived = new GetResultsResponseData(strm);
 
         ClientController.PlayerState playerState = (ClientController.PlayerState) responseReceived.playerState;

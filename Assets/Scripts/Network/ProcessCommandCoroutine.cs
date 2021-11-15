@@ -114,8 +114,32 @@ public class ProcessCommandCoroutine<T> where T : MonoBehaviour
         }
     }
 
-    protected virtual void ProcessCommandReceived(int command, UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
-        throw new System.Exception("ProcessCommandCoroutine child must implements own ProcessCommandReceived");
+    protected void ProcessCommandReceived(int enumCommandNumber, UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+        ServerCommunication.ServerCommand command = (ServerCommunication.ServerCommand) enumCommandNumber;
+        
+        switch(command){
+            case ServerCommunication.ServerCommand.PutPlay:
+                PutPlayCommand(driver, connection, strm);
+            break;
+            case ServerCommunication.ServerCommand.GetState:
+                GetStateCommand(driver, connection, strm);
+            break;
+            case ServerCommunication.ServerCommand.GetResults:
+                GetResultsCommand(driver, connection, strm);
+            break;
+            default:
+                throw new System.Exception(string.Format("Command number {0} not found", enumCommandNumber));
+        }
+    }
+
+    protected virtual void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+        throw new System.Exception("ProcessCommandCoroutine child must implements own PutPlayCommand");
+    }
+    protected virtual void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+        throw new System.Exception("ProcessCommandCoroutine child must implements own GetStateCommand");
+    }
+    protected virtual void GetResultsCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+        throw new System.Exception("ProcessCommandCoroutine child must implements own GetResultsCommand");
     }
 
     protected virtual void ConnectProcedure(NetworkConnection connection){
