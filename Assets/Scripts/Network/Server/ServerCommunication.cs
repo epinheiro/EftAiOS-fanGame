@@ -1,8 +1,10 @@
+using System;
 using Unity.Collections;
 using Unity.Networking.Transport;
 
 public class ServerCommunication : NodeCommunication
 {
+    public Action<PutPlayRequestData> PutPlayEvent;
 
     public enum ServerCommand {PutPlay, GetState, GetResults}
 
@@ -33,11 +35,11 @@ public class ServerCommunication : NodeCommunication
 
         pcc = new ProcessServerCommandCoroutine(this, m_ServerDriver, jobHandler);
 
-        pcc.PutPlayEvent += PutPlayEvent;
+        pcc.PutPlayEvent += PutPlayEventCallback;
     }
 
-    void PutPlayEvent(PutPlayRequestData requestReceived){
-        this.serverController.InsertNewPlayTurnData(requestReceived);
+    void PutPlayEventCallback(PutPlayRequestData requestReceived){
+        PutPlayEvent?.Invoke(requestReceived);
     }
 
      void LateUpdate(){
@@ -52,7 +54,7 @@ public class ServerCommunication : NodeCommunication
         m_ServerDriver.Dispose();
         m_connections.Dispose();
 
-        pcc.PutPlayEvent -= PutPlayEvent;
+        pcc.PutPlayEvent -= PutPlayEventCallback;
     }
 
     void FixedUpdate(){

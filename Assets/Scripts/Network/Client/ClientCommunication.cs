@@ -2,9 +2,13 @@ using UnityEngine;
 using Unity.Networking.Transport;
 using Unity.Collections;
 using Unity.Jobs;
+using System;
 
 public class ClientCommunication : NodeCommunication
 {
+    public Action<ServerController.ServerState> GetStateEvent;
+    public Action<ClientController.PlayerState, Vector2Int, PlayerTurnData.UIColors> GetResultsEvent;
+
     int _clientId;
     public int ClientId{
         get { return _clientId; }
@@ -61,18 +65,16 @@ public class ClientCommunication : NodeCommunication
 
         pcc = new ProcessClientCommandCoroutine(this, m_ClientDriver, jobHandler);
 
-        pcc.GetStateEvent += GetStateEvent;
-        pcc.GetResultsEvent += GetResultsEvent;
+        pcc.GetStateEvent += GetStateEventCallback;
+        pcc.GetResultsEvent += GetResultsEventCallback;
     }
 
-    void GetStateEvent(ServerController.ServerState serverState){
-        this.clientController.ServerState = serverState;
+    void GetStateEventCallback(ServerController.ServerState serverState){
+        GetStateEvent?.Invoke(serverState);
     }
 
-    void GetResultsEvent(ClientController.PlayerState playerState, Vector2Int playerPosition, PlayerTurnData.UIColors playerColor){
-        this.clientController.NextPlayerState = playerState;
-        this.clientController.playerCurrentPosition = playerPosition;
-        this.clientController.PlayerColor = playerColor;
+    void GetResultsEventCallback(ClientController.PlayerState playerState, Vector2Int playerPosition, PlayerTurnData.UIColors playerColor){
+        GetResultsEvent?.Invoke(playerState, playerPosition, playerColor);
     }
 
     void OnDestroy(){
@@ -82,8 +84,8 @@ public class ClientCommunication : NodeCommunication
         m_ClientDriver.Dispose();
         m_clientToServerConnection.Dispose();
 
-        pcc.GetStateEvent -= GetStateEvent;
-        pcc.GetResultsEvent -= GetResultsEvent;
+        pcc.GetStateEvent -= GetStateEventCallback;
+        pcc.GetResultsEvent -= GetResultsEventCallback;
     }
 
     void LateUpdate(){

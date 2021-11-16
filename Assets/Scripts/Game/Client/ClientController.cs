@@ -162,6 +162,18 @@ public class ClientController : BaseController
     public void StartClientCommunication()
     {
         ClientCommunication = this.gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
+        ClientCommunication.GetStateEvent += GetStateEvent;
+        ClientCommunication.GetResultsEvent += GetResultsEvent;
+    }
+
+    void GetStateEvent(ServerController.ServerState serverState){
+        this.ServerState = serverState;
+    }
+
+    void GetResultsEvent(ClientController.PlayerState playerState, Vector2Int playerPosition, PlayerTurnData.UIColors playerColor){
+        this.NextPlayerState = playerState;
+        this.playerCurrentPosition = playerPosition;
+        this.PlayerColor = playerColor;
     }
 
     public void Reset(){
@@ -169,7 +181,9 @@ public class ClientController : BaseController
     }
 
     public void SoftResetClient(){
-        Destroy(this.GetComponent<ClientCommunication>());
+        ClientCommunication.GetStateEvent -= GetStateEvent;
+        ClientCommunication.GetResultsEvent -= GetResultsEvent;
+        Destroy(ClientCommunication);
 
         currentState = ClientController.ClientState.ToConnect;
 

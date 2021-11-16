@@ -70,6 +70,16 @@ public class ServerController : BaseController
         SetupApplication();
 
         serverCommunication = gameObject.AddComponent(typeof(ServerCommunication)) as ServerCommunication;
+        serverCommunication.PutPlayEvent += PutPlayEvent;
+    }
+
+    void PutPlayEvent(PutPlayRequestData requestReceived){
+        this.InsertNewPlayTurnData(requestReceived);
+    }
+
+    void OnDestroy()
+    {
+        serverCommunication.PutPlayEvent -= PutPlayEvent;
     }
 
     void Start(){
