@@ -16,6 +16,6 @@ public class GlowMovementTileBehavior : MonoBehaviour
     void OnMouseDown(){
         TimeLogger.Log("CLIENT {0} - chose movement tile {1}", controller.ClientId, this.name);
         controller.PlayerNextPosition = this.name;
-        controller.BoardManagerRef.CleanMovementGlowTiles(this.name);
+        controller.CleanMovementGlowTiles(this.name);
     }
 }

@@ -116,7 +116,7 @@ public class ProcessingServerState : IStateController
             serverController.PlayerTurnDict.TryGetValue(key, out data);
             PutPlayRequestData lastPlay = data.lastPlay;
 
-            if(data.role == ClientController.PlayerState.Human && serverController.BoardManagerRef.GetTileType(BoardManager.TranslateTilePositionToCode(lastPlay.movementTo)) == BoardManager.PossibleTypes.EscapePod){
+            if(data.role == ClientController.PlayerState.Human && serverController.GetTileType(BoardManager.TranslateTilePositionToCode(lastPlay.movementTo)) == BoardManager.PossibleTypes.EscapePod){
                 playersEscapees.Add(lastPlay.playerId);
                 TimeLogger.Log("SERVER - player {0} escaped!", lastPlay.playerId);
                 serverController.State.IncreaseEscapees();
