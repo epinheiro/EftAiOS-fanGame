@@ -32,6 +32,12 @@ public class ServerCommunication : NodeCommunication
         jobHandler = new CommunicationJobHandler();
 
         pcc = new ProcessServerCommandCoroutine(this, m_ServerDriver, jobHandler);
+
+        pcc.PutPlayEvent += PutPlayEvent;
+    }
+
+    void PutPlayEvent(PutPlayRequestData requestReceived){
+        this.serverController.InsertNewPlayTurnData(requestReceived);
     }
 
      void LateUpdate(){
@@ -45,6 +51,8 @@ public class ServerCommunication : NodeCommunication
         jobHandler.Complete();
         m_ServerDriver.Dispose();
         m_connections.Dispose();
+
+        pcc.PutPlayEvent -= PutPlayEvent;
     }
 
     void FixedUpdate(){

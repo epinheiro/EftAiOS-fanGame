@@ -60,6 +60,19 @@ public class ClientCommunication : NodeCommunication
         SetClientIdentity();
 
         pcc = new ProcessClientCommandCoroutine(this, m_ClientDriver, jobHandler);
+
+        pcc.GetStateEvent += GetStateEvent;
+        pcc.GetResultsEvent += GetResultsEvent;
+    }
+
+    void GetStateEvent(ServerController.ServerState serverState){
+        this.clientController.ServerState = serverState;
+    }
+
+    void GetResultsEvent(ClientController.PlayerState playerState, Vector2Int playerPosition, PlayerTurnData.UIColors playerColor){
+        this.clientController.NextPlayerState = playerState;
+        this.clientController.playerCurrentPosition = playerPosition;
+        this.clientController.PlayerColor = playerColor;
     }
 
     void OnDestroy(){
@@ -68,6 +81,9 @@ public class ClientCommunication : NodeCommunication
         m_ClientDriver.Disconnect(m_clientToServerConnection[0]);
         m_ClientDriver.Dispose();
         m_clientToServerConnection.Dispose();
+
+        pcc.GetStateEvent -= GetStateEvent;
+        pcc.GetResultsEvent -= GetResultsEvent;
     }
 
     void LateUpdate(){

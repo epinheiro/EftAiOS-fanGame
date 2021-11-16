@@ -1,9 +1,12 @@
 ﻿using Unity.Networking.Transport;
 using UnityEngine;
 using Unity.Jobs;
+using System;
 
 public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommunication>
 {
+    public Action<PutPlayRequestData> PutPlayEvent;
+
     public ProcessServerCommandCoroutine(ServerCommunication owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler) :
         base(owner, driver, jobHandler){
     }
@@ -13,7 +16,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
         TimeLogger.Log("SERVER - {0}[{1}] request - PutPlay (({2:00},{3:00}) ({4:00},{5:00}) ({6}))",
         requestReceived.playerId, connection.InternalId, requestReceived.movementTo.x, requestReceived.movementTo.y, requestReceived.sound.x, requestReceived.sound.y, requestReceived.PlayerAttacked);
 
-        ((ServerCommunication)owner).serverController.InsertNewPlayTurnData(requestReceived);
+        PutPlayEvent?.Invoke(requestReceived);
 
         PutPlayResponseData response = new PutPlayResponseData(requestReceived.playerId);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());

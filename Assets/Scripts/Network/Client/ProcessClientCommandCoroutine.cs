@@ -1,7 +1,12 @@
+using System;
 using Unity.Networking.Transport;
+using UnityEngine;
 
 public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommunication>
 {
+    public Action<ServerController.ServerState> GetStateEvent;
+    public Action<ClientController.PlayerState, Vector2Int, PlayerTurnData.UIColors> GetResultsEvent;
+
     public ProcessClientCommandCoroutine(ClientCommunication owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler) :
         base(owner, driver, jobHandler){
     }
@@ -16,7 +21,7 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
         GetStateResponseData responseReceived = new GetStateResponseData(strm);
 
         //TimeLogger.Log("CLIENT {0} - response - GetState ({1})", ((ClientCommunication)owner).ClientId, responseReceived.ServerState);
-        ((ClientCommunication)owner).clientController.ServerState = responseReceived.ServerState;
+        GetStateEvent?.Invoke(responseReceived.ServerState);
     }
 
     protected override void GetResultsCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
@@ -27,10 +32,8 @@ public class ProcessClientCommandCoroutine : ProcessCommandCoroutine<ClientCommu
 
         TimeLogger.Log("CLIENT {0} - {3} - response - GetResults ({1} at {2})",
             ((ClientCommunication)owner).ClientId, playerState, responseReceived.playerPosition,  playerColor);
-        
-        ((ClientCommunication)owner).clientController.NextPlayerState = playerState;
-        ((ClientCommunication)owner).clientController.playerCurrentPosition = responseReceived.playerPosition;
-        ((ClientCommunication)owner).clientController.PlayerColor = playerColor;
+
+        GetResultsEvent?.Invoke(playerState, responseReceived.playerPosition, playerColor);
     }
 
     protected  override void ConnectProcedure(NetworkConnection connection){
