@@ -2,9 +2,13 @@ using UnityEngine;
 using Unity.Networking.Transport;
 using Unity.Collections;
 using Unity.Jobs;
+using System;
 
 public class ClientCommunication : NodeCommunication
 {
+    public Action<ServerController.ServerState> GetStateEvent;
+    public Action<ClientController.PlayerState, Vector2Int, PlayerTurnData.UIColors> GetResultsEvent;
+
     int _clientId;
     public int ClientId{
         get { return _clientId; }
@@ -19,7 +23,7 @@ public class ClientCommunication : NodeCommunication
 
     NetworkEndPoint endpoint;
 
-    public ClientController clientController;
+    ClientController clientController;
 
     public string _customIp = "";
     public string IP {
@@ -60,6 +64,17 @@ public class ClientCommunication : NodeCommunication
         SetClientIdentity();
 
         pcc = new ProcessClientCommandCoroutine(this, m_ClientDriver, jobHandler);
+
+        pcc.GetStateEvent += GetStateEventCallback;
+        pcc.GetResultsEvent += GetResultsEventCallback;
+    }
+
+    void GetStateEventCallback(ServerController.ServerState serverState){
+        GetStateEvent?.Invoke(serverState);
+    }
+
+    void GetResultsEventCallback(ClientController.PlayerState playerState, Vector2Int playerPosition, PlayerTurnData.UIColors playerColor){
+        GetResultsEvent?.Invoke(playerState, playerPosition, playerColor);
     }
 
     void OnDestroy(){
@@ -68,6 +83,9 @@ public class ClientCommunication : NodeCommunication
         m_ClientDriver.Disconnect(m_clientToServerConnection[0]);
         m_ClientDriver.Dispose();
         m_clientToServerConnection.Dispose();
+
+        pcc.GetStateEvent -= GetStateEventCallback;
+        pcc.GetResultsEvent -= GetResultsEventCallback;
     }
 
     void LateUpdate(){
@@ -109,7 +127,7 @@ public class ClientCommunication : NodeCommunication
         int sndY = sound.y;
         bool atk = attacked;
 
-        PutPlayRequest request = new PutPlayRequest(id, movX, movY, sndX, sndY, atk);
+        PutPlayRequestData request = new PutPlayRequestData(id, movX, movY, sndX, sndY, atk);
         TimeLogger.Log("CLIENT {0} - schedule request - PutPlay (({1:00},{2:00}) ({3:00},{4:00}) ({5}))", id, movX, movY, sndX, sndY, atk);
 
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
@@ -119,7 +137,7 @@ public class ClientCommunication : NodeCommunication
     public void ScheduleGetStateRequest(){
         int id = ClientId;
 
-        GetStateRequest request = new GetStateRequest(ClientId);
+        GetStateRequestData request = new GetStateRequestData(ClientId);
         //TimeLogger.Log("CLIENT {0} - schedule request - GetState", id);
 
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());
@@ -129,7 +147,7 @@ public class ClientCommunication : NodeCommunication
     public void ScheduleGetResultsRequest(){
         int id = ClientId;
 
-        GetResultsRequest request = new GetResultsRequest(id);
+        GetResultsRequestData request = new GetResultsRequestData(id);
         TimeLogger.Log("CLIENT {0} - schedule request - GetResults", id);
 
         IJob job = DataPackageWrapper.CreateSendDataJob(m_ClientDriver, m_clientToServerConnection[0], request.DataToArray());

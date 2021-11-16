@@ -19,7 +19,7 @@ public class ToConnectClientState : IStateController
 
         this.clientController = clientController;
         SetClientIdentity();
-        clientController.ClientCommunication = clientController.gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
+        clientController.StartClientCommunication();
         this.uiController = clientController.UIController;
     }
 
@@ -32,7 +32,7 @@ public class ToConnectClientState : IStateController
                     uiController.SetInsertTextButtonAttributes("ENTER SHIP (SAME PC)");
                 }
             }else{
-                if(NodeCommunication.IsIPValid(_insertedString)){
+                if(IPHelper.IsIPValid(_insertedString)){
                     uiController.SetInsertTextButtonVisibility(true);
                     uiController.SetInsertTextButtonAttributes("ENTER SHIP");
                 }else{

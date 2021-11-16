@@ -8,17 +8,21 @@ public class AudioController
     MusicSource music;
     EffectSource effect;
 
+    ServerController serverController;
+
     public AudioController(GameObject owner){
         this.owner = owner;
 
         music = new MusicSource(owner);
         effect = new EffectSource(owner);
+
+        serverController = owner.GetComponent<ServerController>();
     }
 
     ////// Sound events
     public void MatchStart(){
         float clipSeconds = effect.SetAudioClip("Door");
-        music.PlayWithFade(owner.GetComponent<ServerController>(), clipSeconds * 0.60f, true);
+        music.PlayWithFade(serverController, clipSeconds * 0.60f, true);
         effect.PlayClip();
     }
 
@@ -35,10 +39,9 @@ public class AudioController
     }
 
     public void EndGameEffect(){
-        MonoBehaviour ownerScript = owner.GetComponent<ServerController>();
         float delay = 1f;
-        music.StopAfterDelay(ownerScript, delay+.15f);
-        CoroutineHelper.DelayedCall(ownerScript, EndgamePlayShutdown, delay);
+        music.StopAfterDelay(serverController, delay+.15f);
+        CoroutineHelper.DelayedCall(serverController, EndgamePlayShutdown, delay);
     }
 
     void EndgamePlayShutdown(){

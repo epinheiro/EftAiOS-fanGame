@@ -64,7 +64,7 @@ public class PlayingClientState : IStateController
 
             case TurnSteps.Card:
                 string tileCode = BoardManager.TranslateTilePositionToCode(clientController.PlayerNullableNextPosition.Value);
-                BoardManager.PossibleTypes tileType = clientController.BoardManagerRef.GetTileType(tileCode);
+                BoardManager.PossibleTypes tileType = clientController.GetTileType(tileCode);
 
                 if(tileType == BoardManager.PossibleTypes.EventTile){
                     EventDeck.CardTypes cardType = clientController.Deck.DrawCard();
@@ -74,7 +74,7 @@ public class PlayingClientState : IStateController
                             TimeLogger.Log("CLIENT {0} can choose a sector to make a noise", clientController.ClientId);
                             uiController.SetInfoText("Choose an alarm sector");
                             ActivateEffectFeedback(EffectFeedback.ChooseSector);
-                            clientController.BoardManagerRef.GlowPossibleNoises();
+                            clientController.GlowPossibleNoises();
                             currentTurnStep = TurnSteps.Noise;
                             break;
 

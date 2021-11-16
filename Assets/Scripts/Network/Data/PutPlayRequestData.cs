@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Unity.Networking.Transport;
 
-public class PutPlayRequest : INetworkData
+public class PutPlayRequestData : INetworkData
 {
     static public readonly int commandCode = (int) ServerCommunication.ServerCommand.PutPlay;
     public readonly int playerId;
@@ -22,7 +22,7 @@ public class PutPlayRequest : INetworkData
     /// <summary>
     /// This constructor is for WRAPPING the data to make a request
     /// </summary> 
-    public PutPlayRequest(int playerId, int moveToX, int moveToY, int soundInX, int soundInY, bool playerAttacked){
+    public PutPlayRequestData(int playerId, int moveToX, int moveToY, int soundInX, int soundInY, bool playerAttacked){
         this.playerId = playerId;
         movementTo = new Vector2Int(moveToX, moveToY);
         sound = new Vector2Int(soundInX, soundInY);
@@ -32,7 +32,7 @@ public class PutPlayRequest : INetworkData
     /// <summary>
     /// This constructor is for UNWRAPPING the data to read a request
     /// </summary> 
-    public PutPlayRequest(DataStreamReader reader){
+    public PutPlayRequestData(DataStreamReader reader){
         DataStreamReader.Context readerCtx = default(DataStreamReader.Context);
 
         int commandCheck = reader.ReadInt(ref readerCtx);

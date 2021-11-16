@@ -114,9 +114,9 @@ public class ProcessingServerState : IStateController
         foreach(int key in serverController.PlayerTurnDict.Keys){
             PlayerTurnData data;
             serverController.PlayerTurnDict.TryGetValue(key, out data);
-            PutPlayRequest lastPlay = data.lastPlay;
+            PutPlayRequestData lastPlay = data.lastPlay;
 
-            if(data.role == ClientController.PlayerState.Human && serverController.BoardManagerRef.GetTileType(BoardManager.TranslateTilePositionToCode(lastPlay.movementTo)) == BoardManager.PossibleTypes.EscapePod){
+            if(data.role == ClientController.PlayerState.Human && serverController.GetTileType(BoardManager.TranslateTilePositionToCode(lastPlay.movementTo)) == BoardManager.PossibleTypes.EscapePod){
                 playersEscapees.Add(lastPlay.playerId);
                 TimeLogger.Log("SERVER - player {0} escaped!", lastPlay.playerId);
                 serverController.State.IncreaseEscapees();
@@ -135,7 +135,7 @@ public class ProcessingServerState : IStateController
         foreach(int key in serverController.PlayerTurnDict.Keys){
             PlayerTurnData data;
             serverController.PlayerTurnDict.TryGetValue(key, out data);
-            PutPlayRequest lastPlay = data.lastPlay;
+            PutPlayRequestData lastPlay = data.lastPlay;
             if(lastPlay.PlayerAttacked){
                 attackList.Add(lastPlay.movementTo);
                 attackingColors.Add(data.GetUIColorMaterial().color);
@@ -149,7 +149,7 @@ public class ProcessingServerState : IStateController
         foreach(int key in serverController.PlayerTurnDict.Keys){
             PlayerTurnData data;
             serverController.PlayerTurnDict.TryGetValue(key, out data);
-            PutPlayRequest lastPlay = data.lastPlay;
+            PutPlayRequestData lastPlay = data.lastPlay;
 
             foreach(Vector2Int attackPosition in attackList){
                 if(!lastPlay.PlayerAttacked && lastPlay.movementTo == attackPosition){

@@ -60,12 +60,6 @@ public class BoardManager : MonoBehaviour
         CreateMap("Galilei");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public BoardManager.PossibleTypes GetTileType(string tileCode){
         TileData data;
         if(!mapTiles.TryGetValue(tileCode, out data)){

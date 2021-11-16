@@ -1,74 +1,56 @@
 ﻿using Unity.Networking.Transport;
 using UnityEngine;
 using Unity.Jobs;
+using System;
 
 public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommunication>
 {
+    public Action<PutPlayRequestData> PutPlayEvent;
+
     public ProcessServerCommandCoroutine(ServerCommunication owner, UdpNetworkDriver driver, CommunicationJobHandler jobHandler) :
         base(owner, driver, jobHandler){
     }
-    
-    protected override void ProcessCommandReceived(int enumCommandNumber, UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
-        ServerCommunication.ServerCommand command = (ServerCommunication.ServerCommand) enumCommandNumber;
-        
-        switch(command){
-            case ServerCommunication.ServerCommand.PutPlay:
-                PutPlayCommand(driver, connection, strm);
-            break;
-            case ServerCommunication.ServerCommand.GetState:
-                GetStateCommand(driver, connection, strm);
-            break;
-            case ServerCommunication.ServerCommand.GetResults:
-                GetResults(driver, connection, strm);
-            break;
-            default:
-                throw new System.Exception(string.Format("Command number {0} not found", enumCommandNumber));
-        }
-    }
 
-    void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
-        PutPlayRequest requestReceived = new PutPlayRequest(strm);
+    protected override  void PutPlayCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+        PutPlayRequestData requestReceived = new PutPlayRequestData(strm);
         TimeLogger.Log("SERVER - {0}[{1}] request - PutPlay (({2:00},{3:00}) ({4:00},{5:00}) ({6}))",
         requestReceived.playerId, connection.InternalId, requestReceived.movementTo.x, requestReceived.movementTo.y, requestReceived.sound.x, requestReceived.sound.y, requestReceived.PlayerAttacked);
 
-        ((ServerCommunication)owner).serverController.InsertNewPlayTurnData(requestReceived);
+        PutPlayEvent?.Invoke(requestReceived);
 
-        PutPlayResponse response = new PutPlayResponse(requestReceived.playerId);
+        PutPlayResponseData response = new PutPlayResponseData(requestReceived.playerId);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
         jobHandler.QueueJob(job);
     }
 
-    void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
-        GetStateRequest requestReceived = new GetStateRequest(strm);
+    protected override  void GetStateCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+        GetStateRequestData requestReceived = new GetStateRequestData(strm);
         int clientId = requestReceived.playerId;
 
-        ServerController.ServerState currentServerState = ((ServerCommunication)owner).serverController.CurrentState;
+        ServerController.ServerState currentServerState = ((ServerCommunication)owner).ServerCurrentState;
 
         //TimeLogger.Log("SERVER - {0}[{1}] request - GetState ({2})", clientId, connection.InternalId, currentServerState);
 
-        GetStateResponse response = new GetStateResponse(clientId, currentServerState);
+        GetStateResponseData response = new GetStateResponseData(clientId, currentServerState);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
         jobHandler.QueueJob(job);
     }
 
-    void GetResults(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
-        GetResultsRequest requestReceived = new GetResultsRequest(strm);
+    protected override  void GetResultsCommand(UdpNetworkDriver driver, NetworkConnection connection, DataStreamReader strm){
+        GetResultsRequestData requestReceived = new GetResultsRequestData(strm);
         int clientId = requestReceived.playerId;
 
-        int playerColor;
-        Vector2Int position;
-        ClientController.PlayerState state;
-        ((ServerCommunication)owner).serverController.GetPlayerData(clientId, out playerColor, out position, out state);
+        PlayerSimplifiedTurnData data = ((ServerCommunication)owner).PopPlayerData(clientId);
 
-        TimeLogger.Log("SERVER - {0}[{1}] - {3} - request - GetResults ({2})", clientId, connection.InternalId, state, (PlayerTurnData.UIColors) playerColor);
+        TimeLogger.Log("SERVER - {0}[{1}] - {3} - request - GetResults ({2})", clientId, connection.InternalId, data.state, (PlayerTurnData.UIColors) data.playerColor);
 
-        GetResultsResponse response = new GetResultsResponse(clientId, playerColor, state, position);
+        GetResultsResponseData response = new GetResultsResponseData(clientId, data.playerColor, data.state, data.position);
         IJob job = DataPackageWrapper.CreateSendDataJob(driver, connection, response.DataToArray());
         jobHandler.QueueJob(job);
     }
 
     protected  override void DisconnectProcedure(NetworkConnection connection){
-        if(((ServerCommunication)owner).serverController.CurrentState == ServerController.ServerState.WaitingPlayers){
+        if(((ServerCommunication)owner).ServerCurrentState == ServerController.ServerState.WaitingPlayers){
             int internalId = connection.InternalId;
             int clientId = GetClientIdByInternalId(internalId);
             owner.ClientDisconnection(clientId);

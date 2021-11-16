@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseController : MonoBehaviour
@@ -46,19 +47,10 @@ public class BaseController : MonoBehaviour
     /// BoardManager related fields
     public GameObject boardManagerPrefab;
     protected BoardManager _boardManager;
-    public BoardManager BoardManagerRef{
-        get { return _boardManager; }
-        set { 
-            if(_boardManager==null){
-                _boardManager = value;
-            }else{
-                throw new System.Exception(string.Format("BoardManager already exists on node {0}", this.name));
-            }
-        }
-    }
+
     public void InstantiateBoardManager(){
         GameObject go = Instantiate(this.boardManagerPrefab, new Vector2(0, 0), Quaternion.identity);
-        this.BoardManagerRef = go.GetComponent<BoardManager>();
+        this._boardManager = go.GetComponent<BoardManager>();
         go.name = "BoardManager";
     }
 
@@ -79,5 +71,38 @@ public class BaseController : MonoBehaviour
         UIController.ActivateLoadingScreen();
 
         UnityEngine.SceneManagement.SceneManager.LoadScene(name);
+    }
+
+    /// BoardManager related calls
+    public void CleanSoundGlowTiles(string remainingTileCode = ""){
+        _boardManager.CleanSoundGlowTiles(remainingTileCode);
+    }
+
+    public void CleanMovementTile(string codeToDelete){
+        _boardManager.CleanMovementTile(codeToDelete); // INFO - related to WaitingPlayersClientState Option2 feedback
+    }
+
+    public void GlowPossibleMovements(string tileCode, int movement, ClientController.PlayerState role){
+        _boardManager.GlowPossibleMovements(tileCode, movement, role);
+    }
+
+    public void CleanMovementGlowTiles(string remainingTileCode = ""){
+        _boardManager.CleanMovementGlowTiles(remainingTileCode);
+    }
+
+    public BoardManager.PossibleTypes GetTileType(string tileCode){
+        return _boardManager.GetTileType(tileCode);
+    }
+
+    public void GlowPossibleNoises(){
+        _boardManager.GlowPossibleNoises();
+    }
+
+    public void CleanLastSoundEffects(){
+        _boardManager.CleanLastSoundEffects();
+    }
+
+    public void LastSoundEffects(List<NoiseInfo> soundTileCodes){
+        _boardManager.LastSoundEffects(soundTileCodes);
     }
 }

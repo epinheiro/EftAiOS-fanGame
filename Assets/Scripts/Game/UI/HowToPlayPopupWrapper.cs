@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,25 +14,26 @@ public class HowToPlayPopupWrapper : MonoBehaviour
 
     public GameObject backButton;
 
-    GameObject[] popups;
+    HowToPopupEnum currentPopup;
+    Dictionary<HowToPopupEnum, (GameObject, Scrollbar, Action, Action)> popups;
 
-    public enum HowToPopup {Intro, Setup, Playing, Human, Alien}
-
-    // Start is called before the first frame update
     void Awake()
     {
-        popups = new GameObject[]{introPopup, setupPopup, playingPopup, humanRolePopup, alienRolePopup};
-    }
+        popups = new Dictionary<HowToPopupEnum, (GameObject, Scrollbar, Action, Action)>()
+        {
+            {HowToPopupEnum.Intro, (introPopup, introPopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>(), null, null)},
+            {HowToPopupEnum.Setup, (setupPopup, setupPopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>(), null, null)},
+            {HowToPopupEnum.Playing, (playingPopup, playingPopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>(), null, null)},
+            {HowToPopupEnum.Human, (humanRolePopup, humanRolePopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>(), null, null)},
+            {HowToPopupEnum.Alien, (alienRolePopup, alienRolePopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>(), null, null)}
+        };
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        currentPopup = HowToPopupEnum.Closed;
     }
 
     public void ActivateIntroPage(){
         SetActive(true);
-        GoToPopup(HowToPopup.Intro);
+        GoToPopup(HowToPopupEnum.Intro);
     }
 
     public void SetActive(bool isActive){
@@ -39,25 +41,31 @@ public class HowToPlayPopupWrapper : MonoBehaviour
     }
 
     public void GoToPopup(string nextPopup){
-        GoToPopup((HowToPopup)System.Enum.Parse(typeof(HowToPopup), nextPopup));
+        GoToPopup((HowToPopupEnum)System.Enum.Parse(typeof(HowToPopupEnum), nextPopup));
     }
 
-    public void GoToPopup(HowToPopup nextPopup){
-        foreach(HowToPopup popup in System.Enum.GetValues(typeof(HowToPopup))){
-            if(nextPopup == popup){
-                GameObject goPopup = popups[(int)popup];
-                goPopup.SetActive(true);
-                goPopup.transform.Find("Scrollbar Vertical").GetComponent<Scrollbar>().value = 1;
-
-                if(nextPopup == HowToPopup.Intro) backButton.SetActive(false);
-                else backButton.SetActive(true);
-            }else{
-                popups[(int)popup].SetActive(false);
-            }
+    public void GoToPopup(HowToPopupEnum nextPopup){
+        (GameObject, Scrollbar, Action, Action) popup;
+        if(currentPopup != HowToPopupEnum.Closed)
+        {
+            // Deactivate old
+            popup = popups[currentPopup];
+            popup.Item1.SetActive(false);
         }
+
+        // Activate next
+        popup = popups[nextPopup];
+        popup.Item1.SetActive(true);
+        popup.Item2.value = 1;
+
+        if(nextPopup == HowToPopupEnum.Intro) backButton.SetActive(false);
+        else backButton.SetActive(true);
+
+        currentPopup = nextPopup;
     }
 
     public void CloseHowToPopup(){
+        currentPopup = HowToPopupEnum.Closed;
         SetActive(false);
     }
 

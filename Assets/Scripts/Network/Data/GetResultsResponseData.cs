@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Unity.Networking.Transport;
 
-public class GetResultsResponse : INetworkData
+public class GetResultsResponseData : INetworkData
 {
     static public readonly int commandCode = (int) ServerCommunication.ServerCommand.GetResults;
     public readonly int playerId;
@@ -19,7 +19,7 @@ public class GetResultsResponse : INetworkData
     /// <summary>
     /// This constructor is for WRAPPING the data to make a request
     /// </summary> 
-    public GetResultsResponse(int playerId, int playerColor, ClientController.PlayerState playerState, Vector2Int playerPosition){
+    public GetResultsResponseData(int playerId, int playerColor, ClientController.PlayerState playerState, Vector2Int playerPosition){
         this.playerId = playerId;
         this.playerColor = playerColor;
         this.playerState = (int) playerState;
@@ -29,7 +29,7 @@ public class GetResultsResponse : INetworkData
     /// <summary>
     /// This constructor is for UNWRAPPING the data to read a request
     /// </summary> 
-    public GetResultsResponse(DataStreamReader reader){
+    public GetResultsResponseData(DataStreamReader reader){
         DataStreamReader.Context readerCtx = default(DataStreamReader.Context);
 
         int commandCheck = reader.ReadInt(ref readerCtx);

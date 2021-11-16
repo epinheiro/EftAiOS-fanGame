@@ -54,8 +54,8 @@ public class GiveUpButtonController : MonoBehaviour
 
         Destroy(this.GetComponent<UnityEngine.UI.Button>());
 
-        controller.BoardManagerRef.CleanMovementGlowTiles();
-        controller.BoardManagerRef.CleanSoundGlowTiles();
+        controller.CleanMovementGlowTiles();
+        controller.CleanSoundGlowTiles();
         controller.Audio.PlayerDiedEffect();
 
         CoroutineHelper.DelayedCall(controller, controller.ReloadClient, 3.5f);

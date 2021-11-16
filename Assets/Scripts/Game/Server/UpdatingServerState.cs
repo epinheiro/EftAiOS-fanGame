@@ -54,7 +54,7 @@ public class UpdatingServerState : IStateController
             }
         }
 
-        serverController.BoardManagerRef.LastSoundEffects(noises);
+        serverController.LastSoundEffects(noises);
     }
 
     public void ResetTurnControlVariables(){

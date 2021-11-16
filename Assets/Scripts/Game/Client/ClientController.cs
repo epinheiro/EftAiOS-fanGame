@@ -113,7 +113,7 @@ public class ClientController : BaseController
     ClientCommunication clientCommunication;
     public ClientCommunication ClientCommunication{
         get { return clientCommunication; }
-        set { clientCommunication = value; }
+        protected set { clientCommunication = value; }
     }
 
     int _clientId;
@@ -159,12 +159,31 @@ public class ClientController : BaseController
         update = DelayedCall(UpdateStati, 1f, true);
     }
 
+    public void StartClientCommunication()
+    {
+        ClientCommunication = this.gameObject.AddComponent(typeof(ClientCommunication)) as ClientCommunication;
+        ClientCommunication.GetStateEvent += GetStateEvent;
+        ClientCommunication.GetResultsEvent += GetResultsEvent;
+    }
+
+    void GetStateEvent(ServerController.ServerState serverState){
+        this.ServerState = serverState;
+    }
+
+    void GetResultsEvent(ClientController.PlayerState playerState, Vector2Int playerPosition, PlayerTurnData.UIColors playerColor){
+        this.NextPlayerState = playerState;
+        this.playerCurrentPosition = playerPosition;
+        this.PlayerColor = playerColor;
+    }
+
     public void Reset(){
         LoadScene("OnlyClient");
     }
 
     public void SoftResetClient(){
-        Destroy(this.GetComponent<ClientCommunication>());
+        ClientCommunication.GetStateEvent -= GetStateEvent;
+        ClientCommunication.GetResultsEvent -= GetResultsEvent;
+        Destroy(ClientCommunication);
 
         currentState = ClientController.ClientState.ToConnect;
 

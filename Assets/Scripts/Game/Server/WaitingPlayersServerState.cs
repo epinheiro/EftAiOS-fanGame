@@ -60,7 +60,7 @@ public class WaitingPlayersServerState : IStateController
     }
 
     protected override void StateEnd(){
-        serverController.BoardManagerRef.CleanLastSoundEffects();
+        serverController.CleanLastSoundEffects();
         ResetStateController();
     }
 
