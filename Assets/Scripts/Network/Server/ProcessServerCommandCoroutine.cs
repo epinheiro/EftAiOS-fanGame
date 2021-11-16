@@ -40,7 +40,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
         GetResultsRequestData requestReceived = new GetResultsRequestData(strm);
         int clientId = requestReceived.playerId;
 
-        PlayerSimplifiedTurnData data = ((ServerCommunication)owner).GetPlayerData(clientId);
+        PlayerSimplifiedTurnData data = ((ServerCommunication)owner).PopPlayerData(clientId);
 
         TimeLogger.Log("SERVER - {0}[{1}] - {3} - request - GetResults ({2})", clientId, connection.InternalId, data.state, (PlayerTurnData.UIColors) data.playerColor);
 

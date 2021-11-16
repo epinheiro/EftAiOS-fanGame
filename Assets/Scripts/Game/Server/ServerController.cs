@@ -137,7 +137,7 @@ public class ServerController : BaseController
         }
     }
 
-    public PlayerSimplifiedTurnData GetPlayerData(int playerId){
+    public PlayerSimplifiedTurnData PopPlayerData(int playerId){
         int color;
         Vector2Int finalPosition;
         ClientController.PlayerState finalState;

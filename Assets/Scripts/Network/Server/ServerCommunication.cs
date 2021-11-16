@@ -23,8 +23,8 @@ public class ServerCommunication : NodeCommunication
 
     public ServerController.ServerState ServerCurrentState => serverController.CurrentState;
 
-    public PlayerSimplifiedTurnData GetPlayerData(int playerId){
-        return serverController.GetPlayerData(playerId);
+    public PlayerSimplifiedTurnData PopPlayerData(int playerId){
+        return serverController.PopPlayerData(playerId);
     }
 
     public void ClientDisconnection(int clientId){
