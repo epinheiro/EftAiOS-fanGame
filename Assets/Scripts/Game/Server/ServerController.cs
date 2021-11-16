@@ -137,7 +137,7 @@ public class ServerController : BaseController
         }
     }
 
-    public void GetPlayerData(int playerId, out int playerColor, out Vector2Int position, out ClientController.PlayerState state){
+    public PlayerSimplifiedTurnData GetPlayerData(int playerId){
         int color;
         Vector2Int finalPosition;
         ClientController.PlayerState finalState;
@@ -177,11 +177,13 @@ public class ServerController : BaseController
                     break;
             }
         }
-        
-        // Method outputs
-        playerColor = color;
-        position = finalPosition;
-        state = finalState;
+
+        return new PlayerSimplifiedTurnData
+        {
+            playerColor = color,
+            position = finalPosition,
+            state = finalState
+        };
     }
 
     public bool IsPossibleToProceedGame(){
