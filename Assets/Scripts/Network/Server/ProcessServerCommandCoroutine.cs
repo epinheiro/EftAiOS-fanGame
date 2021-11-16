@@ -27,7 +27,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
         GetStateRequestData requestReceived = new GetStateRequestData(strm);
         int clientId = requestReceived.playerId;
 
-        ServerController.ServerState currentServerState = ((ServerCommunication)owner).serverController.CurrentState;
+        ServerController.ServerState currentServerState = ((ServerCommunication)owner).ServerCurrentState;
 
         //TimeLogger.Log("SERVER - {0}[{1}] request - GetState ({2})", clientId, connection.InternalId, currentServerState);
 
@@ -43,7 +43,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
         int playerColor;
         Vector2Int position;
         ClientController.PlayerState state;
-        ((ServerCommunication)owner).serverController.GetPlayerData(clientId, out playerColor, out position, out state);
+        ((ServerCommunication)owner).GetPlayerData(clientId, out playerColor, out position, out state);
 
         TimeLogger.Log("SERVER - {0}[{1}] - {3} - request - GetResults ({2})", clientId, connection.InternalId, state, (PlayerTurnData.UIColors) playerColor);
 
@@ -53,7 +53,7 @@ public class ProcessServerCommandCoroutine : ProcessCommandCoroutine<ServerCommu
     }
 
     protected  override void DisconnectProcedure(NetworkConnection connection){
-        if(((ServerCommunication)owner).serverController.CurrentState == ServerController.ServerState.WaitingPlayers){
+        if(((ServerCommunication)owner).ServerCurrentState == ServerController.ServerState.WaitingPlayers){
             int internalId = connection.InternalId;
             int clientId = GetClientIdByInternalId(internalId);
             owner.ClientDisconnection(clientId);

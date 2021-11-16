@@ -23,7 +23,7 @@ public class ClientCommunication : NodeCommunication
 
     NetworkEndPoint endpoint;
 
-    public ClientController clientController;
+    ClientController clientController;
 
     public string _customIp = "";
     public string IP {

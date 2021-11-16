@@ -1,6 +1,7 @@
 using System;
 using Unity.Collections;
 using Unity.Networking.Transport;
+using UnityEngine;
 
 public class ServerCommunication : NodeCommunication
 {
@@ -18,7 +19,13 @@ public class ServerCommunication : NodeCommunication
 
     ProcessServerCommandCoroutine pcc;
 
-    public ServerController serverController;
+    ServerController serverController;
+
+    public ServerController.ServerState ServerCurrentState => serverController.CurrentState;
+
+    public void GetPlayerData(int playerId, out int playerColor, out Vector2Int position, out ClientController.PlayerState state){
+        serverController.GetPlayerData(playerId, out playerColor, out position, out state);
+    }
 
     public void ClientDisconnection(int clientId){
         serverController.PlayerDisconnection(clientId);
