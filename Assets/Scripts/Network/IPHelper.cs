@@ -19,7 +19,7 @@ public static class IPHelper
     public static string GetLocalIPAddress()
     {
         // https://docs.microsoft.com/pt-br/dotnet/api/system.text.regularexpressions.regex?view=netframework-4.8
-        string pattern = @"^192\.168\.0\.\d+";
+        string pattern = @"^\d+\.\d+\.\d+\.\d+";
         Regex rgx = new Regex(pattern);
 
         IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
